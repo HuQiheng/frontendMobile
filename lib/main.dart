@@ -19,11 +19,11 @@ class MyApp extends StatelessWidget {
     // In this course, you will, of course, not just use them a lot but
     // also learn about many other widgets!
     return MaterialApp(
-      title: 'Flutter First App',
+      title: 'Wealth Wars App',
       theme: ThemeData(useMaterial3: true),
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Welcome to Flutter'),
+          title: const Text('Welcome to Wealth Wars'),
         ),
         body: Container(
           width: double.infinity,
@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: const [
               Text(
-                'Flutter - The Complete Guide',
+                'Wealth Wars Game',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 24,
@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
               ),
               SizedBox(height: 16),
               Text(
-                'Learn Flutter step-by-step, from the ground up.',
+                'Conquer.',
                 textAlign: TextAlign.center,
               ),
             ],

@@ -7,3 +7,4 @@ This modules are needed for implementation
 - Flutter extension in Visual Studio for developing the app
 - Follow the steps providen in the previous URL to use flutter in VS
 - Dont locate the proyect in NON-ASCII routes
+- It is advisable to use GitHub Desktop for Windows development

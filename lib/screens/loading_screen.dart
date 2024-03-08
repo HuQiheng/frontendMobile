@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
+import 'initial_screen.dart';
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({super.key});
@@ -19,7 +19,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       () => Navigator.of(context).pushReplacement(
         MaterialPageRoute(
             builder: (context) =>
-                const HomeScreen()), // Screen to which it is redirected
+                const InitialScreen()), // Screen to which it is redirected
       ),
     );
   }

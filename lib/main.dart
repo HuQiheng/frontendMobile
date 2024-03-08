@@ -6,6 +6,11 @@ void main() {
   WidgetsFlutterBinding
       .ensureInitialized(); // Ensures the initialization of the widgets.
 
+  SystemChrome.setEnabledSystemUIMode(
+    //Full screen mode
+    SystemUiMode.immersiveSticky,
+  );
+
   // It is set in horizontal format.
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeRight,

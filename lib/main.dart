@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_application_1/screens/loading_screen.dart';
+import 'package:wealth_wars/screens/loading_screen.dart';
 
 void main() {
   WidgetsFlutterBinding
-      .ensureInitialized(); // Asegura que tengas inicialización para los widgets
+      .ensureInitialized(); // Ensures the initialization of the widgets.
+
+  // It is set in horizontal format.
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.landscapeRight,
     DeviceOrientation.landscapeLeft,
@@ -21,7 +23,7 @@ class MyApp extends StatelessWidget {
     return const MaterialApp(
       title: 'Wealth Wars App',
       home:
-          LoadingScreen(), // Usa tu pantalla de carga como la pantalla inicial
+          LoadingScreen(), // The loading screen is used as the initial screen, and later redirected to the correct one.
     );
   }
 }

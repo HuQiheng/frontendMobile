@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'home_screen.dart'; // Reemplaza esto con tu siguiente pantalla después del splash
+import 'home_screen.dart';
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({super.key});
@@ -15,11 +15,11 @@ class _LoadingScreenState extends State<LoadingScreen> {
   void initState() {
     super.initState();
     Timer(
-      const Duration(seconds: 5), // Puedes cambiar el tiempo de espera aquí
+      const Duration(seconds: 4), // Loading screen timeout
       () => Navigator.of(context).pushReplacement(
         MaterialPageRoute(
             builder: (context) =>
-                const HomeScreen()), // Cambia YourNextScreen por tu pantalla principal
+                const HomeScreen()), // Screen to which it is redirected
       ),
     );
   }
@@ -31,10 +31,9 @@ class _LoadingScreenState extends State<LoadingScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            // Puedes cambiar 'assets/logo.png' por tu imagen de logo
-            Image.asset('assets/logo.png', height: 120.0),
+            Image.asset('assets/images/logo.png', height: 175.0),
             const SizedBox(height: 20),
-            const CircularProgressIndicator(), // Un indicador de carga
+            const CircularProgressIndicator(),
           ],
         ),
       ),

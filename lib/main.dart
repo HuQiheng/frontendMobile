@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:wealth_wars/screens/loading_screen.dart';
+import 'package:wealth_wars/pages/loading_page.dart';
 
 void main() {
   WidgetsFlutterBinding

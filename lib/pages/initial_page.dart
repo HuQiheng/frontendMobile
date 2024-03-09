@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/initial_page_widgets.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class InitialPage extends StatefulWidget {
   const InitialPage({super.key});
@@ -55,6 +56,15 @@ class _InitialPageState extends State<InitialPage> {
                   ],
                 ),
               ),
+              SmoothPageIndicator(
+                  controller: _pageController, // PageController
+                  count: 4,
+                  effect: const ExpandingDotsEffect(
+                    dotColor: Colors.yellow,
+                    activeDotColor: Color.fromRGBO(13, 71, 161, 1),
+                  ), // your preferred effect
+                  onDotClicked: (index) {}),
+              const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.only(bottom: 20),
                 child: NavigationButtons(

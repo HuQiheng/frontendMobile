@@ -2,6 +2,7 @@
     <application
         android:label="Wealth Wars"
         android:name="${applicationName}"
+        android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_logo">
         <activity
             android:name=".MainActivity"

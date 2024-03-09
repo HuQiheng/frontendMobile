@@ -19,7 +19,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
       () => Navigator.of(context).pushReplacement(
         MaterialPageRoute(
             builder: (context) =>
-                const InitialPage1()), // Screen to which it is redirected
+                const InitialPage()), // Screen to which it is redirected
       ),
     );
   }

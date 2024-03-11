@@ -110,6 +110,7 @@ class InfoLogin extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -155,6 +156,9 @@ class NavigationButtons extends StatelessWidget {
               ),
               child: const Text(
                 'Anterior',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
               ),
             ),
           );
@@ -175,7 +179,12 @@ class NavigationButtons extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               ),
-              child: const Text('Siguiente'),
+              child: const Text(
+                'Siguiente',
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
             ),
           );
         }

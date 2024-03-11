@@ -60,9 +60,9 @@ class _InitialPageState extends State<InitialPage> {
                   controller: _pageController, // PageController
                   count: 4,
                   effect: const ExpandingDotsEffect(
-                    dotColor: Colors.yellow,
+                    dotColor: Color.fromRGBO(234, 151, 10, 1),
                     activeDotColor: Color.fromRGBO(13, 71, 161, 1),
-                  ), // your preferred effect
+                  ),
                   onDotClicked: (index) {}),
               const SizedBox(height: 20),
               Padding(

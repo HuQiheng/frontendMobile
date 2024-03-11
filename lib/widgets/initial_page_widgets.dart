@@ -97,7 +97,7 @@ class InfoLogin extends StatelessWidget {
               onPressed: () {}, // Login functionality
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.black,
-                backgroundColor: Colors.yellow,
+                backgroundColor: const Color.fromRGBO(234, 151, 10, 1),
                 shape: RoundedRectangleBorder(
                   borderRadius:
                       BorderRadius.circular(30.0), // Button border radius
@@ -150,7 +150,7 @@ class NavigationButtons extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.black,
-                backgroundColor: Colors.yellow,
+                backgroundColor: const Color.fromRGBO(234, 151, 10, 1),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               ),
@@ -175,7 +175,7 @@ class NavigationButtons extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.black,
-                backgroundColor: Colors.yellow,
+                backgroundColor: const Color.fromRGBO(234, 151, 10, 1),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
               ),

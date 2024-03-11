@@ -150,16 +150,19 @@ class InitialPage4 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    return MaterialApp(
       title: 'Wealth Wars Initial Page 4',
       home: Scaffold(
         backgroundColor: Colors.transparent,
         body: Center(
-          child: SizedBox(
-            width: 500,
-            child: InfoLogin(
+          child: FractionallySizedBox(
+            widthFactor: screenWidth < 600 ? 0.9 : 0.75,
+            heightFactor: screenHeight < 600 ? 1 : 0.8,
+            child: const InfoLogin(
               'Comienza a jugar',
-              'Crea una nueva cuenta o incia sesión con una ya existente para empezar a jugar ya',
+              'Crea una nueva cuenta o inicia sesión con una ya existente para empezar a jugar ya',
             ),
           ),
         ),

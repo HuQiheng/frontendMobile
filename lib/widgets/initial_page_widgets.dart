@@ -18,9 +18,10 @@ class Info extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const SizedBox(),
             // Page title
             Text(
               title,
@@ -32,7 +33,6 @@ class Info extends StatelessWidget {
               ),
             ),
             // Page description
-            const SizedBox(height: 20),
             Text(
               description,
               textAlign: TextAlign.center,
@@ -42,6 +42,7 @@ class Info extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
+            const SizedBox(),
           ],
         ),
       ),
@@ -67,7 +68,7 @@ class InfoLogin extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Page title
@@ -81,7 +82,6 @@ class InfoLogin extends StatelessWidget {
               ),
             ),
             // Page description
-            const SizedBox(height: 20),
             Text(
               description,
               textAlign: TextAlign.center,
@@ -91,8 +91,8 @@ class InfoLogin extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
+            const SizedBox(),
             // Page button
-            const SizedBox(height: 40),
             ElevatedButton(
               onPressed: () {}, // Login functionality
               style: ElevatedButton.styleFrom(
@@ -152,12 +152,13 @@ class NavigationButtons extends StatelessWidget {
                 foregroundColor: Colors.black,
                 backgroundColor: const Color.fromRGBO(234, 151, 10, 1),
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               ),
               child: const Text(
                 'Anterior',
                 style: TextStyle(
                   color: Colors.white,
+                  fontSize: 16,
                 ),
               ),
             ),
@@ -177,12 +178,13 @@ class NavigationButtons extends StatelessWidget {
                 foregroundColor: Colors.black,
                 backgroundColor: const Color.fromRGBO(234, 151, 10, 1),
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               ),
               child: const Text(
                 'Siguiente',
                 style: TextStyle(
                   color: Colors.white,
+                  fontSize: 16,
                 ),
               ),
             ),

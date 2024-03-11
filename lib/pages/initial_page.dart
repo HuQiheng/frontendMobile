@@ -45,6 +45,15 @@ class _InitialPageState extends State<InitialPage> {
           ),
           child: Column(
             children: [
+              const SizedBox(height: 20),
+              SmoothPageIndicator(
+                controller: _pageController, // PageController
+                count: 4,
+                effect: const ExpandingDotsEffect(
+                  dotColor: Color.fromRGBO(234, 151, 10, 1),
+                  activeDotColor: Color.fromRGBO(13, 71, 161, 1),
+                ),
+              ),
               Expanded(
                 child: PageView(
                   controller: _pageController,
@@ -56,15 +65,6 @@ class _InitialPageState extends State<InitialPage> {
                   ],
                 ),
               ),
-              SmoothPageIndicator(
-                  controller: _pageController, // PageController
-                  count: 4,
-                  effect: const ExpandingDotsEffect(
-                    dotColor: Color.fromRGBO(234, 151, 10, 1),
-                    activeDotColor: Color.fromRGBO(13, 71, 161, 1),
-                  ),
-                  onDotClicked: (index) {}),
-              const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.only(bottom: 20),
                 child: NavigationButtons(
@@ -85,6 +85,7 @@ class InitialPage1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Wealth Wars Initial Page 1',
       home: Scaffold(
         backgroundColor: Colors.transparent,
@@ -105,6 +106,7 @@ class InitialPage2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Wealth Wars Initial Page 2',
       home: Scaffold(
         backgroundColor: Colors.transparent,
@@ -128,6 +130,7 @@ class InitialPage3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Wealth Wars Initial Page 3',
       home: Scaffold(
         backgroundColor: Colors.transparent,
@@ -151,6 +154,7 @@ class InitialPage4 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Wealth Wars Initial Page 4',
       home: Scaffold(
         backgroundColor: Colors.transparent,

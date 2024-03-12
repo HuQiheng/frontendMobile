@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 // Widget to display the central information on the screen.
 class Info extends StatelessWidget {
@@ -50,12 +51,33 @@ class Info extends StatelessWidget {
   }
 }
 
+final GoogleSignIn googleSignIn = GoogleSignIn(
+  scopes: ['email'],
+);
+
 // Widget to display the central login information on the screen.
 class InfoLogin extends StatelessWidget {
   final String title;
   final String description;
 
   const InfoLogin(this.title, this.description, {super.key});
+
+  Future<void> signInWithGoogle() async {
+    try {
+      await googleSignIn.signOut();
+
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+
+      if (googleUser != null) {
+        final GoogleSignInAuthentication googleAuth =
+            await googleUser.authentication;
+
+        print("Token de Google Sign-In: ${googleAuth.idToken}");
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,7 +93,6 @@ class InfoLogin extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Page title
             Text(
               title,
               textAlign: TextAlign.center,
@@ -81,7 +102,6 @@ class InfoLogin extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
-            // Page description
             Text(
               description,
               textAlign: TextAlign.center,
@@ -92,21 +112,19 @@ class InfoLogin extends StatelessWidget {
               ),
             ),
             const SizedBox(),
-            // Page button
             ElevatedButton(
-              onPressed: () {}, // Login functionality
+              onPressed: signInWithGoogle,
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.black,
                 backgroundColor: const Color.fromRGBO(234, 151, 10, 1),
                 shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(30.0), // Button border radius
+                  borderRadius: BorderRadius.circular(30.0),
                 ),
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 30, vertical: 10), // Button padding
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
               ),
               child: const Text(
-                'Iniciar sesión',
+                'Iniciar sesión con Google',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

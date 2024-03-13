@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:logger/logger.dart';
 
 // Widget to display the central information on the screen.
 class Info extends StatelessWidget {
@@ -52,30 +53,31 @@ class Info extends StatelessWidget {
 }
 
 final GoogleSignIn googleSignIn = GoogleSignIn(
-  scopes: ['email'],
+  scopes: [
+    'email',
+  ],
 );
 
 // Widget to display the central login information on the screen.
 class InfoLogin extends StatelessWidget {
   final String title;
   final String description;
+  final logger = Logger();
 
-  const InfoLogin(this.title, this.description, {super.key});
+  InfoLogin(this.title, this.description, {super.key});
 
   Future<void> signInWithGoogle() async {
     try {
-      await googleSignIn.signOut();
-
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
       if (googleUser != null) {
         final GoogleSignInAuthentication googleAuth =
             await googleUser.authentication;
 
-        print("Token de Google Sign-In: ${googleAuth.idToken}");
+        logger.d("Token de Google Sign-In: ${googleAuth.idToken}");
       }
     } catch (error) {
-      print(error);
+      logger.e("Error during Google Sign-In: $error");
     }
   }
 

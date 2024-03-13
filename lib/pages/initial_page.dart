@@ -153,7 +153,7 @@ class InitialPage4 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Wealth Wars Initial Page 4',
       home: Scaffold(

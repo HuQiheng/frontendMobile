@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:logger/logger.dart';
 
 // Widget to display the central information on the screen.
@@ -52,14 +52,6 @@ class Info extends StatelessWidget {
   }
 }
 
-final GoogleSignIn googleSignIn = GoogleSignIn(
-  scopes: [
-    'email',
-  ],
-  clientId:
-      "528032898405-1p5v7i0icgnupa6ckuhifrv8le5gidtb.apps.googleusercontent.com",
-);
-
 // Widget to display the central login information on the screen.
 class InfoLogin extends StatelessWidget {
   final String title;
@@ -70,15 +62,10 @@ class InfoLogin extends StatelessWidget {
 
   Future<void> signInWithGoogle() async {
     try {
-      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      // Cambia esto para crear un objeto Uri en lugar de usar una cadena directamente
+      final Uri url = Uri.parse("https://wealthwars.games/signin");
       logger.d("Google Sign In");
-
-      if (googleUser != null) {
-        final GoogleSignInAuthentication googleAuth =
-            await googleUser.authentication;
-
-        logger.d("Token de Google Sign-In: ${googleAuth.idToken}");
-      }
+      await launchUrl(url);
     } catch (error) {
       logger.e("Error during Google Sign-In: $error");
     }

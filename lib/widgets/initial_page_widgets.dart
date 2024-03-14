@@ -56,6 +56,8 @@ final GoogleSignIn googleSignIn = GoogleSignIn(
   scopes: [
     'email',
   ],
+  clientId:
+      "528032898405-1p5v7i0icgnupa6ckuhifrv8le5gidtb.apps.googleusercontent.com",
 );
 
 // Widget to display the central login information on the screen.
@@ -69,6 +71,7 @@ class InfoLogin extends StatelessWidget {
   Future<void> signInWithGoogle() async {
     try {
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      logger.d("Google Sign In");
 
       if (googleUser != null) {
         final GoogleSignInAuthentication googleAuth =

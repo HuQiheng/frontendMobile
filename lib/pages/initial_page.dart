@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wealth_wars/pages/home_screen.dart';
 import '../widgets/initial_page_widgets.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -30,6 +31,13 @@ class _InitialPageState extends State<InitialPage> {
     super.dispose();
   }
 
+  void _navigateToHome() {
+    Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(builder: (context) => const HomeScreen()),
+      (Route<dynamic> route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -50,18 +58,18 @@ class _InitialPageState extends State<InitialPage> {
                 controller: _pageController, // PageController
                 count: 4,
                 effect: const ExpandingDotsEffect(
-                  dotColor: Color.fromRGBO(234, 151, 10, 1),
+                  dotColor: Color(0xFFEA970A),
                   activeDotColor: Color.fromRGBO(13, 71, 161, 1),
                 ),
               ),
               Expanded(
                 child: PageView(
                   controller: _pageController,
-                  children: const [
-                    InitialPage1(),
-                    InitialPage2(),
-                    InitialPage3(),
-                    InitialPage4(),
+                  children: [
+                    const InitialPage1(),
+                    const InitialPage2(),
+                    const InitialPage3(),
+                    InitialPage4(onNavigate: _navigateToHome),
                   ],
                 ),
               ),
@@ -149,7 +157,9 @@ class InitialPage3 extends StatelessWidget {
 }
 
 class InitialPage4 extends StatelessWidget {
-  const InitialPage4({super.key});
+  final VoidCallback onNavigate;
+
+  const InitialPage4({super.key, required this.onNavigate});
 
   @override
   Widget build(BuildContext context) {
@@ -164,6 +174,7 @@ class InitialPage4 extends StatelessWidget {
             child: InfoLogin(
               'Comienza a jugar',
               'Crea una nueva cuenta o incia sesión con una ya existente para empezar a jugar ya',
+              onNavigate: onNavigate,
             ),
           ),
         ),

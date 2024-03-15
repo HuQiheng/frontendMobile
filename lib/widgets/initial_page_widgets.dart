@@ -57,8 +57,10 @@ class InfoLogin extends StatelessWidget {
   final String title;
   final String description;
   final logger = Logger();
+  final VoidCallback onNavigate;
 
-  InfoLogin(this.title, this.description, {super.key});
+  InfoLogin(this.title, this.description,
+      {super.key, required this.onNavigate});
 
   Future<void> signInWithGoogle() async {
     try {
@@ -66,6 +68,7 @@ class InfoLogin extends StatelessWidget {
       final Uri url = Uri.parse("https://wealthwars.games/signin");
       logger.d("Google Sign In");
       await launchUrl(url);
+      onNavigate();
     } catch (error) {
       logger.e("Error during Google Sign-In: $error");
     }
@@ -108,7 +111,7 @@ class InfoLogin extends StatelessWidget {
               onPressed: signInWithGoogle,
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.black,
-                backgroundColor: const Color.fromRGBO(234, 151, 10, 1),
+                backgroundColor: const Color(0xFFEA970A),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(30.0),
                 ),
@@ -160,7 +163,7 @@ class NavigationButtons extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.black,
-                backgroundColor: const Color.fromRGBO(234, 151, 10, 1),
+                backgroundColor: const Color(0xFFEA970A),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               ),
@@ -186,7 +189,7 @@ class NavigationButtons extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.black,
-                backgroundColor: const Color.fromRGBO(234, 151, 10, 1),
+                backgroundColor: const Color(0xFFEA970A),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
               ),

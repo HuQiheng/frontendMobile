@@ -1,25 +1,44 @@
 import 'package:flutter/material.dart';
+import 'package:wealth_wars/pages/lobby_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
+  //Para perfil
+  void _navigateToAccount() {}
+
+  //Para ajustes
+  void _navigateToSettings() {}
+
+  //Para logros
+  void _navigateToAwards() {}
+
+  //Para amigos
+  void _navigateToFriends() {}
+
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Color(0xFF083344),
+    return Scaffold(
+      backgroundColor: const Color(0xFF083344),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
               Expanded(
                 flex: 2,
                 child: Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: MenuButton(
-                    iconData: Icons.gamepad,
-                    label: 'Juego',
-                  ),
+                      iconData: Icons.gamepad,
+                      label: 'Juego',
+                      onNavigate: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const LobbyScreen()),
+                        );
+                      }),
                 ),
               ),
               Expanded(
@@ -32,19 +51,21 @@ class HomeScreen extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8.0),
                               child: MenuButton(
                                 iconData: Icons.account_circle,
                                 label: 'Perfil',
+                                onNavigate: _navigateToAccount,
                               ),
                             ),
                           ),
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8.0),
                               child: MenuButton(
                                 iconData: Icons.settings,
                                 label: 'Ajustes',
+                                onNavigate: _navigateToSettings,
                               ),
                             ),
                           ),
@@ -56,19 +77,21 @@ class HomeScreen extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8.0),
                               child: MenuButton(
                                 iconData: Icons.emoji_events,
                                 label: 'Logros',
+                                onNavigate: _navigateToAwards,
                               ),
                             ),
                           ),
                           Expanded(
                             child: Padding(
-                              padding: EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8.0),
                               child: MenuButton(
                                 iconData: Icons.group,
                                 label: 'Amigos',
+                                onNavigate: _navigateToFriends,
                               ),
                             ),
                           ),
@@ -89,11 +112,13 @@ class HomeScreen extends StatelessWidget {
 class MenuButton extends StatelessWidget {
   final IconData iconData;
   final String label;
+  final VoidCallback onNavigate;
 
   const MenuButton({
     super.key,
     required this.iconData,
     required this.label,
+    required this.onNavigate,
   });
 
   @override
@@ -101,7 +126,7 @@ class MenuButton extends StatelessWidget {
     return Card(
       color: const Color(0xFFEA970A),
       child: InkWell(
-        onTap: () {},
+        onTap: onNavigate,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[

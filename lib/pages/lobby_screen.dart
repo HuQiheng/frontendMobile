@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wealth_wars/pages/game_screen.dart';
+import 'package:wealth_wars/pages/home_screen.dart';
 
 class LobbyScreen extends StatelessWidget {
   const LobbyScreen({super.key});
@@ -57,7 +58,13 @@ class LobbyScreen extends StatelessWidget {
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const HomeScreen()),
+                        );
+                      },
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.black,
                         backgroundColor: const Color(0xFFEA970A),

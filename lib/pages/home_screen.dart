@@ -19,6 +19,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFF083344),
       body: SafeArea(
         child: Padding(
@@ -153,11 +154,12 @@ class PopUpSalas extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
+                padding: const EdgeInsets.all(10.0),
                 width: 250,
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: const Color.fromARGB(255, 0, 0, 0),
-                    width: 4.0,
+                    width: 3.0,
                   ),
                   borderRadius: BorderRadius.circular(4.0),
                   color: const Color(0xFFEA970A),
@@ -181,10 +183,11 @@ class PopUpSalas extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
+                padding: const EdgeInsets.all(10.0),
                 width: 250,
                 decoration: BoxDecoration(
                   border: Border.all(
-                      color: const Color.fromARGB(255, 0, 0, 0), width: 4.0),
+                      color: const Color.fromARGB(255, 0, 0, 0), width: 3.0),
                   borderRadius: BorderRadius.circular(4.0),
                   color: const Color(0xFFEA970A),
                 ),

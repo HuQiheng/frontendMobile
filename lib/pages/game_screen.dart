@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+// ignore: depend_on_referenced_packages
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class GameScreen extends StatelessWidget {
   const GameScreen({super.key});
@@ -19,12 +22,31 @@ class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
 
   @override
-  // ignore: library_private_types_in_public_api
   _MapScreenState createState() => _MapScreenState();
 }
 
 class _MapScreenState extends State<MapScreen> {
   bool _showContainer = false;
+  final List<types.Message> _messages = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // Inicial Messages
+  }
+
+  void _handleSendPressed(types.PartialText message) {
+    final textMessage = types.TextMessage(
+      author: const types.User(id: 'user1'), // Actual User
+      createdAt: DateTime.now().millisecondsSinceEpoch,
+      id: DateTime.now().toString(),
+      text: message.text,
+    );
+
+    setState(() {
+      _messages.insert(0, textMessage);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +84,7 @@ class _MapScreenState extends State<MapScreen> {
             bottom: 0,
             right: 0,
             child: Container(
+              width: 300,
               padding: const EdgeInsets.all(15),
               decoration: BoxDecoration(
                 border: const Border(
@@ -73,32 +96,12 @@ class _MapScreenState extends State<MapScreen> {
                 borderRadius: BorderRadius.circular(4.0),
                 color: const Color.fromARGB(255, 255, 206, 120),
               ),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: SizedBox(
-                  width: 300,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Expanded(
-                        child: TextField(
-                          decoration: InputDecoration(
-                            fillColor: const Color.fromARGB(255, 255, 255, 255),
-                            filled: true,
-                            hintText: 'Enviar mensaje',
-                            prefixIcon: const Icon(Icons.chat),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(25),
-                            ),
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        icon: const Icon(Icons.send),
-                        onPressed: () {},
-                      ),
-                    ],
-                  ),
+              child: Chat(
+                messages: _messages,
+                onSendPressed: _handleSendPressed,
+                user: const types.User(id: 'user1'), // Actual User
+                theme: const DefaultChatTheme(
+                  backgroundColor: Color.fromARGB(255, 255, 206, 120),
                 ),
               ),
             ),

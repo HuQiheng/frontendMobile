@@ -22,6 +22,7 @@ class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
 
   @override
+  // ignore: library_private_types_in_public_api
   _MapScreenState createState() => _MapScreenState();
 }
 
@@ -32,7 +33,7 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void initState() {
     super.initState();
-    // Inicial Messages
+    // Initial Messages
   }
 
   void _handleSendPressed(types.PartialText message) {
@@ -60,9 +61,15 @@ class _MapScreenState extends State<MapScreen> {
                 _showContainer = false;
               });
             },
-            child: SvgPicture.asset(
-              assetName,
-              fit: BoxFit.cover,
+            child: InteractiveViewer(
+              boundaryMargin: const EdgeInsets.all(20),
+              minScale: 0.1,
+              maxScale: 4.0,
+              child: SvgPicture.asset(
+                assetName,
+                fit: BoxFit
+                    .contain, // Use BoxFit.contain to make sure the whole map is visible
+              ),
             ),
           ),
         ),

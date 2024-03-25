@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:wealth_wars/widgets/map.dart';
 // ignore: depend_on_referenced_packages
@@ -28,7 +27,7 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  double _positionChat = 0.0;
+  double _positionChat = -300.0;
   final List<types.Message> _messages = [];
 
   void _onTapDown(BuildContext context, TapDownDetails details) {
@@ -56,8 +55,6 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    const String assetName = 'assets/iberian_map.svg';
-
     return Stack(
       children: <Widget>[
         Positioned.fill(

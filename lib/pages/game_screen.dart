@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:wealth_wars/widgets/map.dart';
 // ignore: depend_on_referenced_packages
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
@@ -27,8 +28,12 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
-  bool _showContainer = false;
+  double _positionChat = 0.0;
   final List<types.Message> _messages = [];
+
+  void _onTapDown(BuildContext context, TapDownDetails details) {
+    print('Usuario tocó en las coordenadas: ${details.globalPosition}');
+  }
 
   @override
   void initState() {
@@ -52,23 +57,23 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     const String assetName = 'assets/iberian_map.svg';
+
     return Stack(
       children: <Widget>[
         Positioned.fill(
           child: GestureDetector(
             onTap: () {
               setState(() {
-                _showContainer = false;
+                _positionChat = -300.0;
+                FocusScope.of(context).unfocus();
               });
             },
             child: InteractiveViewer(
               boundaryMargin: const EdgeInsets.all(20),
               minScale: 0.1,
               maxScale: 4.0,
-              child: SvgPicture.asset(
-                assetName,
-                fit: BoxFit
-                    .contain, // Use BoxFit.contain to make sure the whole map is visible
+              child: const MapWidget(
+                size: 400,
               ),
             ),
           ),
@@ -79,40 +84,41 @@ class _MapScreenState extends State<MapScreen> {
           child: FloatingActionButton(
             onPressed: () {
               setState(() {
-                _showContainer = !_showContainer;
+                _positionChat = 0.0;
               });
             },
             child: const Icon(Icons.chat),
           ),
         ),
-        if (_showContainer)
-          Positioned(
-            top: 0,
-            bottom: 0,
-            right: 0,
-            child: Container(
-              width: 300,
-              padding: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                border: const Border(
-                  left: BorderSide(
-                    color: Color.fromARGB(255, 0, 0, 0),
-                    width: 2.0,
-                  ),
-                ),
-                borderRadius: BorderRadius.circular(4.0),
-                color: const Color.fromARGB(255, 255, 206, 120),
-              ),
-              child: Chat(
-                messages: _messages,
-                onSendPressed: _handleSendPressed,
-                user: const types.User(id: 'user1'), // Actual User
-                theme: const DefaultChatTheme(
-                  backgroundColor: Color.fromARGB(255, 255, 206, 120),
+        AnimatedPositioned(
+          duration: const Duration(milliseconds: 250),
+          top: 0,
+          bottom: 0,
+          right: _positionChat,
+          child: Container(
+            width: 300,
+            padding: const EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              border: const Border(
+                left: BorderSide(
+                  color: Color.fromARGB(255, 0, 0, 0),
+                  width: 2.0,
                 ),
               ),
+              borderRadius: BorderRadius.circular(4.0),
+              color: const Color.fromARGB(255, 255, 206, 120),
+            ),
+            child: Chat(
+              messages: _messages,
+              onSendPressed: _handleSendPressed,
+              user: const types.User(id: 'user1'), // Actual User
+              theme: const DefaultChatTheme(
+                backgroundColor: Color.fromARGB(255, 255, 206, 120),
+              ),
+              showUserNames: true,
             ),
           ),
+        ),
       ],
     );
   }

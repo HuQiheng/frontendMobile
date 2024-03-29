@@ -65,22 +65,10 @@ class _MapScreenState extends State<MapScreen> {
                 FocusScope.of(context).unfocus();
               });
             },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: MapWidget(
-                          size: 400,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+            child: Expanded(
+              child: MapWidget(
+                size: 400,
+              ),
             ),
           ),
         ),

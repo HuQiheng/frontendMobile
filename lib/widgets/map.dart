@@ -1075,17 +1075,19 @@ class MapWidget extends StatelessWidget {
       scaleEnabled: true,
       panEnabled: true,
       constrained: true,
-      child: InteractableSvg(
-        svgAddress: "assets/iberian_map.svg",
-        onChanged: (region) {},
-        width: double.infinity,
-        height: double.infinity,
-        toggleEnable: true,
-        isMultiSelectable: false,
-        selectedColor: Colors.red.withOpacity(0.5),
-        strokeColor: Colors.black,
-        unSelectableId: "bg",
-        strokeWidth: 2.0,
+      child: Center(
+        child: InteractableSvg(
+          svgAddress: "assets/iberian_map.svg",
+          onChanged: (region) {},
+          width: double.infinity,
+          height: double.infinity,
+          toggleEnable: true,
+          isMultiSelectable: false,
+          selectedColor: Colors.red.withOpacity(0.5),
+          strokeColor: Colors.black,
+          unSelectableId: "bg",
+          strokeWidth: 2.0,
+        ),
       ),
     );
   }

@@ -1071,12 +1071,6 @@ class MapWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    void handleTap(TapUpDetails details) {
-      logger.d("Mapa tocado");
-      final Offset position = details.localPosition;
-      logger.d("Tap position: ${position.dx}, ${position.dy}");
-    }
-
     return InteractiveViewer(
       scaleEnabled: true,
       panEnabled: true,

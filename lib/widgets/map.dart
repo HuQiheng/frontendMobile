@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:path_drawing/path_drawing.dart';
+import 'package:interactable_svg/interactable_svg/interactable_svg.dart';
 
 class CandyPainter extends CustomPainter {
   final double area = 392.394 * 317.762;
@@ -16,10 +18,10 @@ class CandyPainter extends CustomPainter {
   CandyPainter(this.requiredSize);
 
   final List<Color> colors = [
-    const Color.fromRGBO(59,130,246,1),
-    const Color.fromRGBO(244,63,94,1),
-    const Color.fromRGBO(245,158,11,1),
-    const Color.fromRGBO(34,197,94,1),
+    const Color.fromRGBO(59, 130, 246, 1),
+    const Color.fromRGBO(244, 63, 94, 1),
+    const Color.fromRGBO(245, 158, 11, 1),
+    const Color.fromRGBO(34, 197, 94, 1),
   ];
 
   @override
@@ -1063,16 +1065,33 @@ class CandyPainter extends CustomPainter {
 
 class MapWidget extends StatelessWidget {
   final double size;
+  final logger = Logger();
 
-  const MapWidget({super.key, required this.size});
+  MapWidget({super.key, required this.size});
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      alignment: Alignment.center,
-      child: CustomPaint(
-        painter: CandyPainter(size),
+    void handleTap(TapUpDetails details) {
+      logger.d("Mapa tocado");
+      final Offset position = details.localPosition;
+      logger.d("Tap position: ${position.dx}, ${position.dy}");
+    }
+
+    return InteractiveViewer(
+      scaleEnabled: true,
+      panEnabled: true,
+      constrained: true,
+      child: InteractableSvg(
+        svgAddress: "assets/iberian_map.svg",
+        onChanged: (region) {},
+        width: double.infinity,
+        height: double.infinity,
+        toggleEnable: true,
+        isMultiSelectable: false,
+        selectedColor: Colors.red.withOpacity(0.5),
+        strokeColor: Colors.black,
+        unSelectableId: "bg",
+        strokeWidth: 2.0,
       ),
     );
   }

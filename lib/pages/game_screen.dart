@@ -65,13 +65,22 @@ class _MapScreenState extends State<MapScreen> {
                 FocusScope.of(context).unfocus();
               });
             },
-            child: InteractiveViewer(
-              boundaryMargin: const EdgeInsets.all(20),
-              minScale: 0.1,
-              maxScale: 4.0,
-              child: const MapWidget(
-                size: 400,
-              ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: MapWidget(
+                          size: 400,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ),
         ),

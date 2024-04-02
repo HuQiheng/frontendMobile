@@ -79,6 +79,11 @@ class _MapScreenState extends State<MapScreen> {
           ),
         ),
         const Align(alignment: Alignment.bottomCenter, child: TurnInfo()),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 75, right: 10),
+          child: Align(
+              alignment: Alignment.centerRight, child: PlayersInfo(players: 4)),
+        ),
         AnimatedPositioned(
           duration: const Duration(milliseconds: 250),
           top: 0,
@@ -122,7 +127,7 @@ class TurnInfo extends StatelessWidget {
       children: [
         Container(
           margin: const EdgeInsets.all(20),
-          width: 350.0,
+          width: 315.0,
           height: 60.0,
           decoration: const BoxDecoration(
             color: Color.fromARGB(175, 57, 57, 57),
@@ -170,20 +175,20 @@ class TurnInfo extends StatelessWidget {
         Positioned(
           right: 0,
           top: 10,
-          child: InkWell(
-            onTap: () {},
-            borderRadius: BorderRadius.circular(37.5),
-            child: Container(
-              width: 75.0,
-              height: 75.0,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.blue,
-                border: Border.all(color: Colors.black, width: 3.0),
-              ),
-              child: const Icon(
+          child: Container(
+            width: 75.0,
+            height: 75.0,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.blue,
+              border: Border.all(color: Colors.black, width: 3.0),
+            ),
+            child: IconButton(
+              onPressed: () {},
+              icon: const Icon(
                 Icons.skip_next,
-                size: 60,
+                size: 55,
+                color: Colors.black,
               ),
             ),
           ),
@@ -211,6 +216,50 @@ class TurnInfo extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class PlayersInfo extends StatelessWidget {
+  final List<Color> colors = [
+    const Color.fromRGBO(59, 130, 246, 1),
+    const Color.fromRGBO(244, 63, 94, 1),
+    const Color.fromRGBO(245, 158, 11, 1),
+    const Color.fromRGBO(34, 197, 94, 1),
+  ];
+
+  final int players;
+
+  PlayersInfo({super.key, required this.players});
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> playerWidgets = [];
+
+    int i = players;
+
+    while (i > 0) {
+      playerWidgets.add(
+        Container(
+          width: 50.0,
+          height: 50.0,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: colors[i - 1],
+            border: Border.all(color: Colors.black, width: 2.0),
+          ),
+          child: const Icon(
+            Icons.supervised_user_circle,
+            size: 40,
+          ),
+        ),
+      );
+      i--;
+    }
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: playerWidgets,
     );
   }
 }

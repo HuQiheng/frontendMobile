@@ -1319,32 +1319,36 @@ class _MapWidgetState extends State<MapWidget> {
       scaleEnabled: true,
       panEnabled: true,
       constrained: true,
-      child: Center(
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            CustomPaint(
-              painter: RegionOverlayPainter(
-                  paths: regionPaths, colors: regionColors),
-            ),
-            InteractableSvg(
-              svgAddress: "assets/iberian_map.svg",
-              onChanged: (region) {
-                String name = region!.name;
-                logger.d("Has pulsado la region: $name ");
-                setState(() {
-                  regionColors[region.id] = Colors.red;
-                });
-              },
-              width: double.infinity,
-              height: double.infinity,
-              toggleEnable: true,
-              isMultiSelectable: false,
-              selectedColor: Colors.purple.withOpacity(0.5),
-              strokeColor: Colors.black,
-              strokeWidth: 2.0,
-            ),
-          ],
+      child: Padding(
+        padding: const EdgeInsets.only(top: 15.0),
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              CustomPaint(
+                painter: RegionOverlayPainter(
+                    paths: regionPaths, colors: regionColors),
+              ),
+              InteractableSvg(
+                svgAddress: "assets/iberian_map.svg",
+                onChanged: (region) {
+                  String name = region!.name;
+                  logger.d("Has pulsado la region: $name ");
+                  setState(() {
+                    regionColors[region.id] = Colors.red;
+                  });
+                },
+                width: double.infinity,
+                height: double.infinity,
+                toggleEnable: true,
+                isMultiSelectable: false,
+                selectedColor: Colors.purple.withOpacity(0.5),
+                strokeColor: Colors.black,
+                strokeWidth: 2.0,
+              ),
+            ],
+          ),
         ),
       ),
     );

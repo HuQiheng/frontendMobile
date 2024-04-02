@@ -1345,7 +1345,7 @@ class _MapWidgetState extends State<MapWidget> {
                 isMultiSelectable: false,
                 selectedColor: Colors.purple.withOpacity(0.5),
                 strokeColor: Colors.black,
-                strokeWidth: 2.0,
+                strokeWidth: 1.5,
               ),
             ],
           ),

@@ -81,6 +81,7 @@ flutter:
     - assets/images/logo.png
     - assets/images/wallpaper.webp
     - assets/iberian_map.svg
+    - assets/images/sea_background.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

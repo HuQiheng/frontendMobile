@@ -38,7 +38,11 @@ class PlayersInfo extends StatelessWidget {
       );
       tp.layout();
       if (tp.width > maxWidth) {
-        maxWidth = tp.width;
+        if (tp.width < 135) {
+          maxWidth = tp.width + 45;
+        } else {
+          maxWidth = 180;
+        }
       }
     }
 
@@ -49,10 +53,14 @@ class PlayersInfo extends StatelessWidget {
             Container(
               margin: const EdgeInsets.only(left: 20, top: 20, bottom: 20),
               padding: const EdgeInsets.only(left: 35),
-              width: maxWidth + 45,
+              width: maxWidth,
               height: 40.0,
               decoration: BoxDecoration(
                 color: colorsBanner[i],
+                border: const Border(
+                  top: BorderSide(color: Colors.black, width: 2.0),
+                  bottom: BorderSide(color: Colors.black, width: 2.0),
+                ),
               ),
               child: Align(
                 alignment: Alignment.centerLeft,

@@ -4,6 +4,7 @@ import 'package:wealth_wars/widgets/map.dart';
 import 'package:wealth_wars/widgets/turn_info.dart';
 import 'package:wealth_wars/widgets/resources_info.dart';
 import 'package:wealth_wars/widgets/players_info.dart';
+import 'package:wealth_wars/widgets/pop_up_settings.dart';
 
 // ignore: depend_on_referenced_packages
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -58,6 +59,8 @@ class _MapScreenState extends State<MapScreen> {
     return Scaffold(
       body: Stack(
         children: <Widget>[
+          //=======================
+          //==========MAP==========
           Positioned.fill(
             child: GestureDetector(
               onTap: () {
@@ -69,6 +72,8 @@ class _MapScreenState extends State<MapScreen> {
               child: const MapWidget(),
             ),
           ),
+          //=============================
+          //==========CHAT_ICON==========
           Positioned(
             bottom: 16,
             right: 16,
@@ -81,18 +86,35 @@ class _MapScreenState extends State<MapScreen> {
               child: const Icon(Icons.chat),
             ),
           ),
+          //=============================
+          //==========TURN_INFO==========
           const Align(alignment: Alignment.bottomCenter, child: TurnInfo()),
+          //================================
+          //==========PLAYERS_INFO==========
           Padding(
             padding: const EdgeInsets.only(bottom: 75),
             child: Align(
                 alignment: Alignment.centerRight,
                 child: PlayersInfo(players: 4)),
           ),
+          //============================
+          //==========SETTINGS==========
           Positioned(
             left: 10,
             top: 5,
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  _positionChat = -300.0;
+                  FocusScope.of(context).unfocus();
+                });
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return const PopUpSettings();
+                  },
+                );
+              },
               icon: const Icon(
                 Icons.settings,
                 size: 60,
@@ -100,10 +122,14 @@ class _MapScreenState extends State<MapScreen> {
               ),
             ),
           ),
+          //==================================
+          //==========RESOURCES_INFO==========
           const Align(
             alignment: Alignment.centerLeft,
             child: ResourcesInfo(),
           ),
+          //========================
+          //==========CHAT==========
           AnimatedPositioned(
             duration: const Duration(milliseconds: 250),
             top: 0,

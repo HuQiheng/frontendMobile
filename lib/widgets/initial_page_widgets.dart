@@ -21,6 +21,10 @@ class Info extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.blue.shade900.withOpacity(0.9),
           borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: const Color(0xFF083344),
+            width: 4.0,
+          ),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -130,6 +134,10 @@ class _InfoLoginState extends State<InfoLogin> {
         decoration: BoxDecoration(
           color: Colors.blue.shade900.withOpacity(0.9),
           borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: const Color(0xFF083344),
+            width: 4.0,
+          ),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -213,6 +221,10 @@ class NavigationButtons extends StatelessWidget {
                 backgroundColor: const Color(0xFFEA970A),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25),
+                  side: const BorderSide(color: Color(0xFF083344), width: 2.0),
+                ),
               ),
               child: const Text(
                 'Anterior',
@@ -239,6 +251,10 @@ class NavigationButtons extends StatelessWidget {
                 backgroundColor: const Color(0xFFEA970A),
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25),
+                  side: const BorderSide(color: Color(0xFF083344), width: 2.0),
+                ),
               ),
               child: const Text(
                 'Siguiente',

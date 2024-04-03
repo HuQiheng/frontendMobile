@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:wealth_wars/widgets/map.dart';
 import 'package:wealth_wars/widgets/turn_info.dart';
+import 'package:wealth_wars/widgets/resources_info.dart';
 import 'package:wealth_wars/widgets/players_info.dart';
 
 // ignore: depend_on_referenced_packages
@@ -86,6 +87,22 @@ class _MapScreenState extends State<MapScreen> {
             child: Align(
                 alignment: Alignment.centerRight,
                 child: PlayersInfo(players: 4)),
+          ),
+          Positioned(
+            left: 10,
+            top: 5,
+            child: IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.settings,
+                size: 60,
+                color: Colors.black,
+              ),
+            ),
+          ),
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: ResourcesInfo(),
           ),
           AnimatedPositioned(
             duration: const Duration(milliseconds: 250),

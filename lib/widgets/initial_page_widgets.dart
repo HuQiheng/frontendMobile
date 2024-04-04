@@ -1,4 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:logger/logger.dart';
+import 'package:uni_links/uni_links.dart';
 
 // Widget to display the central information on the screen.
 class Info extends StatelessWidget {
@@ -16,11 +21,16 @@ class Info extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.blue.shade900.withOpacity(0.9),
           borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: const Color(0xFF083344),
+            width: 4.0,
+          ),
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            const SizedBox(),
             // Page title
             Text(
               title,
@@ -32,7 +42,6 @@ class Info extends StatelessWidget {
               ),
             ),
             // Page description
-            const SizedBox(height: 20),
             Text(
               description,
               textAlign: TextAlign.center,
@@ -42,6 +51,7 @@ class Info extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
+            const SizedBox(),
           ],
         ),
       ),
@@ -50,11 +60,70 @@ class Info extends StatelessWidget {
 }
 
 // Widget to display the central login information on the screen.
-class InfoLogin extends StatelessWidget {
+class InfoLogin extends StatefulWidget {
   final String title;
   final String description;
+  final VoidCallback onNavigate;
 
-  const InfoLogin(this.title, this.description, {super.key});
+  const InfoLogin(this.title, this.description,
+      {super.key, required this.onNavigate});
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _InfoLoginState createState() => _InfoLoginState();
+}
+
+class _InfoLoginState extends State<InfoLogin> {
+  final logger = Logger();
+  StreamSubscription? _sub;
+
+  @override
+  void initState() {
+    super.initState();
+    initUniLinks();
+  }
+
+  @override
+  void dispose() {
+    _sub?.cancel();
+    super.dispose();
+  }
+
+  Future<void> initUniLinks() async {
+    _sub = linkStream.listen((String? link) {
+      if (link != null) {
+        Uri uri = Uri.parse(link);
+
+        logger.d("Received deep link: $uri");
+
+        if (uri.path == "/signinresult") {
+          // Extract data from the deep link
+          String? resultJson = uri.queryParameters['token'];
+
+          // Handle the result data
+          if (resultJson != null) {
+            // Parse JSON data and handle it
+            logger.d("Result from website: $resultJson");
+          }
+        }
+      }
+    }, onError: (err) {
+      logger.e("Failed to handle incoming link: $err");
+    });
+  }
+
+  Future<void> signInWithGoogle() async {
+    try {
+      final Uri url = Uri.parse("https://wealthwars.games/auth");
+      logger.d("Google Sign In");
+      if (await launchUrl(url)) {
+        logger.d("Url launched");
+        widget.onNavigate();
+      }
+    } catch (error) {
+      logger.e("Error during Google Sign-In: $error");
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,14 +134,17 @@ class InfoLogin extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.blue.shade900.withOpacity(0.9),
           borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+            color: const Color(0xFF083344),
+            width: 4.0,
+          ),
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            // Page title
             Text(
-              title,
+              widget.title,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 50,
@@ -80,10 +152,8 @@ class InfoLogin extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
-            // Page description
-            const SizedBox(height: 20),
             Text(
-              description,
+              widget.description,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 15,
@@ -91,25 +161,24 @@ class InfoLogin extends StatelessWidget {
                 color: Colors.white,
               ),
             ),
-            // Page button
-            const SizedBox(height: 40),
+            const SizedBox(),
             ElevatedButton(
-              onPressed: () {}, // Login functionality
+              onPressed: signInWithGoogle,
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.black,
-                backgroundColor: const Color.fromRGBO(234, 151, 10, 1),
+                backgroundColor: const Color(0xFFEA970A),
                 shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(30.0), // Button border radius
+                  borderRadius: BorderRadius.circular(30.0),
                 ),
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 30, vertical: 10), // Button padding
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
               ),
               child: const Text(
-                'Iniciar sesión',
+                'Iniciar sesión con Google',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -149,12 +218,20 @@ class NavigationButtons extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.black,
-                backgroundColor: const Color.fromRGBO(234, 151, 10, 1),
+                backgroundColor: const Color(0xFFEA970A),
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25),
+                  side: const BorderSide(color: Color(0xFF083344), width: 2.0),
+                ),
               ),
               child: const Text(
                 'Anterior',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
               ),
             ),
           );
@@ -171,11 +248,21 @@ class NavigationButtons extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.black,
-                backgroundColor: const Color.fromRGBO(234, 151, 10, 1),
+                backgroundColor: const Color(0xFFEA970A),
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25),
+                  side: const BorderSide(color: Color(0xFF083344), width: 2.0),
+                ),
               ),
-              child: const Text('Siguiente'),
+              child: const Text(
+                'Siguiente',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
+              ),
             ),
           );
         }

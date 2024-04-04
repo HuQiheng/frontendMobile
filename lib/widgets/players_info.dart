@@ -15,7 +15,7 @@ class PlayersInfo extends StatelessWidget {
     const Color.fromRGBO(17, 99, 47, 1),
   ];
 
-  final List<String> usuarios = ['Usuario 0', 'User 1', 'Usuario 2', 'User 3'];
+  final List<String> usuarios = ['User 1', 'User 2', 'User 3', 'User 4'];
 
   final int players;
 
@@ -54,7 +54,7 @@ class PlayersInfo extends StatelessWidget {
               margin: const EdgeInsets.only(left: 20, top: 20, bottom: 20),
               padding: const EdgeInsets.only(left: 35),
               width: maxWidth,
-              height: 40.0,
+              height: 37.0,
               decoration: BoxDecoration(
                 color: colorsBanner[i],
                 border: const Border(

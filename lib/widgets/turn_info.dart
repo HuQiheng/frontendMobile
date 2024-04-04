@@ -1,10 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
-class TurnInfo extends StatelessWidget {
+final List<Color> colors = [
+  const Color.fromRGBO(59, 130, 246, 1),
+  const Color.fromRGBO(244, 63, 94, 1),
+  const Color.fromRGBO(245, 158, 11, 1),
+  const Color.fromRGBO(34, 197, 94, 1),
+];
+
+// debug
+final List<String> usuarios = ['User 1', 'User 2', 'User 3', 'User 4'];
+
+class TurnInfo extends StatefulWidget {
   const TurnInfo({super.key});
 
   @override
+  State<TurnInfo> createState() => _TurnInfoState();
+}
+
+class _TurnInfoState extends State<TurnInfo> {
+  final logger = Logger();
+  var fase = 0;
+  var player = 0;   // backend in json
+
+  void buttonClicked() {
+    setState(() {       
+      // setstate using for the rerender the screen 
+      // if we not use than it not show the sceond text
+      if(fase+1 == 3){
+        logger.d("Tocaría cambiar de jugador");
+        player = (player + 1) % 4;
+      }
+      fase = (fase + 1) % 3;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    var texts = [
+    // list of text which the text get form here 
+    "INVERTIR",                            
+    "CONQUISTAR",
+    "REORGANIZAR",
+    ];
+    
     return Stack(
       children: [
         Container(
@@ -14,22 +53,22 @@ class TurnInfo extends StatelessWidget {
           decoration: const BoxDecoration(
             color: Color.fromARGB(175, 57, 57, 57),
           ),
-          child: const Column(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
-                'Nombre de usuario',
-                style: TextStyle(
+                usuarios[player],
+                style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Divider(
+              const Divider(
                 height: 0,
               ),
               Text(
-                'INVERTIR',
-                style: TextStyle(
+                texts[fase],
+                style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                 ),
@@ -45,7 +84,7 @@ class TurnInfo extends StatelessWidget {
             height: 75.0,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.blue,
+              color: colors[player],
               border: Border.all(color: Colors.black, width: 3.0),
             ),
             child: const Icon(
@@ -62,11 +101,14 @@ class TurnInfo extends StatelessWidget {
             height: 75.0,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.blue,
+              color: colors[player],
               border: Border.all(color: Colors.black, width: 3.0),
             ),
             child: IconButton(
-              onPressed: () {},
+              onPressed: () {
+                buttonClicked();
+                logger.d("Estás en fase: $fase ");
+              },
               icon: const Icon(
                 Icons.skip_next,
                 size: 55,
@@ -82,7 +124,7 @@ class TurnInfo extends StatelessWidget {
             width: 40,
             height: 25,
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: colors[player],
               borderRadius: BorderRadius.circular(25.0),
               border: Border.all(color: Colors.black, width: 2.0),
             ),

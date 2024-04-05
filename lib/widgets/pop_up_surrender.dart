@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:wealth_wars/pages/home_screen.dart';
 
-class PopUpSettings extends StatelessWidget {
-  const PopUpSettings({super.key});
+class PopUpSurrender extends StatelessWidget {
+  const PopUpSurrender({super.key});
 
   @override
   Widget build(BuildContext context) {

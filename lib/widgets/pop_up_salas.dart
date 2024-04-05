@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wealth_wars/pages/lobby_screen.dart';
+import 'package:wealth_wars/pages/lobby_screen_host.dart';
+import 'package:wealth_wars/pages/lobby_screen_guest.dart';
 
 class PopUpSalas extends StatelessWidget {
   const PopUpSalas({super.key});
@@ -38,7 +39,7 @@ class PopUpSalas extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: ElevatedButton(
                       style: buttonStyle,
-                      onPressed: () => _navigateToLobby(context),
+                      onPressed: () => _navigateToLobbyHost(context),
                       child: const Text('Crear sala', style: buttonTextStyle),
                     ),
                   ),
@@ -68,7 +69,7 @@ class PopUpSalas extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: ElevatedButton(
                       style: buttonStyle,
-                      onPressed: () => _navigateToLobby(context),
+                      onPressed: () => _navigateToLobbyGuest(context),
                       child: Text('Unirme', style: buttonTextStyle),
                     ),
                   ),
@@ -90,10 +91,17 @@ class PopUpSalas extends StatelessWidget {
     );
   }
 
-  void _navigateToLobby(BuildContext context) {
+  void _navigateToLobbyHost(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const LobbyScreen()),
+      MaterialPageRoute(builder: (context) => const LobbyScreenHost()),
+    );
+  }
+
+  void _navigateToLobbyGuest(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const LobbyScreenGuest()),
     );
   }
 }

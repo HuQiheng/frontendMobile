@@ -5,7 +5,7 @@ import 'package:wealth_wars/widgets/map.dart';
 import 'package:wealth_wars/widgets/turn_info.dart';
 import 'package:wealth_wars/widgets/resources_info.dart';
 import 'package:wealth_wars/widgets/players_info.dart';
-import 'package:wealth_wars/widgets/pop_up_settings.dart';
+import 'package:wealth_wars/widgets/pop_up_surrender.dart';
 
 // ignore: depend_on_referenced_packages
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -107,7 +107,7 @@ class _MapScreenState extends State<MapScreen> {
                 child: PlayersInfo(players: 4)),
           ),
           //============================
-          //==========SETTINGS==========
+          //==========SURRENDER==========
           Positioned(
             left: 10,
             top: 5,
@@ -120,14 +120,14 @@ class _MapScreenState extends State<MapScreen> {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return const PopUpSettings();
+                    return const PopUpSurrender();
                   },
                 );
               },
               icon: const Icon(
-                Icons.settings,
+                Icons.logout,
                 size: 60,
-                color: Colors.black,
+                color: Colors.red,
               ),
             ),
           ),

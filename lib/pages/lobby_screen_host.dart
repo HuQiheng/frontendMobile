@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:wealth_wars/pages/game_screen.dart';
 import 'package:wealth_wars/pages/home_screen.dart';
 
-class LobbyScreen extends StatelessWidget {
-  const LobbyScreen({super.key});
+class LobbyScreenHost extends StatelessWidget {
+  const LobbyScreenHost({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +42,7 @@ class LobbyScreen extends StatelessWidget {
                 flex: 1,
                 child: Column(
                   children: <Widget>[
+                    const Expanded(child: SizedBox.shrink()),
                     Container(
                       margin: const EdgeInsets.symmetric(vertical: 8.0),
                       decoration: BoxDecoration(
@@ -57,6 +58,7 @@ class LobbyScreen extends StatelessWidget {
                         subtitle: Text('<Código>'),
                       ),
                     ),
+                    const Expanded(child: SizedBox.shrink()),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.push(
@@ -74,7 +76,7 @@ class LobbyScreen extends StatelessWidget {
                       ),
                       child: const Text('Cerrar sala'),
                     ),
-                    const SizedBox(height: 8.0),
+                    const Expanded(child: SizedBox.shrink()),
                     ElevatedButton(
                       onPressed: () {
                         Navigator.push(
@@ -92,6 +94,7 @@ class LobbyScreen extends StatelessWidget {
                       ),
                       child: const Text('Empezar juego'),
                     ),
+                    const Expanded(child: SizedBox.shrink()),
                   ],
                 ),
               ),

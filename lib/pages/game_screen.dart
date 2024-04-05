@@ -44,13 +44,10 @@ class _MapScreenState extends State<MapScreen> {
 
     Future.delayed(const Duration(seconds: 2), () {
       logger.d("Carga completada, actualizando estado...");
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      } else {
-        logger.d("El widget MapScreen ya no está montado.");
-      }
+
+      setState(() {
+        _isLoading = false;
+      });
     });
   }
 
@@ -69,14 +66,6 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    }
-
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -156,29 +145,37 @@ class _MapScreenState extends State<MapScreen> {
             bottom: 0,
             right: _positionChat,
             child: Container(
-              width: 300,
-              padding: const EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                border: const Border(
-                  left: BorderSide(
-                    color: Color.fromARGB(255, 0, 0, 0),
-                    width: 2.0,
+                width: 300,
+                padding: const EdgeInsets.all(15),
+                decoration: BoxDecoration(
+                  border: const Border(
+                    left: BorderSide(
+                      color: Color.fromARGB(255, 0, 0, 0),
+                      width: 2.0,
+                    ),
                   ),
+                  borderRadius: BorderRadius.circular(4.0),
+                  color: const Color.fromARGB(255, 255, 206, 120),
                 ),
-                borderRadius: BorderRadius.circular(4.0),
-                color: const Color.fromARGB(255, 255, 206, 120),
-              ),
-              child: Chat(
-                messages: _messages,
-                onSendPressed: _handleSendPressed,
-                user: const types.User(id: 'user1'), // Actual User
-                theme: const DefaultChatTheme(
-                  backgroundColor: Color.fromARGB(255, 255, 206, 120),
-                ),
-                showUserNames: true,
+                child: Chat(
+                  messages: _messages,
+                  onSendPressed: _handleSendPressed,
+                  user: const types.User(id: 'user1'), // Actual User
+                  theme: const DefaultChatTheme(
+                    backgroundColor: Color.fromARGB(255, 255, 206, 120),
+                  ),
+                  showUserNames: true,
+                )),
+          ),
+          //=====================================
+          //==========PANTALLA DE CARGA==========
+          if (_isLoading)
+            Container(
+              decoration: const BoxDecoration(color: Colors.white),
+              child: const Center(
+                child: CircularProgressIndicator(),
               ),
             ),
-          ),
         ],
       ),
     );

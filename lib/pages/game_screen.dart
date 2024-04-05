@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:logger/logger.dart';
 import 'package:wealth_wars/widgets/map.dart';
 import 'package:wealth_wars/widgets/turn_info.dart';
 import 'package:wealth_wars/widgets/resources_info.dart';
@@ -34,11 +35,23 @@ class MapScreen extends StatefulWidget {
 class _MapScreenState extends State<MapScreen> {
   double _positionChat = -300.0;
   final List<types.Message> _messages = [];
+  Logger logger = Logger();
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    // Initial Messages
+
+    Future.delayed(const Duration(seconds: 2), () {
+      logger.d("Carga completada, actualizando estado...");
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      } else {
+        logger.d("El widget MapScreen ya no está montado.");
+      }
+    });
   }
 
   void _handleSendPressed(types.PartialText message) {
@@ -56,6 +69,14 @@ class _MapScreenState extends State<MapScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -63,14 +84,13 @@ class _MapScreenState extends State<MapScreen> {
           //==========MAP==========
           Positioned.fill(
             child: GestureDetector(
-              onTap: () {
-                setState(() {
-                  _positionChat = -300.0;
-                  FocusScope.of(context).unfocus();
-                });
-              },
-              child: const MapWidget(),
-            ),
+                onTap: () {
+                  setState(() {
+                    _positionChat = -300.0;
+                    FocusScope.of(context).unfocus();
+                  });
+                },
+                child: const MapWidget()),
           ),
           //=============================
           //==========CHAT_ICON==========

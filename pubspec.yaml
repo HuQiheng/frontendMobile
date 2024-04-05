@@ -80,6 +80,8 @@ flutter:
     - assets/images/wallpaper.webp
     - assets/iberian_map.svg
     - assets/images/sea_background.jpg
+    - assets/icons/join.png
+    - assets/icons/play.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

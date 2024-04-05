@@ -19,61 +19,91 @@ class PopUpSalas extends StatelessWidget {
       foregroundColor: Colors.black,
       shadowColor: Colors.black54,
       elevation: 5,
-      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+    );
+
+    final OutlineInputBorder borderStyle = OutlineInputBorder(
+      borderSide: const BorderSide(color: Colors.white70),
+      borderRadius: BorderRadius.circular(10),
     );
 
     return AlertDialog(
       backgroundColor: backgroundColor,
-      content: Container(
+      content: SizedBox(
         width: double.maxFinite,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.verified_user_rounded,
-                      color: Colors.white, size: 40),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: ElevatedButton(
-                      style: buttonStyle,
-                      onPressed: () => _navigateToLobbyHost(context),
-                      child: const Text('Crear sala', style: buttonTextStyle),
-                    ),
+              child: Card(
+                color: const Color(0xFF1A3A4A),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(
+                        child: Image.asset(
+                          'assets/icons/play.png',
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: ElevatedButton(
+                          style: buttonStyle,
+                          onPressed: () => _navigateToLobbyHost(context),
+                          child:
+                              const Text('Crear sala', style: buttonTextStyle),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
               ),
             ),
             Expanded(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Icon(Icons.key, color: Colors.white, size: 40),
-                  const TextField(
-                    keyboardType: TextInputType.number,
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      labelText: 'Código de unión',
-                      labelStyle: TextStyle(color: Colors.white70),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white70),
+              child: Card(
+                color: const Color(0xFF1A3A4A),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Flexible(
+                        child: Image.asset(
+                          'assets/icons/join.png',
+                          fit: BoxFit.contain,
+                        ),
                       ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
+                      TextField(
+                        keyboardType: TextInputType.number,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          labelText: 'Código de unión',
+                          labelStyle: const TextStyle(color: Colors.white70),
+                          enabledBorder: borderStyle,
+                          focusedBorder: borderStyle.copyWith(
+                            borderSide: const BorderSide(color: Colors.white),
+                          ),
+                        ),
                       ),
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8.0),
+                        child: ElevatedButton(
+                          style: buttonStyle,
+                          onPressed: () => _navigateToLobbyGuest(context),
+                          child: const Text('Unirme', style: buttonTextStyle),
+                        ),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: ElevatedButton(
-                      style: buttonStyle,
-                      onPressed: () => _navigateToLobbyGuest(context),
-                      child: Text('Unirme', style: buttonTextStyle),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           ],
@@ -84,7 +114,7 @@ class PopUpSalas extends StatelessWidget {
           child: ElevatedButton(
             style: buttonStyle,
             onPressed: () => Navigator.of(context).pop(),
-            child: Text('Cerrar', style: buttonTextStyle),
+            child: const Text('Cerrar', style: buttonTextStyle),
           ),
         ),
       ],

@@ -1,23 +1,39 @@
 import 'package:flutter/material.dart';
 import '../widgets/pop_up_salas.dart';
+import 'package:wealth_wars/pages/account_screen.dart';
+import 'package:wealth_wars/pages/awards_screen.dart';
+import 'package:wealth_wars/pages/friends_screen.dart';
+import 'package:wealth_wars/pages/settings_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  //Para perfil
-  void _navigateToAccount() {}
-
-  //Para ajustes
-  void _navigateToSettings() {}
-
-  //Para logros
-  void _navigateToAwards() {}
-
-  //Para amigos
-  void _navigateToFriends() {}
-
   @override
   Widget build(BuildContext context) {
+    void navigateToAccount() {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => const ProfileScreen()),
+      );
+    }
+
+    void navigateToAwards() {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => const AwardsScreen()),
+      );
+    }
+
+    void navigateToFriends() {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => const FriendsScreen()),
+      );
+    }
+
+    void navigateToSettings() {
+      Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => const SettingsScreen()),
+      );
+    }
+
     return MaterialApp(
       home: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -58,7 +74,7 @@ class HomeScreen extends StatelessWidget {
                                 child: MenuButton(
                                   iconData: Icons.account_circle,
                                   label: 'Perfil',
-                                  onNavigate: _navigateToAccount,
+                                  onNavigate: navigateToAccount,
                                 ),
                               ),
                             ),
@@ -68,7 +84,7 @@ class HomeScreen extends StatelessWidget {
                                 child: MenuButton(
                                   iconData: Icons.settings,
                                   label: 'Ajustes',
-                                  onNavigate: _navigateToSettings,
+                                  onNavigate: navigateToSettings,
                                 ),
                               ),
                             ),
@@ -84,7 +100,7 @@ class HomeScreen extends StatelessWidget {
                                 child: MenuButton(
                                   iconData: Icons.emoji_events,
                                   label: 'Logros',
-                                  onNavigate: _navigateToAwards,
+                                  onNavigate: navigateToAwards,
                                 ),
                               ),
                             ),
@@ -94,7 +110,7 @@ class HomeScreen extends StatelessWidget {
                                 child: MenuButton(
                                   iconData: Icons.group,
                                   label: 'Amigos',
-                                  onNavigate: _navigateToFriends,
+                                  onNavigate: navigateToFriends,
                                 ),
                               ),
                             ),

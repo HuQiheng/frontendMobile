@@ -6,89 +6,94 @@ class PopUpSalas extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const Color primaryColor = Color(0xFFEA970A);
+    const Color backgroundColor = Color(0xFF083344);
+    const TextStyle buttonTextStyle = TextStyle(color: Colors.white);
+
+    final ButtonStyle buttonStyle = ElevatedButton.styleFrom(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      backgroundColor: primaryColor,
+      foregroundColor: Colors.black,
+      shadowColor: Colors.black54,
+      elevation: 5,
+      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 20.0),
+    );
+
     return AlertDialog(
-      backgroundColor: const Color(0xFF083344),
-      content: Row(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                padding: const EdgeInsets.all(10.0),
-                width: 250,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: const Color.fromARGB(255, 0, 0, 0),
-                    width: 3.0,
+      backgroundColor: backgroundColor,
+      content: Container(
+        width: double.maxFinite,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.verified_user_rounded,
+                      color: Colors.white, size: 40),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: ElevatedButton(
+                      style: buttonStyle,
+                      onPressed: () => _navigateToLobby(context),
+                      child: const Text('Crear sala', style: buttonTextStyle),
+                    ),
                   ),
-                  borderRadius: BorderRadius.circular(4.0),
-                  color: const Color(0xFFEA970A),
-                ),
-                child: Center(
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const LobbyScreen()),
-                      );
-                    },
-                    child: const Text('Crear sala'),
-                  ),
-                ),
+                ],
               ),
             ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                padding: const EdgeInsets.all(10.0),
-                width: 250,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                      color: const Color.fromARGB(255, 0, 0, 0), width: 3.0),
-                  borderRadius: BorderRadius.circular(4.0),
-                  color: const Color(0xFFEA970A),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    TextField(
-                      keyboardType: TextInputType.number,
-                      decoration: const InputDecoration(
-                        labelText: 'Codigo de unión',
-                        border: OutlineInputBorder(),
+            Expanded(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Icon(Icons.key, color: Colors.white, size: 40),
+                  const TextField(
+                    keyboardType: TextInputType.number,
+                    style: TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      labelText: 'Código de unión',
+                      labelStyle: TextStyle(color: Colors.white70),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white70),
                       ),
-                      onChanged: (text) {},
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
                     ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LobbyScreen()),
-                        );
-                      },
-                      child: const Text('Unirme'),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: ElevatedButton(
+                      style: buttonStyle,
+                      onPressed: () => _navigateToLobby(context),
+                      child: Text('Unirme', style: buttonTextStyle),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       actions: <Widget>[
         Center(
           child: ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text('Cerrar'),
+            style: buttonStyle,
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('Cerrar', style: buttonTextStyle),
           ),
         ),
       ],
+    );
+  }
+
+  void _navigateToLobby(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const LobbyScreen()),
     );
   }
 }

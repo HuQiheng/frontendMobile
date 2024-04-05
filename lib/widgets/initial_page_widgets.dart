@@ -114,7 +114,7 @@ class _InfoLoginState extends State<InfoLogin> {
 
   Future<void> signInWithGoogle() async {
     try {
-      final Uri url = Uri.parse("https://wealthwars.games/auth");
+      final Uri url = Uri.parse("https://wealthwars.games/auth/google");
       logger.d("Google Sign In");
       if (await launchUrl(url)) {
         logger.d("Url launched");

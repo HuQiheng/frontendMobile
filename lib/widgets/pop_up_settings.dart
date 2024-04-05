@@ -16,7 +16,7 @@ class PopUpSettings extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'AJUSTES',
+                'Abandonar partida',
                 style: TextStyle(
                   color: Color(0xFFEA970A),
                   fontWeight: FontWeight.bold,
@@ -47,36 +47,52 @@ class PopUpSettings extends StatelessWidget {
                 borderRadius: BorderRadius.circular(4.0),
                 color: const Color(0xFFEA970A),
               ),
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const HomeScreen()),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    foregroundColor: Colors.white,
-                  ),
-                  child: const IntrinsicWidth(
-                    child: Row(
-                      children: [
-                        Text('Abandonar'),
-                        SizedBox(
-                          width: 10,
+                child: Column(
+                  children: [
+                    const Expanded(child: SizedBox.shrink()),
+                    const Text(
+                      '¿Estás seguro de que quieres rendirte?\nNo podrás regresar a la partida\ny perderás tus territorios',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25,
+                      ),
+                    ),
+                    const Expanded(child: SizedBox.shrink()),
+                    //SizedBox(height: 10,),
+                    Align(
+                    alignment: Alignment.bottomCenter,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const HomeScreen()),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                      ),
+                      child: const IntrinsicWidth(
+                        child: Row(
+                          children: [
+                            Text('Abandonar'),
+                            SizedBox(
+                              width: 10,
+                            ),
+                            Icon(
+                              Icons.logout,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                          ],
                         ),
-                        Icon(
-                          Icons.logout,
-                          color: Colors.white,
-                          size: 30,
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
+                  const Expanded(child: SizedBox.shrink()),
+                ],
               ),
             ),
           ),

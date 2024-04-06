@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:logger/logger.dart';
 import 'package:uni_links/uni_links.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 // Widget to display the central information on the screen.
 class Info extends StatelessWidget {
@@ -77,7 +77,6 @@ class InfoLogin extends StatefulWidget {
 
 class _InfoLoginState extends State<InfoLogin> {
   final logger = Logger();
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   StreamSubscription? _sub;
 
@@ -95,63 +94,42 @@ class _InfoLoginState extends State<InfoLogin> {
 
   Future<void> initUniLinks() async {
     _sub = linkStream.listen((String? link) {
-      if (link != null) {
-        Uri uri = Uri.parse(link);
-
-        logger.d("Received deep link: $uri");
-
-        if (uri.path == "/signinresult") {
-          // Extract data from the deep link
-          String? resultJson = uri.queryParameters['token'];
-
-          // Handle the result data
-          if (resultJson != null) {
-            // Parse JSON data and handle it
-            logger.d("Result from website: $resultJson");
-          }
-        }
-      }
+      logger.d(link);
+      handleLink(link);
     }, onError: (err) {
       logger.e("Failed to handle incoming link: $err");
     });
   }
 
+  void handleLink(String? link) {
+    if (link != null) {
+      final Uri uri = Uri.parse(link);
+      logger.d("Received deep link: $uri");
+
+      if (uri.path == "/auth/google/callback") {
+        // Extract token data from the deep link
+        String? token = uri.queryParameters['token'];
+
+        // Handle the token
+        if (token != null) {
+          logger.d("Token received from website: $token");
+        } else {
+          logger.e("No token received in the deep link");
+        }
+      }
+    }
+  }
+
   void _handleSignIn() async {
     try {
-      await _googleSignIn.signOut();
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      logger.d("HOLA");
-      logger.d(googleUser?.email);
-      if(googleUser != null){
-        String ruta = "https://wealthwars.games:3010/users/" + googleUser.email;
-        logger.d(ruta);
-        obtenerInformacion(ruta);
-      }
-      // Una vez que el usuario se haya autenticado correctamente, puedes obtener la información de la URL de callback
-      //      
-    } catch (error) {
-      logger.d('Error al iniciar sesión con Google: $error');
-    }
-  }
-
-  void obtenerInformacion(String url) async {
-    // Hacer la solicitud HTTP a la URL de callback
-    logger.d("Entro");
-    final response = await http.get(url as Uri);
-    logger.d("PASO");
-
-    // Verificar si la solicitud fue exitosa (código de estado 200)
-    if (response.statusCode == 200) {
-      // Extraer la información de la respuesta
-      String body = response.body;
-      logger.d('Respuesta de la URL de callback: $body');
+      final Uri url = Uri.parse("https://wealthwars.games:3010/auth/google");
+      logger.d("Google Sign In");
+      await launchUrl(url);
       widget.onNavigate();
-    } else {
-      // Manejar errores de solicitud
-      logger.d('Error al obtener la información: ${response.statusCode}');
+    } catch (error) {
+      logger.e('Error authenticating: $error');
     }
   }
-
 
   @override
   Widget build(BuildContext context) {

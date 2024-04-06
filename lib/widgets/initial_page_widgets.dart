@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:logger/logger.dart';
 import 'package:uni_links/uni_links.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:http/http.dart' as http;
 
 // Widget to display the central information on the screen.
 class Info extends StatelessWidget {
@@ -75,6 +77,8 @@ class InfoLogin extends StatefulWidget {
 
 class _InfoLoginState extends State<InfoLogin> {
   final logger = Logger();
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+
   StreamSubscription? _sub;
 
   @override
@@ -112,18 +116,42 @@ class _InfoLoginState extends State<InfoLogin> {
     });
   }
 
-  Future<void> signInWithGoogle() async {
+  void _handleSignIn() async {
     try {
-      final Uri url = Uri.parse("https://wealthwars.games/auth/google");
-      logger.d("Google Sign In");
-      if (await launchUrl(url)) {
-        logger.d("Url launched");
-        widget.onNavigate();
+      await _googleSignIn.signOut();
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      logger.d("HOLA");
+      logger.d(googleUser?.email);
+      if(googleUser != null){
+        String ruta = "https://wealthwars.games:3010/users/" + googleUser.email;
+        logger.d(ruta);
+        obtenerInformacion(ruta);
       }
+      // Una vez que el usuario se haya autenticado correctamente, puedes obtener la información de la URL de callback
+      //      
     } catch (error) {
-      logger.e("Error during Google Sign-In: $error");
+      logger.d('Error al iniciar sesión con Google: $error');
     }
   }
+
+  void obtenerInformacion(String url) async {
+    // Hacer la solicitud HTTP a la URL de callback
+    logger.d("Entro");
+    final response = await http.get(url as Uri);
+    logger.d("PASO");
+
+    // Verificar si la solicitud fue exitosa (código de estado 200)
+    if (response.statusCode == 200) {
+      // Extraer la información de la respuesta
+      String body = response.body;
+      logger.d('Respuesta de la URL de callback: $body');
+      widget.onNavigate();
+    } else {
+      // Manejar errores de solicitud
+      logger.d('Error al obtener la información: ${response.statusCode}');
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -163,7 +191,7 @@ class _InfoLoginState extends State<InfoLogin> {
             ),
             const SizedBox(),
             ElevatedButton(
-              onPressed: signInWithGoogle,
+              onPressed: _handleSignIn,
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.black,
                 backgroundColor: const Color(0xFFEA970A),

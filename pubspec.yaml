@@ -52,6 +52,7 @@ dependencies:
   xml: ^6.3.0
 
   interactable_svg: any
+  google_sign_in: ^6.2.1
 
 dev_dependencies:
   flutter_test:

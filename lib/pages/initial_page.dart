@@ -43,6 +43,7 @@ class _InitialPageState extends State<InitialPage> {
     return MaterialApp(
       title: 'Wealth Wars Initial Page',
       home: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Container(
           // Background image
           decoration: const BoxDecoration(

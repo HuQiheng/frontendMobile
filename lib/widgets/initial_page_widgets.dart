@@ -79,6 +79,7 @@ class _InfoLoginState extends State<InfoLogin> {
   final logger = Logger();
 
   StreamSubscription? _sub;
+  String _linkMessage = '';
 
   @override
   void initState() {
@@ -93,31 +94,32 @@ class _InfoLoginState extends State<InfoLogin> {
   }
 
   Future<void> initUniLinks() async {
-    _sub = linkStream.listen((String? link) {
-      logger.d(link);
-      handleLink(link);
+    final initialLink = await getInitialUri();
+    logger.d("Link inicial recibido: $initialLink");
+    if (initialLink != null) {
+      handleLink(initialLink);
+    }
+
+    _sub = uriLinkStream.listen((Uri? uri) {
+      if (uri != null) {
+        handleLink(uri);
+      }
     }, onError: (err) {
-      logger.e("Failed to handle incoming link: $err");
+      setState(() {
+        _linkMessage = 'Failed to receive link: $err';
+      });
     });
   }
 
-  void handleLink(String? link) {
-    if (link != null) {
-      final Uri uri = Uri.parse(link);
-      logger.d("Received deep link: $uri");
-
-      if (uri.path == "/auth/google/callback") {
-        // Extract token data from the deep link
-        String? token = uri.queryParameters['token'];
-
-        // Handle the token
-        if (token != null) {
-          logger.d("Token received from website: $token");
-        } else {
-          logger.e("No token received in the deep link");
-        }
+  void handleLink(Uri uri) {
+    setState(() {
+      _linkMessage = uri.toString();
+      // Aquí puedes extraer el parámetro 'user' de la URL
+      var user = uri.queryParameters['user'];
+      if (user != null) {
+        // Haz algo con la información del usuario
       }
-    }
+    });
   }
 
   void _handleSignIn() async {

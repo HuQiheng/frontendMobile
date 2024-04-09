@@ -51,7 +51,11 @@ dependencies:
 
   xml: ^6.3.0
 
-  webview_flutter: ^3.0.0
+  webview_flutter: ^4.7.0
+
+  webview_cookie_manager: ^2.0.6
+
+  shared_preferences: ^2.0.15
 
   interactable_svg: any
   google_sign_in: ^6.2.1

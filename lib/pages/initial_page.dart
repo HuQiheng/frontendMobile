@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wealth_wars/pages/home_screen.dart';
+import 'package:wealth_wars/pages/web_view_auth.dart';
 import '../widgets/initial_page_widgets.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
@@ -38,6 +39,12 @@ class _InitialPageState extends State<InitialPage> {
     );
   }
 
+  void _handleSignIn() async {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => WebViewScreen(onNavigate: _navigateToHome),
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -70,7 +77,10 @@ class _InitialPageState extends State<InitialPage> {
                     const InitialPage1(),
                     const InitialPage2(),
                     const InitialPage3(),
-                    InitialPage4(onNavigate: _navigateToHome),
+                    InitialPage4(
+                      onNavigate: _navigateToHome,
+                      handleSignIn: _handleSignIn,
+                    ),
                   ],
                 ),
               ),
@@ -159,8 +169,10 @@ class InitialPage3 extends StatelessWidget {
 
 class InitialPage4 extends StatelessWidget {
   final VoidCallback onNavigate;
+  final VoidCallback handleSignIn;
 
-  const InitialPage4({super.key, required this.onNavigate});
+  const InitialPage4(
+      {super.key, required this.onNavigate, required this.handleSignIn});
 
   @override
   Widget build(BuildContext context) {
@@ -176,6 +188,7 @@ class InitialPage4 extends StatelessWidget {
               'Comienza a jugar',
               'Crea una nueva cuenta o incia sesión con una ya existente para empezar a jugar ya',
               onNavigate: onNavigate,
+              handleSignIn: handleSignIn,
             ),
           ),
         ),

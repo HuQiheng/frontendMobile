@@ -61,9 +61,10 @@ class InfoLogin extends StatefulWidget {
   final String title;
   final String description;
   final VoidCallback onNavigate;
+  final VoidCallback handleSignIn;
 
   const InfoLogin(this.title, this.description,
-      {super.key, required this.onNavigate});
+      {super.key, required this.onNavigate, required this.handleSignIn});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -76,12 +77,6 @@ class _InfoLoginState extends State<InfoLogin> {
   @override
   void initState() {
     super.initState();
-  }
-
-  void _handleSignIn() async {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => WebViewScreen(onNavigate: widget.onNavigate),
-    ));
   }
 
   @override
@@ -122,7 +117,7 @@ class _InfoLoginState extends State<InfoLogin> {
             ),
             const SizedBox(),
             ElevatedButton(
-              onPressed: _handleSignIn,
+              onPressed: widget.handleSignIn,
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.black,
                 backgroundColor: const Color(0xFFEA970A),

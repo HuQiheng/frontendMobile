@@ -1,11 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:logger/logger.dart';
-import 'package:uni_links/uni_links.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:wealth_wars/pages/web_view_auth.dart';
 
 // Widget to display the central information on the screen.
 class Info extends StatelessWidget {
@@ -78,59 +73,15 @@ class InfoLogin extends StatefulWidget {
 class _InfoLoginState extends State<InfoLogin> {
   final logger = Logger();
 
-  StreamSubscription? _sub;
-  String _linkMessage = '';
-
   @override
   void initState() {
     super.initState();
-    initUniLinks();
-  }
-
-  @override
-  void dispose() {
-    _sub?.cancel();
-    super.dispose();
-  }
-
-  Future<void> initUniLinks() async {
-    final initialLink = await getInitialUri();
-    logger.d("Link inicial recibido: $initialLink");
-    if (initialLink != null) {
-      handleLink(initialLink);
-    }
-
-    _sub = uriLinkStream.listen((Uri? uri) {
-      if (uri != null) {
-        handleLink(uri);
-      }
-    }, onError: (err) {
-      setState(() {
-        _linkMessage = 'Failed to receive link: $err';
-      });
-    });
-  }
-
-  void handleLink(Uri uri) {
-    setState(() {
-      _linkMessage = uri.toString();
-      // Aquí puedes extraer el parámetro 'user' de la URL
-      var user = uri.queryParameters['user'];
-      if (user != null) {
-        // Haz algo con la información del usuario
-      }
-    });
   }
 
   void _handleSignIn() async {
-    try {
-      final Uri url = Uri.parse("https://wealthwars.games:3010/auth/google");
-      logger.d("Google Sign In");
-      await launchUrl(url);
-      widget.onNavigate();
-    } catch (error) {
-      logger.e('Error authenticating: $error');
-    }
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => WebViewScreen(onNavigate: widget.onNavigate),
+    ));
   }
 
   @override

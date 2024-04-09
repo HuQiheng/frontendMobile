@@ -51,10 +51,10 @@ class PlayersInfo extends StatelessWidget {
         Stack(
           children: [
             Container(
-              margin: const EdgeInsets.only(left: 20, top: 20, bottom: 20),
+              margin: const EdgeInsets.only(left: 20, top: 6.5, bottom: 6.5),
               padding: const EdgeInsets.only(left: 35),
               width: maxWidth,
-              height: 37.0,
+              height: 37.5,
               decoration: BoxDecoration(
                 color: colorsBanner[i],
                 border: const Border(
@@ -75,7 +75,7 @@ class PlayersInfo extends StatelessWidget {
             ),
             Positioned(
               left: 0,
-              top: 15,
+              top: 0,
               child: Container(
                 width: 50.0,
                 height: 50.0,

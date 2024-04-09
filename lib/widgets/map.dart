@@ -239,7 +239,7 @@ class _MapWidgetState extends State<MapWidget> {
   };
 
   Map<String, String> circleNumbers = {
-    "g9882": "3",
+    "g9882": "99",
     "g9900": "3",
     "g10510": "3",
     "g10207": "3",

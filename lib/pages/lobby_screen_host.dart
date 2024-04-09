@@ -1,47 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:wealth_wars/pages/game_screen.dart';
 import 'package:wealth_wars/pages/home_screen.dart';
+import 'package:wealth_wars/widgets/players_info.dart';
 
-class LobbyScreen extends StatelessWidget {
-  const LobbyScreen({super.key});
+class LobbyScreenHost extends StatelessWidget {
+  const LobbyScreenHost({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
+        backgroundColor: const Color(0xFF083344),
+        body: SafeArea(
           child: Row(
-            children: <Widget>[
+            children: [
               Expanded(
-                flex: 2,
-                child: ListView.builder(
-                  itemCount: 4,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 8.0),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blue, width: 2.0),
-                        borderRadius: BorderRadius.circular(4.0),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: TextField(
-                          enabled: false,
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            labelText: 'Jugador ${index + 1}',
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
+                flex: 3,
+                child: PlayersInfo(players: 4),
               ),
               Expanded(
-                flex: 1,
+                flex: 2,
                 child: Column(
-                  children: <Widget>[
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                     Container(
                       margin: const EdgeInsets.symmetric(vertical: 8.0),
                       decoration: BoxDecoration(
@@ -58,13 +39,9 @@ class LobbyScreen extends StatelessWidget {
                       ),
                     ),
                     ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
+                      onPressed: () => Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
-                              builder: (context) => const HomeScreen()),
-                        );
-                      },
+                              builder: (_) => const HomeScreen())),
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.black,
                         backgroundColor: const Color(0xFFEA970A),
@@ -74,15 +51,10 @@ class LobbyScreen extends StatelessWidget {
                       ),
                       child: const Text('Cerrar sala'),
                     ),
-                    const SizedBox(height: 8.0),
                     ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
+                      onPressed: () => Navigator.of(context).push(
                           MaterialPageRoute(
-                              builder: (context) => const GameScreen()),
-                        );
-                      },
+                              builder: (_) => const GameScreen())),
                       style: ElevatedButton.styleFrom(
                         foregroundColor: Colors.black,
                         backgroundColor: const Color(0xFFEA970A),

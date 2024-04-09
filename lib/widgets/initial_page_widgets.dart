@@ -1,9 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:logger/logger.dart';
-import 'package:uni_links/uni_links.dart';
+import 'package:wealth_wars/pages/web_view_auth.dart';
 
 // Widget to display the central information on the screen.
 class Info extends StatelessWidget {
@@ -64,9 +61,10 @@ class InfoLogin extends StatefulWidget {
   final String title;
   final String description;
   final VoidCallback onNavigate;
+  final VoidCallback handleSignIn;
 
   const InfoLogin(this.title, this.description,
-      {super.key, required this.onNavigate});
+      {super.key, required this.onNavigate, required this.handleSignIn});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -75,54 +73,10 @@ class InfoLogin extends StatefulWidget {
 
 class _InfoLoginState extends State<InfoLogin> {
   final logger = Logger();
-  StreamSubscription? _sub;
 
   @override
   void initState() {
     super.initState();
-    initUniLinks();
-  }
-
-  @override
-  void dispose() {
-    _sub?.cancel();
-    super.dispose();
-  }
-
-  Future<void> initUniLinks() async {
-    _sub = linkStream.listen((String? link) {
-      if (link != null) {
-        Uri uri = Uri.parse(link);
-
-        logger.d("Received deep link: $uri");
-
-        if (uri.path == "/signinresult") {
-          // Extract data from the deep link
-          String? resultJson = uri.queryParameters['token'];
-
-          // Handle the result data
-          if (resultJson != null) {
-            // Parse JSON data and handle it
-            logger.d("Result from website: $resultJson");
-          }
-        }
-      }
-    }, onError: (err) {
-      logger.e("Failed to handle incoming link: $err");
-    });
-  }
-
-  Future<void> signInWithGoogle() async {
-    try {
-      final Uri url = Uri.parse("https://wealthwars.games/auth");
-      logger.d("Google Sign In");
-      if (await launchUrl(url)) {
-        logger.d("Url launched");
-        widget.onNavigate();
-      }
-    } catch (error) {
-      logger.e("Error during Google Sign-In: $error");
-    }
   }
 
   @override
@@ -163,7 +117,7 @@ class _InfoLoginState extends State<InfoLogin> {
             ),
             const SizedBox(),
             ElevatedButton(
-              onPressed: signInWithGoogle,
+              onPressed: widget.handleSignIn,
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.black,
                 backgroundColor: const Color(0xFFEA970A),

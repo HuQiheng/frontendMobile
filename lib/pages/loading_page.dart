@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:wealth_wars/pages/home_screen.dart';
+import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 import 'initial_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({super.key});
@@ -14,25 +16,33 @@ class LoadingScreen extends StatefulWidget {
 
 class _LoadingScreenState extends State<LoadingScreen> {
   Logger logger = Logger();
+  final cookieManager = WebviewCookieManager();
 
-  Future<void> loadUserData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? username = prefs.getString('username');
-    logger.d("Username: $username");
+  void checkSession() async {
+    final List<Cookie> cookies =
+        await cookieManager.getCookies('https://wealthwars.games');
+    logger.d("Cookie de inicio de sesion: $cookies.toString()");
+
+    await Future.delayed(const Duration(seconds: 3));
+
+    bool hasSession = cookies
+        .any((Cookie c) => c.name == 'connect.sid' && c.value.isNotEmpty);
+
+    if (mounted) {
+      if (hasSession) {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const HomeScreen()));
+      } else {
+        Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (context) => const InitialPage()));
+      }
+    }
   }
 
   @override
   void initState() {
     super.initState();
-    Timer(
-      const Duration(seconds: 3), // Loading screen timeout
-      () => Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-            // If we have any token registered already on the app we skip to the initialPage
-            builder: (context) =>
-                const InitialPage()), // Screen to which it is redirected
-      ),
-    );
+    checkSession();
   }
 
   @override

@@ -38,6 +38,8 @@ class _MapScreenState extends State<MapScreen> {
   Logger logger = Logger();
   bool _isLoading = true;
 
+  int phase = 0;
+
   @override
   void initState() {
     super.initState();
@@ -79,7 +81,9 @@ class _MapScreenState extends State<MapScreen> {
                     FocusScope.of(context).unfocus();
                   });
                 },
-                child: const MapWidget()),
+                child: MapWidget(
+                  phase: phase,
+                )), //Hay que ver como introducir la fase <------------------------------------
           ),
           //=============================
           //==========CHAT_ICON==========

@@ -16,7 +16,9 @@ final List<Color> colors = [
 ];
 
 class MapWidget extends StatefulWidget {
-  const MapWidget({super.key});
+  final int phase;
+
+  const MapWidget({super.key, required this.phase});
 
   @override
   State<MapWidget> createState() => _MapWidgetState();
@@ -24,6 +26,14 @@ class MapWidget extends StatefulWidget {
 
 class _MapWidgetState extends State<MapWidget> {
   final logger = Logger();
+
+  late int phase;
+
+  @override
+  void initState() {
+    super.initState();
+    phase = widget.phase;
+  }
 
   Map<String, Path> circulePaths = {
     "g9882": parseSvgPathData(
@@ -236,6 +246,51 @@ class _MapWidgetState extends State<MapWidget> {
         .shift(
       const Offset(width, height),
     ),
+  };
+
+  Map<String, int> regionPlayers = {
+    "g9882": 1,
+    "g9900": 3,
+    "g10510": 2,
+    "g10207": 1,
+    "g10518": 1,
+    "g10526": 1,
+    "g10542": 2,
+    "g11540": 3,
+    "g12212": 0,
+    "g15909": 0,
+    "g12534": 0,
+    "g2225": 2,
+    "g12542": 2,
+    "g4467": 2,
+    "g13911": 3,
+    "g14246": 0,
+    "g15576": 0,
+    "g15244": 0,
+    "g16243": 0,
+    "g11532": 1,
+    "g16914": 1,
+    "g14254": 1,
+    "g10558": 1,
+    "g10550": 1,
+    "g10882": 2,
+    "g2": 2,
+    "g11564": 3,
+    "g13919": 3,
+    "g4": 3,
+    "g18259": 3,
+    "g17589": 3,
+    "g17251": 2,
+    "g16578": 2,
+    "g19959": 1,
+    "g19282": 2,
+    "g3": 1,
+    "g10898": 1,
+    "g10566": 1,
+    "g11210": 1,
+    "g11218": 0,
+    "g1167": 0,
+    "g10197": 0,
   };
 
   Map<String, String> circleNumbers = {
@@ -568,11 +623,11 @@ class _MapWidgetState extends State<MapWidget> {
                 InteractableSvg(
                   svgAddress: "assets/iberian_map.svg",
                   onChanged: (region) {
-                    String name = region!.name;
-                    logger.d("Has pulsado la region: $name ");
-                    setState(() {
-                      regionColors[region.id] = Colors.red;
-                    });
+                    if (phase == 1) {
+                      String name = region!.name;
+                      logger.d("Has pulsado la region: $name ");
+                      setState(() {});
+                    }
                   },
                   width: double.infinity,
                   height: double.infinity,

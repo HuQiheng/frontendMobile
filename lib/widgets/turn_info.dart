@@ -20,30 +20,30 @@ class TurnInfo extends StatefulWidget {
 
 class _TurnInfoState extends State<TurnInfo> {
   final logger = Logger();
-  var fase = 0;
-  var player = 0;   // backend in json
+  int phase = 0;
+  int player = 0; // backend in json
 
   void buttonClicked() {
-    setState(() {       
-      // setstate using for the rerender the screen 
+    setState(() {
+      // setstate using for the rerender the screen
       // if we not use than it not show the sceond text
-      if(fase+1 == 3){
+      if (phase + 1 == 3) {
         logger.d("Tocaría cambiar de jugador");
         player = (player + 1) % 4;
       }
-      fase = (fase + 1) % 3;
+      phase = (phase + 1) % 3;
     });
   }
 
   @override
   Widget build(BuildContext context) {
     var texts = [
-    // list of text which the text get form here 
-    "INVERTIR",                            
-    "CONQUISTAR",
-    "REORGANIZAR",
+      // list of text which the text get form here
+      "INVERTIR",
+      "CONQUISTAR",
+      "REORGANIZAR",
     ];
-    
+
     return Stack(
       children: [
         Container(
@@ -67,7 +67,7 @@ class _TurnInfoState extends State<TurnInfo> {
                 height: 0,
               ),
               Text(
-                texts[fase],
+                texts[phase],
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -107,7 +107,7 @@ class _TurnInfoState extends State<TurnInfo> {
             child: IconButton(
               onPressed: () {
                 buttonClicked();
-                logger.d("Estás en fase: $fase ");
+                logger.d("Estás en fase: $phase ");
               },
               icon: const Icon(
                 Icons.skip_next,

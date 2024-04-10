@@ -81,9 +81,7 @@ class _MapScreenState extends State<MapScreen> {
                     FocusScope.of(context).unfocus();
                   });
                 },
-                child: MapWidget(
-                  phase: phase,
-                )), //Hay que ver como introducir la fase <------------------------------------
+                child: const MapWidget()),
           ),
           //=============================
           //==========CHAT_ICON==========

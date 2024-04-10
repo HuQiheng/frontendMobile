@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:wealth_wars/pages/web_view_auth.dart';
 
 // Widget to display the central information on the screen.
 class Info extends StatelessWidget {

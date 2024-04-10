@@ -16,9 +16,7 @@ final List<Color> colors = [
 ];
 
 class MapWidget extends StatefulWidget {
-  final int phase;
-
-  const MapWidget({super.key, required this.phase});
+  const MapWidget({super.key});
 
   @override
   State<MapWidget> createState() => _MapWidgetState();
@@ -27,13 +25,9 @@ class MapWidget extends StatefulWidget {
 class _MapWidgetState extends State<MapWidget> {
   final logger = Logger();
 
-  late int phase;
-
-  @override
-  void initState() {
-    super.initState();
-    phase = widget.phase;
-  }
+  final int phase = 1;
+  final int player = 0;
+  final int playerPlaying = 0;
 
   Map<String, Path> circulePaths = {
     "g9882": parseSvgPathData(
@@ -623,10 +617,23 @@ class _MapWidgetState extends State<MapWidget> {
                 InteractableSvg(
                   svgAddress: "assets/iberian_map.svg",
                   onChanged: (region) {
-                    if (phase == 1) {
-                      String name = region!.name;
-                      logger.d("Has pulsado la region: $name ");
-                      setState(() {});
+                    String name = region!.name;
+                    int? playerRegion = regionPlayers[region
+                        .id]; //EL ID OBTENIDO ES DIFERENTE AL QUE QUEREMOS <----------------------
+
+                    if (player == playerPlaying) {
+                      if (phase == 0) {
+                        logger.d("Has pulsado la region: $name ");
+                        setState(() {});
+                      }
+                      if (phase == 1 && player == playerRegion) {
+                        logger.d("Has pulsado la region: $name ");
+                        setState(() {});
+                      }
+                      if (phase == 2) {
+                        logger.d("Has pulsado la region: $name ");
+                        setState(() {});
+                      }
                     }
                   },
                   width: double.infinity,

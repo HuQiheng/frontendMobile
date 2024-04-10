@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:wealth_wars/methods/shared_preferences.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -34,10 +35,10 @@ class WebViewScreenState extends State<WebViewScreen> {
               logger.d("La uri es $uri");
               String userJson = uri.queryParameters['user'] ?? '';
               logger.d("JSON recibido de user: $userJson");
-
               if (userJson.isNotEmpty) {
                 try {
                   Map<String, dynamic> user = jsonDecode(userJson);
+                  saveUserData(user);
                   logger.d("Nombre de usuario: ${user['name']}");
                 } catch (e) {
                   logger.e("Error parsing user JSON: $e");

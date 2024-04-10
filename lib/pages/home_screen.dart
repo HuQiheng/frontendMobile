@@ -4,15 +4,21 @@ import 'package:wealth_wars/pages/account_screen.dart';
 import 'package:wealth_wars/pages/awards_screen.dart';
 import 'package:wealth_wars/pages/friends_screen.dart';
 import 'package:wealth_wars/pages/settings_screen.dart';
+import 'package:wealth_wars/methods/shared_preferences.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    void navigateToAccount() {
+    void navigateToAccount() async {
+      final userData = await getUserData();
+      String username = userData?['name'];
+
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => const ProfileScreen()),
+        MaterialPageRoute(
+          builder: (context) => ProfileScreen(username: username),
+        ),
       );
     }
 

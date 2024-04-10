@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+  final String username;
+
+  const ProfileScreen({super.key, required this.username});
 
   @override
   Widget build(BuildContext context) {
@@ -11,9 +13,9 @@ class ProfileScreen extends StatelessWidget {
         iconTheme: const IconThemeData(
           color: Colors.white,
         ),
-        title: const Text(
-          'Perfil de Usuario',
-          style: TextStyle(color: Colors.white),
+        title: Text(
+          'Perfil de $username',
+          style: const TextStyle(color: Colors.white),
         ),
         automaticallyImplyLeading: true,
         backgroundColor: const Color(0xFF083344),
@@ -23,12 +25,12 @@ class ProfileScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: <Widget>[
-              const CircleAvatar(
+              CircleAvatar(
                 radius: 60,
                 backgroundColor: Color(0xFFEA970A),
                 child: Text(
-                  "@USERNAME",
-                  style: TextStyle(color: Colors.white),
+                  username,
+                  style: const TextStyle(color: Colors.white),
                 ),
               ),
               TextButton(

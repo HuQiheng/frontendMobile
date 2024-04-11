@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wealth_wars/pages/lobby_screen.dart';
+import 'package:wealth_wars/pages/GamePage/lobby_screen.dart';
 
 class PopUpSalas extends StatelessWidget {
   const PopUpSalas({super.key});

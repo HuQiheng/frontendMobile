@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:wealth_wars/pages/home_screen.dart';
+import 'package:wealth_wars/pages/HomePage/home_screen.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
-import 'initial_page.dart';
+import 'InitialPage/initial_page.dart';
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({super.key});

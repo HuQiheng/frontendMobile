@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import '../widgets/pop_up_salas.dart';
-import 'package:wealth_wars/pages/account_screen.dart';
-import 'package:wealth_wars/pages/awards_screen.dart';
-import 'package:wealth_wars/pages/friends_screen.dart';
-import 'package:wealth_wars/pages/settings_screen.dart';
+import '../../widgets/pop_up_salas.dart';
+import 'package:wealth_wars/pages/HomePage/account_screen.dart';
+import 'package:wealth_wars/pages/HomePage/awards_screen.dart';
+import 'package:wealth_wars/pages/HomePage/friends_screen.dart';
+import 'package:wealth_wars/pages/HomePage/settings_screen.dart';
 import 'package:wealth_wars/methods/shared_preferences.dart';
 
 class HomeScreen extends StatelessWidget {

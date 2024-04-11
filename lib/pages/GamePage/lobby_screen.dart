@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:wealth_wars/pages/game_screen.dart';
-import 'package:wealth_wars/pages/home_screen.dart';
+import 'package:wealth_wars/pages/GamePage/game_screen.dart';
+import 'package:wealth_wars/pages/HomePage/home_screen.dart';
 import 'package:wealth_wars/widgets/players_lobby.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 

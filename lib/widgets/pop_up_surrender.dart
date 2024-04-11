@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wealth_wars/pages/home_screen.dart';
+import 'package:wealth_wars/pages/HomePage/home_screen.dart';
 
 class PopUpSurrender extends StatelessWidget {
   const PopUpSurrender({super.key});

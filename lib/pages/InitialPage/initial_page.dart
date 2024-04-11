@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:wealth_wars/pages/home_screen.dart';
-import 'package:wealth_wars/pages/web_view_auth.dart';
-import '../widgets/initial_page_widgets.dart';
+import 'package:wealth_wars/pages/HomePage/home_screen.dart';
+import 'package:wealth_wars/pages/InitialPage/web_view_auth.dart';
+import '../../widgets/initial_page_widgets.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class InitialPage extends StatefulWidget {

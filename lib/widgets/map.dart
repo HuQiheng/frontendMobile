@@ -4,6 +4,7 @@ import 'package:path_drawing/path_drawing.dart';
 import 'package:interactable_svg/interactable_svg/interactable_svg.dart';
 import 'package:wealth_wars/methods/region_overlay_painter.dart';
 import 'package:wealth_wars/methods/circule_overlay_painter.dart';
+import 'package:wealth_wars/widgets/pop_up_attack.dart';
 
 const double width = -392.394 * 0.5;
 const double height = -317.762 * 0.5;
@@ -24,10 +25,6 @@ class MapWidget extends StatefulWidget {
 
 class _MapWidgetState extends State<MapWidget> {
   final logger = Logger();
-
-  final int phase = 1;
-  final int player = 0;
-  final int playerPlaying = 0;
 
   Map<String, Path> circulePaths = {
     "g9882": parseSvgPathData(
@@ -590,6 +587,13 @@ class _MapWidgetState extends State<MapWidget> {
     ),
   };
 
+  final int phase = 1;
+  final int player = 0;
+  final int playerPlaying = 0;
+
+  int attackPhase = 0;
+  Region? attackRegion;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -618,22 +622,33 @@ class _MapWidgetState extends State<MapWidget> {
                   svgAddress: "assets/iberian_map.svg",
                   onChanged: (region) {
                     String name = region!.name;
-                    int? playerRegion = regionPlayers[region
-                        .id]; //EL ID OBTENIDO ES DIFERENTE AL QUE QUEREMOS <----------------------
 
                     if (player == playerPlaying) {
-                      if (phase == 0) {
-                        logger.d("Has pulsado la region: $name ");
-                        setState(() {});
+                      if (phase == 0) {}
+                      if (phase == 1) {
+                        //Faltaría comprobar que es su propia región
+                        if (attackPhase == 0) {
+                          attackRegion = region;
+                          attackPhase++;
+                        } //Faltaría comprobar que es región colindante
+                        else if (attackPhase == 1 && attackRegion != region) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return PopUpAttack(
+                                attackRegion: attackRegion!.name,
+                                defenseRegion: region.name,
+                              );
+                            },
+                          );
+
+                          attackPhase = 0;
+                        }
                       }
-                      if (phase == 1 && player == playerRegion) {
-                        logger.d("Has pulsado la region: $name ");
-                        setState(() {});
-                      }
-                      if (phase == 2) {
-                        logger.d("Has pulsado la region: $name ");
-                        setState(() {});
-                      }
+                      if (phase == 2) {}
+
+                      logger.d("Has pulsado la region: $name ");
+                      setState(() {});
                     }
                   },
                   width: double.infinity,

@@ -47,20 +47,20 @@ class PopUpSurrender extends StatelessWidget {
                 borderRadius: BorderRadius.circular(4.0),
                 color: const Color(0xFFEA970A),
               ),
-                child: Column(
-                  children: [
-                    const Expanded(child: SizedBox.shrink()),
-                    const Text(
-                      '¿Estás seguro de que quieres rendirte?\nNo podrás regresar a la partida\ny perderás tus territorios',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 25,
-                      ),
+              child: Column(
+                children: [
+                  const Expanded(child: SizedBox.shrink()),
+                  const Text(
+                    '¿Estás seguro de que quieres rendirte?\nNo podrás regresar a la partida\ny perderás tus territorios',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
                     ),
-                    const Expanded(child: SizedBox.shrink()),
-                    //SizedBox(height: 10,),
-                    Align(
+                  ),
+                  const Expanded(child: SizedBox.shrink()),
+                  //SizedBox(height: 10,),
+                  Align(
                     alignment: Alignment.bottomCenter,
                     child: ElevatedButton(
                       onPressed: () {

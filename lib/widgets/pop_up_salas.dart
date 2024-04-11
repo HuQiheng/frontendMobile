@@ -9,7 +9,7 @@ class PopUpSalas extends StatelessWidget {
     const Color primaryColor = Color(0xFFEA970A);
     const Color backgroundColor = Color(0xFF083344);
     const TextStyle buttonTextStyle = TextStyle(
-      color: Colors.white,
+      color: Colors.black,
       fontWeight: FontWeight.bold,
     );
 

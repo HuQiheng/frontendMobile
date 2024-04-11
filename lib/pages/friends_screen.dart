@@ -28,7 +28,7 @@ class FriendsScreen extends StatelessWidget {
                     child: TextField(
                       decoration: InputDecoration(
                         hintText: 'Añadir amigo (Introducir código)',
-                        hintStyle: TextStyle(color: Colors.white70),
+                        hintStyle: const TextStyle(color: Colors.white70),
                         filled: true,
                         fillColor: Color(0xFF005A88),
                         border: OutlineInputBorder(
@@ -36,11 +36,11 @@ class FriendsScreen extends StatelessWidget {
                           borderSide: BorderSide.none,
                         ),
                       ),
-                      style: TextStyle(color: Colors.white),
+                      style: const TextStyle(color: Colors.white),
                     ),
                   ),
                   IconButton(
-                    icon: Icon(Icons.check, color: Colors.white),
+                    icon: const Icon(Icons.check, color: Colors.white),
                     onPressed: () {},
                   ),
                 ],

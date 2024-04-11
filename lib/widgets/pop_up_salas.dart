@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:wealth_wars/pages/lobby_screen_host.dart';
-import 'package:wealth_wars/pages/lobby_screen_guest.dart';
+import 'package:wealth_wars/pages/lobby_screen.dart';
 
 class PopUpSalas extends StatelessWidget {
   const PopUpSalas({super.key});
@@ -149,14 +148,17 @@ class PopUpSalas extends StatelessWidget {
   void _navigateToLobbyHost(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const LobbyScreenHost()),
+      MaterialPageRoute(
+          builder: (context) => const LobbyScreen(
+                isHost: true,
+              )),
     );
   }
 
   void _navigateToLobbyGuest(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const LobbyScreenGuest()),
+      MaterialPageRoute(builder: (context) => const LobbyScreen()),
     );
   }
 }

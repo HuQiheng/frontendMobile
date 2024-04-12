@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:path_drawing/path_drawing.dart';
 import 'package:interactable_svg/interactable_svg/interactable_svg.dart';
@@ -591,8 +594,58 @@ class _MapWidgetState extends State<MapWidget> {
   final int player = 0;
   final int playerPlaying = 0;
 
+  @override
+  void initState() {
+    super.initState();
+    loadTerritories();
+  }
+
   int attackPhase = 0;
-  Region? attackRegion;
+  late Region attackRegion;
+
+  Map<String, String> nameToIdMap = {};
+  Map<String, List<String>> idToAdjacentsMap = {};
+
+  Future<void> loadTerritories() async {
+    final jsonString = await rootBundle.loadString('assets/territories.json');
+    final Map<String, dynamic> territories = jsonDecode(jsonString);
+
+    territories.forEach((id, details) {
+      nameToIdMap[details['name']] = id;
+      idToAdjacentsMap[id] = List<String>.from(details['adjacents']);
+    });
+  }
+
+  bool areRegionsAdjacent(String attackRegionName, String defenseRegionName) {
+    String? attackRegionId = nameToIdMap[attackRegionName];
+    String? defenseRegionId = nameToIdMap[defenseRegionName];
+    logger.d("Region atacante: $attackRegionId");
+    logger.d("Region defensora: $defenseRegionId");
+
+    logger.d(idToAdjacentsMap.toString());
+
+    return idToAdjacentsMap[attackRegionId]?.contains(defenseRegionId) ?? false;
+  }
+
+  // Esto era para llenar una lista con regiones del mapa y poder modificar el mapa dado un archivo json
+  Future<List<GameRegion>> loadMapData() async {
+    final jsonString = await rootBundle.loadString('assets/game_state.js');
+    final jsonResponse = jsonDecode(jsonString);
+    List<GameRegion> gameRegions = [];
+
+    jsonResponse['map'].forEach((key, value) {
+      GameRegion gameRegion = GameRegion(
+        name: value['name'],
+        player: value['player'],
+        troops: value['troops'],
+        factories: value['factories'],
+      );
+
+      gameRegions.add(gameRegion);
+    });
+
+    return gameRegions;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -630,19 +683,23 @@ class _MapWidgetState extends State<MapWidget> {
                         if (attackPhase == 0) {
                           attackRegion = region;
                           attackPhase++;
-                        } //Faltaría comprobar que es región colindante
-                        else if (attackPhase == 1 && attackRegion != region) {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return PopUpAttack(
-                                attackRegion: attackRegion!.name,
-                                defenseRegion: region.name,
-                              );
-                            },
-                          );
-
-                          attackPhase = 0;
+                        } else if (attackPhase == 1 && attackRegion != region) {
+                          if (areRegionsAdjacent(
+                              attackRegion.name, region.name)) {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return PopUpAttack(
+                                  attackRegion: attackRegion.name,
+                                  defenseRegion: region.name,
+                                );
+                              },
+                            );
+                            attackPhase = 0;
+                          } else {
+                            logger.d("Las regiones no son adyacentes.");
+                            attackPhase = 0;
+                          }
                         }
                       }
                       if (phase == 2) {}
@@ -670,4 +727,18 @@ class _MapWidgetState extends State<MapWidget> {
       ),
     );
   }
+}
+
+class GameRegion {
+  String name;
+  int player;
+  int troops;
+  int factories;
+
+  GameRegion({
+    required this.name,
+    required this.player,
+    required this.troops,
+    required this.factories,
+  });
 }

@@ -92,6 +92,8 @@ flutter:
     - assets/icons/join.png
     - assets/icons/play.png
     - assets/icons/duel.png
+    - assets/game_state.js
+    - assets/territories.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

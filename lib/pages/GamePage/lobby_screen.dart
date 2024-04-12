@@ -29,10 +29,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
   void initSocket() {
     socket = IO.io('https://wealthwars.games:3010', <String, dynamic>{
       'transports': ['websocket'],
-      'autoConnect': false,
-      'timeout': 5000
     });
-    socket.connect();
 
     socket.on('accessCode', (code) {
       setState(() {

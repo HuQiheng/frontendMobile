@@ -12,7 +12,7 @@ class AwardsScreen extends StatelessWidget {
           color: Colors.white,
         ),
         title: const Text(
-          'Logros',
+          'Logros:',
           style: TextStyle(color: Colors.white),
         ),
         automaticallyImplyLeading: true,
@@ -24,20 +24,13 @@ class AwardsScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              const Text(
-                'Logros:',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
-                ),
-              ),
               Expanded(
                 child: ListView.separated(
                   itemCount: 10,
                   separatorBuilder: (context, index) =>
                       const Divider(color: Colors.white24),
                   itemBuilder: (context, index) {
+                    // Hay que añadir los logros 
                     return ListTile(
                       title: Text(
                         'Logro ${index + 1}',

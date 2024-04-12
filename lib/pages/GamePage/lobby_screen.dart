@@ -31,6 +31,8 @@ class _LobbyScreenState extends State<LobbyScreen> {
       'transports': ['websocket'],
     });
 
+    socket.emit('createRoom');
+
     socket.on('accessCode', (code) {
       setState(() {
         logger.d("Codigo de sala: $code");

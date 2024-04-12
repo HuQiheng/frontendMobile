@@ -102,7 +102,13 @@ class _LobbyScreenState extends State<LobbyScreen> {
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),
-                            subtitle: Text(accessCode),
+                            subtitle: Center(
+                              child: Text(
+                                accessCode,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
                           ),
                         ),
                         const SizedBox(height: 16),

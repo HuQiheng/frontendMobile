@@ -54,7 +54,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
     socket.on('accessCode', (code) {
       setState(() {
         logger.d("Codigo de sala: $code");
-        accessCode = code;
+        accessCode = code.toString();
       });
     });
 

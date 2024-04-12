@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:wealth_wars/pages/GamePage/game_screen.dart';
 import 'package:wealth_wars/pages/HomePage/home_screen.dart';
 import 'package:wealth_wars/widgets/players_lobby.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 
 class LobbyScreen extends StatefulWidget {
   final bool isHost;
@@ -16,6 +19,7 @@ class LobbyScreen extends StatefulWidget {
 }
 
 class _LobbyScreenState extends State<LobbyScreen> {
+  final cookieManager = WebviewCookieManager();
   late IO.Socket socket;
   String accessCode = '';
   Logger logger = Logger();
@@ -26,17 +30,31 @@ class _LobbyScreenState extends State<LobbyScreen> {
     initSocket();
   }
 
-  void initSocket() {
+  Future<void> initSocket() async {
+    final cookies = await cookieManager.getCookies('https://wealthwars.games');
+    String sessionCookie = cookies
+        .firstWhere(
+          (cookie) => cookie.name == 'connect.sid',
+        )
+        .value;
+
     socket = IO.io('https://wealthwars.games:3010', <String, dynamic>{
       'transports': ['websocket'],
+      'extraHeaders': {'cookie': 'connect.sid=$sessionCookie'},
+      'withCredentials': true,
     });
 
-    socket.emit('createRoom');
+    socket.on('connect', (_) {
+      logger.d('Socket connected');
+      if (widget.isHost) {
+        socket.emit('createRoom');
+      }
+    });
 
     socket.on('accessCode', (code) {
       setState(() {
         logger.d("Codigo de sala: $code");
-        accessCode = code;
+        accessCode = code.toString();
       });
     });
 
@@ -84,7 +102,13 @@ class _LobbyScreenState extends State<LobbyScreen> {
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),
-                            subtitle: Text(accessCode),
+                            subtitle: Center(
+                              child: Text(
+                                accessCode,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
                           ),
                         ),
                         const SizedBox(height: 16),

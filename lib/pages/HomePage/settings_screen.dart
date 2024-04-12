@@ -78,9 +78,72 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     activeColor: Colors.white,
                     activeTrackColor: Colors.lightBlueAccent,
                   ),
+                  
                 ],
               ),
             ),
+            const SizedBox(height: 5), // Espacio entre la línea y la lista
+            Container(
+              height: 1,
+              color: Colors.white24,
+            ),
+            const SizedBox(height: 5), // Espacio entre la línea y la lista
+            Row(
+                children: [
+                  const Expanded(child: SizedBox.shrink()),
+                  ElevatedButton(
+                    onPressed: () {
+                      
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: const IntrinsicWidth(
+                      child: Column(
+                        children: [
+                          Text('Cerrar sesión'),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Icon(
+                            Icons.logout,
+                            color: Colors.white,
+                            size: 30,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const Expanded(child: SizedBox.shrink()),
+                  ElevatedButton(
+                    onPressed: () {
+                      
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      foregroundColor: Colors.white,
+                    ),
+                    child: const IntrinsicWidth(
+                      child: Column(
+                        children: [
+                          Text('Borrar cuenta'),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Icon(
+                            Icons.delete_forever,
+                            color: Colors.white,
+                            size: 30,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const Expanded(child: SizedBox.shrink()),
+                ],
+              ),
+              const SizedBox(height: 10), // Espacio entre la línea y la lista
           ],
         ),
       ),

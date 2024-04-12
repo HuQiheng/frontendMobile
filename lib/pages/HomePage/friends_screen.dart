@@ -22,12 +22,12 @@ class FriendsScreen extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
+            children: [
               Row(children: [
                 Expanded(
                   child: TextField(
                     decoration: InputDecoration(
-                      hintText: 'Añadir amigo (Introducir código)',
+                      hintText: 'Añadir amigo (Introducir código):',
                       hintStyle: const TextStyle(color: Colors.white70),
                       filled: true,
                       fillColor: const Color(0xFF005A88),
@@ -52,17 +52,16 @@ class FriendsScreen extends StatelessWidget {
               ),
               const SizedBox(height: 16), // Espacio entre la línea y la lista
               Expanded(
-                child: ListView.separated(
-                  itemCount: 10,
-                  separatorBuilder: (context, index) =>
-                      const Divider(color: Colors.white24),
-                  itemBuilder: (context, index) {
+                child: ListView.builder(
+                  itemCount: 10, // Cambia esto por la longitud de tu lista de amigos
+                  itemBuilder: (BuildContext context, int index) {
+                    // Aquí puedes construir cada elemento de la lista
                     return ListTile(
-                      title: Text(
-                        'Amigo ${index + 1}',
-                        style: const TextStyle(color: Colors.white),
-                      ),
+                      title: Text('Amigo $index'),
                       tileColor: const Color(0xFF0066CC),
+                      onTap: () {
+                        // Acción al hacer tap en el amigo
+                      },
                     );
                   },
                 ),

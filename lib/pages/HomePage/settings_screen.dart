@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:wealth_wars/widgets/pop_up_close_session.dart';
+import 'package:wealth_wars/widgets/pop_up_delete_account.dart';
 
 class SettingsScreen extends StatefulWidget {
-  const SettingsScreen({super.key});
+  final String email;
+
+  const SettingsScreen({super.key, required this.email});
 
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
@@ -31,7 +35,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              color: Color(0xFF005A88),
+              color: const Color(0xFF005A88),
               width: double.infinity,
               padding: const EdgeInsets.all(8.0),
               child: const Text(
@@ -93,7 +97,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   const Expanded(child: SizedBox.shrink()),
                   ElevatedButton(
                     onPressed: () {
-                      
+                      showDialog(
+                        // Cerrar sesión
+                        context: context,
+                        builder: (BuildContext context) {
+                          return const PopUpCloseSession();
+                        },
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
@@ -118,7 +128,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   const Expanded(child: SizedBox.shrink()),
                   ElevatedButton(
                     onPressed: () {
-                      
+                      showDialog(
+                        // Borrar cuenta
+                        context: context,
+                        builder: (BuildContext context) {
+                          //return const PopUpDelete(email: email);
+                          return const PopUpDelete();
+                        },
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,

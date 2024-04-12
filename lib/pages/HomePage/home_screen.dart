@@ -34,9 +34,13 @@ class HomeScreen extends StatelessWidget {
       );
     }
 
-    void navigateToSettings() {
+    void navigateToSettings() async {
+      final userData = await getUserData();
+      String email = userData?['email'];
+
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => const SettingsScreen()),
+        MaterialPageRoute(
+          builder: (context) => SettingsScreen(email: email),),
       );
     }
 

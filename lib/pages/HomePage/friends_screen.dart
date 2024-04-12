@@ -65,7 +65,7 @@ class FriendsScreen extends StatelessWidget {
                         child: ListTile(
                           title: Text(
                             'Amigo $index',
-                            style: TextStyle(color: Colors.white), // Color del texto del ListTile
+                            style: const TextStyle(color: Colors.white), // Color del texto del ListTile
                           ),
                           onTap: () {
                             // Acción al hacer tap en el amigo

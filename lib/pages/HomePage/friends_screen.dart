@@ -12,66 +12,63 @@ class FriendsScreen extends StatelessWidget {
           color: Colors.white,
         ),
         title: const Text(
-          'Amigos',
+          'Mis amigos:',
           style: TextStyle(color: Colors.white),
         ),
         backgroundColor: const Color(0xFF083344),
       ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: 'Añadir amigo (Introducir código)',
-                        hintStyle: const TextStyle(color: Colors.white70),
-                        filled: true,
-                        fillColor: Color(0xFF005A88),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: BorderSide.none,
-                        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Row(children: [
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      hintText: 'Añadir amigo (Introducir código)',
+                      hintStyle: const TextStyle(color: Colors.white70),
+                      filled: true,
+                      fillColor: const Color(0xFF005A88),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
                       ),
-                      style: const TextStyle(color: Colors.white),
                     ),
+                    style: const TextStyle(color: Colors.white),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.check, color: Colors.white),
-                    onPressed: () {},
-                  ),
-                ],
+                ),
+                IconButton(
+                  icon: const Icon(Icons.check, color: Colors.white),
+                  //Se busca en la base de datos
+                  onPressed: () {},
+                ),
+              ],),
+              const SizedBox(height: 16), // Espacio entre el TextField y la lista
+              Container(
+                height: 1,
+                color: Colors.white24,
               ),
-            ),
-            Container(
-              color: Color(0xFF005A88),
-              width: double.infinity,
-              padding: const EdgeInsets.all(8.0),
-              child: const Text(
-                'Mis amigos',
-                style: TextStyle(color: Colors.white),
+              const SizedBox(height: 16), // Espacio entre la línea y la lista
+              Expanded(
+                child: ListView.separated(
+                  itemCount: 10,
+                  separatorBuilder: (context, index) =>
+                      const Divider(color: Colors.white24),
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(
+                        'Amigo ${index + 1}',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      tileColor: const Color(0xFF0066CC),
+                    );
+                  },
+                ),
               ),
-            ),
-            Expanded(
-              child: ListView.separated(
-                itemCount: 10,
-                separatorBuilder: (context, index) =>
-                    Divider(color: Colors.white24),
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(
-                      'Amigo ${index + 1}',
-                      style: TextStyle(color: Colors.white),
-                    ),
-                    tileColor: Color(0xFF0066CC),
-                  );
-                },
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

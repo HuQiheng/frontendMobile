@@ -14,10 +14,12 @@ class HomeScreen extends StatelessWidget {
     void navigateToAccount() async {
       final userData = await getUserData();
       String username = userData?['name'];
-
+      String email = userData?['email'];
+      String picture = userData?['picture'];
+      
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => ProfileScreen(username: username),
+          builder: (context) => ProfileScreen(username: username, email: email, picture: picture),
         ),
       );
     }

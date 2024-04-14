@@ -102,7 +102,7 @@ class PopUpDelete extends StatelessWidget {
                           logger.d("Cookies cleared successfully.");
                         }).catchError((e) {
                           logger.e("Failed to clear cookies: $e");
-                        }); 
+                        });
 
                         await deleteUser(email);
 

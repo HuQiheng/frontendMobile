@@ -19,6 +19,7 @@ Future<Map<String, dynamic>?> getUserData() async {
   String? userJson = prefs.getString('user_data');
   if (userJson != null) {
     logger.d("User data retrieved successfully.");
+    logger.d(userJson);
     return jsonDecode(userJson);
   }
   logger.d("No user data found.");

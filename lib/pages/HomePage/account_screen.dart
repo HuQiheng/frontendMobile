@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:logger/logger.dart';
 
 class ProfileScreen extends StatelessWidget {
   final String username;
+  final String email;
+  final String picture;
 
-  const ProfileScreen({super.key, required this.username});
+  const ProfileScreen({super.key, required this.username, required this.email, required this.picture});
 
   @override
   Widget build(BuildContext context) {
+    final Logger logger = Logger();
+    logger.d(username + email + picture);
     return Scaffold(
       backgroundColor: const Color(0xFF083344),
       appBar: AppBar(
@@ -27,14 +33,18 @@ class ProfileScreen extends StatelessWidget {
             children: <Widget>[
               CircleAvatar(
                 radius: 60,
-                backgroundColor: Color(0xFFEA970A),
-                child: Text(
-                  username,
-                  style: const TextStyle(color: Colors.white),
+                backgroundImage: NetworkImage(
+                  picture,
                 ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  // Aquí va el codigo de amigo
+                  Clipboard.setData(const ClipboardData(text: '<Mi código amigo>')); // Copia el texto al portapapeles
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Texto copiado al portapapeles')),
+                  );
+                },
                 style: TextButton.styleFrom(
                   foregroundColor: Colors.white,
                   textStyle: const TextStyle(

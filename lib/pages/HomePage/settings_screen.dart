@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wealth_wars/widgets/pop_up_close_session.dart';
 import 'package:wealth_wars/widgets/pop_up_delete_account.dart';
+import 'package:logger/logger.dart';
 
 class SettingsScreen extends StatefulWidget {
   final String email;
@@ -18,6 +19,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Logger logger = Logger();
+    String email = widget.email;
+    logger.d("HOLA" + email);
     return Scaffold(
       backgroundColor: const Color(0xFF083344),
       appBar: AppBar(
@@ -132,8 +136,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         // Borrar cuenta
                         context: context,
                         builder: (BuildContext context) {
-                          //return const PopUpDelete(email: email);
-                          return const PopUpDelete();
+                          return PopUpDelete(email: email);
+                          //return const PopUpDelete();
                         },
                       );
                     },

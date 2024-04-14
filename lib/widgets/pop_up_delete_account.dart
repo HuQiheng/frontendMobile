@@ -2,18 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:wealth_wars/pages/loading_page.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 import 'package:logger/logger.dart';
+import 'package:http/http.dart' as http;
 
 
 class PopUpDelete extends StatelessWidget {
-  /*final String email;
-  const PopUpDelete({super.key, required this.email});*/
+  final String email;
+  const PopUpDelete({super.key, required this.email});
 
-  const PopUpDelete({super.key});
+  //const PopUpDelete({super.key});
+
+  Future<void> deleteUser(String email) async {
+  // Construir la URL con el email del usuario a eliminar
+  Logger logger = Logger();
+  String url = 'https://wealthwars.games/users/$email';
+
+  try {
+    // Realizar la solicitud DELETE al backend
+    var response = await http.delete(Uri.parse(url));
+
+    // Verificar si la solicitud fue exitosa (código de estado 200)
+    if (response.statusCode == 200) {
+      // El usuario ha sido eliminado exitosamente
+      logger.d('Usuario eliminado exitosamente.');
+    } else {
+      // La solicitud no fue exitosa, mostrar el mensaje de error
+      logger.d('Error al eliminar usuario: ${response.statusCode}');
+    }
+  } catch (error) {
+    // Manejar errores de conexión u otros errores
+    logger.d('Error al eliminar usuario: $error');
+  }
+}
 
   @override
   Widget build(BuildContext context) {
     final WebviewCookieManager cookieManager = WebviewCookieManager();
     Logger logger = Logger();
+    logger.d(email);
     return AlertDialog(
       contentPadding:
           const EdgeInsets.only(top: 2, right: 20, left: 20, bottom: 20),
@@ -71,14 +96,16 @@ class PopUpDelete extends StatelessWidget {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: ElevatedButton(
-                      onPressed: () {
-                        // Borrar cuenta aquí (Primero quitar cookies?)
-                        /*
+                      onPressed: () async {
+                        // Borrar cuenta aquí (primero se eliminan las coockies)
                         cookieManager.clearCookies().then((_) {
                           logger.d("Cookies cleared successfully.");
                         }).catchError((e) {
                           logger.e("Failed to clear cookies: $e");
-                        });*/
+                        }); 
+
+                        await deleteUser(email);
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
+import 'package:wealth_wars/widgets/pop_up_change_username.dart';
 
 class ProfileScreen extends StatelessWidget {
   final String username;
   final String email;
   final String picture;
+  final String password;
 
-  const ProfileScreen({super.key, required this.username, required this.email, required this.picture});
+  const ProfileScreen({super.key, required this.username, required this.email, required this.picture, required this.password});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,7 @@ class ProfileScreen extends StatelessWidget {
           child: Column(
             children: <Widget>[
               CircleAvatar(
-                radius: 60,
+                radius: 50,
                 backgroundImage: NetworkImage(
                   picture,
                 ),
@@ -47,10 +49,34 @@ class ProfileScreen extends StatelessWidget {
                 },
                 style: TextButton.styleFrom(
                   foregroundColor: Colors.white,
+                  backgroundColor: const Color(0xFF0066CC),
                   textStyle: const TextStyle(
                       fontSize: 16, fontStyle: FontStyle.italic),
                 ),
                 child: const Text('<Mi código amigo>'),
+              ),
+              Row(
+                children: [
+                  const Expanded(child: SizedBox.shrink()),
+                  TextButton(
+                    onPressed: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return PopUpChangeUsername(email: email, password: password);
+                        },
+                      );
+                    },
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: const Color(0xFF0066CC),
+                      textStyle: const TextStyle(
+                          fontSize: 16, fontStyle: FontStyle.italic),
+                    ),
+                    child: const Text('Cambiar nombre'),
+                  ),
+                  const Expanded(child: SizedBox.shrink()),
+                ],
               ),
               const Align(
                 alignment: Alignment.centerLeft,

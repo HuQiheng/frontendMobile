@@ -23,7 +23,7 @@ class PopUpDelete extends StatelessWidget {
     // Verificar si la solicitud fue exitosa (código de estado 200)
     if (response.statusCode == 200) {
       // El usuario ha sido eliminado exitosamente
-      logger.d('Usuario eliminado exitosamente.');
+      logger.d('Respuesta del servidor: ${response.body}');
     } else {
       // La solicitud no fue exitosa, mostrar el mensaje de error
       logger.d('Error al eliminar usuario: ${response.statusCode}');

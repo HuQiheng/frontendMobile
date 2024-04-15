@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
-import 'package:wealth_wars/pages/GamePage/game_screen.dart';
+import 'package:wealth_wars/methods/player_class.dart';
+import 'package:wealth_wars/pages/gamePage/game_screen.dart';
 import 'package:wealth_wars/pages/HomePage/home_screen.dart';
-import 'package:wealth_wars/widgets/players_lobby.dart';
+import 'package:wealth_wars/widgets/lobbyWidgets/players_lobby.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LobbyScreen extends StatefulWidget {
   final bool isHost;
+  final String? joinCode;
+  final Player player;
 
-  const LobbyScreen({super.key, this.isHost = false});
+  const LobbyScreen(
+      {super.key, this.isHost = false, this.joinCode, required this.player});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -21,10 +27,12 @@ class _LobbyScreenState extends State<LobbyScreen> {
   late IO.Socket socket;
   String accessCode = '';
   Logger logger = Logger();
+  late List<Player> players;
 
   @override
   void initState() {
     super.initState();
+    players = [widget.player];
     initSocket();
   }
 
@@ -42,11 +50,32 @@ class _LobbyScreenState extends State<LobbyScreen> {
       'withCredentials': true,
     });
 
+    // Aseguramos la conexión del socket
+    socket.connect();
+
     socket.on('connect', (_) {
       logger.d('Socket connected');
       if (widget.isHost) {
         socket.emit('createRoom');
+      } else {
+        setState(() {
+          logger.d("Codigo de sala: $widget.joinCode");
+          accessCode = widget.joinCode.toString();
+        });
+        socket.emit('joinRoom', widget.joinCode);
       }
+    });
+
+    socket.on('playerJoined', (name) {
+      logger.d("Se unió $name");
+      Fluttertoast.showToast(
+        msg: "Se unió $name",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: const Color(0xFFEA970A),
+        textColor: Colors.black,
+        fontSize: 16.0,
+      );
     });
 
     socket.on('accessCode', (code) {
@@ -54,6 +83,27 @@ class _LobbyScreenState extends State<LobbyScreen> {
         logger.d("Codigo de sala: $code");
         accessCode = code.toString();
       });
+    });
+
+    socket.on('connectedPlayers', (data) {
+      logger.d("Jugador nuevo recibido: $data");
+      List<dynamic> emailList = data as List<dynamic>;
+      List<Player> newPlayers = emailList.map((email) {
+        return Player.fromEmail(email.toString());
+      }).toList();
+
+      setState(() {
+        players = newPlayers;
+      });
+    });
+
+    socket.on('mapSended', (map) {
+      logger.d("Mapa recibido: $map");
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) => GameScreen(
+                socket: socket,
+                gameMap: map,
+              )));
     });
 
     socket.onError((data) {
@@ -73,7 +123,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
             children: [
               Expanded(
                 flex: 3,
-                child: PlayersLobby(players: 4),
+                child: PlayersLobby(players: players),
               ),
               Expanded(
                 flex: 2,
@@ -100,11 +150,31 @@ class _LobbyScreenState extends State<LobbyScreen> {
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),
-                            subtitle: Center(
-                              child: Text(
-                                accessCode,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold),
+                            subtitle: GestureDetector(
+                              onTap: () {
+                                Clipboard.setData(
+                                    ClipboardData(text: accessCode));
+                              },
+                              child: Center(
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      accessCode,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Icon(
+                                      Icons.content_copy,
+                                      size: 20,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withOpacity(0.6),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -113,11 +183,13 @@ class _LobbyScreenState extends State<LobbyScreen> {
                         ElevatedButton(
                           onPressed: () {
                             if (widget.isHost) {
+                              socket.disconnect();
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                       builder: (_) => const HomeScreen()));
                             } else {
-                              socket.emit('leaveRoom', accessCode);
+                              socket.emit('leaveRoom');
+                              socket.disconnect();
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                       builder: (_) => const HomeScreen()));
@@ -137,9 +209,9 @@ class _LobbyScreenState extends State<LobbyScreen> {
                         const SizedBox(height: 16),
                         if (widget.isHost) ...[
                           ElevatedButton(
-                            onPressed: () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                    builder: (_) => const GameScreen())),
+                            onPressed: () {
+                              socket.emit('startGame', accessCode);
+                            },
                             style: ElevatedButton.styleFrom(
                               foregroundColor: Colors.black,
                               backgroundColor: const Color(0xFFEA970A),

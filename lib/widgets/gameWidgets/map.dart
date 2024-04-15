@@ -7,7 +7,7 @@ import 'package:path_drawing/path_drawing.dart';
 import 'package:interactable_svg/interactable_svg/interactable_svg.dart';
 import 'package:wealth_wars/methods/region_overlay_painter.dart';
 import 'package:wealth_wars/methods/circule_overlay_painter.dart';
-import 'package:wealth_wars/widgets/pop_up_attack.dart';
+import 'package:wealth_wars/widgets/gameWidgets/pop_up_attack.dart';
 
 const double width = -392.394 * 0.5;
 const double height = -317.762 * 0.5;
@@ -20,7 +20,8 @@ final List<Color> colors = [
 ];
 
 class MapWidget extends StatefulWidget {
-  const MapWidget({super.key});
+  final Map<String, dynamic> gameMap;
+  const MapWidget({super.key, required this.gameMap});
 
   @override
   State<MapWidget> createState() => _MapWidgetState();
@@ -629,11 +630,9 @@ class _MapWidgetState extends State<MapWidget> {
 
   // Esto era para llenar una lista con regiones del mapa y poder modificar el mapa dado un archivo json
   Future<List<GameRegion>> loadMapData() async {
-    final jsonString = await rootBundle.loadString('assets/game_state.js');
-    final jsonResponse = jsonDecode(jsonString);
     List<GameRegion> gameRegions = [];
 
-    jsonResponse['map'].forEach((key, value) {
+    widget.gameMap['map'].forEach((key, value) {
       GameRegion gameRegion = GameRegion(
         name: value['name'],
         player: value['player'],

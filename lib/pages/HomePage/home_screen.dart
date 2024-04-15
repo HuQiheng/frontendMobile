@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import '../../widgets/pop_up_salas.dart';
+import '../../widgets/lobbyWidgets/pop_up_salas.dart';
 import 'package:wealth_wars/pages/HomePage/account_screen.dart';
 import 'package:wealth_wars/pages/HomePage/awards_screen.dart';
 import 'package:wealth_wars/pages/HomePage/friends_screen.dart';
 import 'package:wealth_wars/pages/HomePage/settings_screen.dart';
 import 'package:wealth_wars/methods/shared_preferences.dart';
+import 'package:wealth_wars/methods/player_class.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -17,10 +18,14 @@ class HomeScreen extends StatelessWidget {
       String email = userData?['email'];
       String picture = userData?['picture'];
       String password = userData?['password'];
-      
+
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => ProfileScreen(username: username, email: email, picture: picture, password: password),
+          builder: (context) => ProfileScreen(
+              username: username,
+              email: email,
+              picture: picture,
+              password: password),
         ),
       );
     }
@@ -43,7 +48,19 @@ class HomeScreen extends StatelessWidget {
 
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => SettingsScreen(email: email),),
+          builder: (context) => SettingsScreen(email: email),
+        ),
+      );
+    }
+
+    void showGamePopup() async {
+      final userData = await getUserData();
+      Player player = Player(
+          email: userData?['email'], profileImageUrl: userData?['picture']);
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) => PopUpSalas(player: player),
       );
     }
 
@@ -61,17 +78,9 @@ class HomeScreen extends StatelessWidget {
                   child: Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: MenuButton(
-                        iconData: Icons.gamepad,
-                        label: 'Juego',
-                        onNavigate: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return const PopUpSalas();
-                            },
-                          );
-                        },
-                      )),
+                          iconData: Icons.gamepad,
+                          label: 'Juego',
+                          onNavigate: showGamePopup)),
                 ),
                 Expanded(
                   flex: 3,

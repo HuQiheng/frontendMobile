@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
-import 'package:wealth_wars/widgets/pop_up_change_username.dart';
+import 'package:wealth_wars/widgets/homeWidgets/pop_up_change_username.dart';
 
 class ProfileScreen extends StatelessWidget {
   final String username;
@@ -9,7 +9,12 @@ class ProfileScreen extends StatelessWidget {
   final String picture;
   final String password;
 
-  const ProfileScreen({super.key, required this.username, required this.email, required this.picture, required this.password});
+  const ProfileScreen(
+      {super.key,
+      required this.username,
+      required this.email,
+      required this.picture,
+      required this.password});
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +47,12 @@ class ProfileScreen extends StatelessWidget {
               TextButton(
                 onPressed: () {
                   // Aquí va el codigo de amigo
-                  Clipboard.setData(const ClipboardData(text: '<Mi código amigo>')); // Copia el texto al portapapeles
+                  Clipboard.setData(const ClipboardData(
+                      text:
+                          '<Mi código amigo>')); // Copia el texto al portapapeles
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Texto copiado al portapapeles')),
+                    const SnackBar(
+                        content: Text('Texto copiado al portapapeles')),
                   );
                 },
                 style: TextButton.styleFrom(
@@ -63,7 +71,8 @@ class ProfileScreen extends StatelessWidget {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
-                          return PopUpChangeUsername(email: email, password: password);
+                          return PopUpChangeUsername(
+                              email: email, password: password);
                         },
                       );
                     },

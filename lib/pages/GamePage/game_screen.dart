@@ -1,23 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:logger/logger.dart';
-import 'package:wealth_wars/widgets/map.dart';
-import 'package:wealth_wars/widgets/turn_info.dart';
-import 'package:wealth_wars/widgets/resources_info.dart';
-import 'package:wealth_wars/widgets/players_info.dart';
-import 'package:wealth_wars/widgets/pop_up_surrender.dart';
+// ignore: library_prefixes
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:wealth_wars/widgets/gameWidgets/map.dart';
+import 'package:wealth_wars/widgets/gameWidgets/turn_info.dart';
+import 'package:wealth_wars/widgets/gameWidgets/resources_info.dart';
+import 'package:wealth_wars/widgets/gameWidgets/players_info.dart';
+import 'package:wealth_wars/widgets/gameWidgets/pop_up_surrender.dart';
 
 // ignore: depend_on_referenced_packages
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class GameScreen extends StatelessWidget {
-  const GameScreen({super.key});
+  final IO.Socket socket;
+  final Map<String, dynamic> gameMap;
+  const GameScreen({super.key, required this.socket, required this.gameMap});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: Scaffold(
-        body: MapScreen(),
+        body: MapScreen(gameMap: gameMap),
         resizeToAvoidBottomInset: false,
       ),
     );
@@ -25,7 +29,8 @@ class GameScreen extends StatelessWidget {
 }
 
 class MapScreen extends StatefulWidget {
-  const MapScreen({super.key});
+  final Map<String, dynamic> gameMap;
+  const MapScreen({super.key, required this.gameMap});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -81,7 +86,9 @@ class _MapScreenState extends State<MapScreen> {
                     FocusScope.of(context).unfocus();
                   });
                 },
-                child: const MapWidget()),
+                child: MapWidget(
+                  gameMap: widget.gameMap,
+                )),
           ),
           //=============================
           //==========CHAT_ICON==========

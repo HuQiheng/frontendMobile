@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:wealth_wars/pages/GamePage/lobby_screen.dart';
+import 'package:wealth_wars/pages/gamePage/lobby_screen.dart';
+import 'package:wealth_wars/methods/player_class.dart';
 
 class PopUpSalas extends StatelessWidget {
-  const PopUpSalas({super.key});
+  final Player player;
+  PopUpSalas({super.key, required this.player});
+
+  final TextEditingController joinCodeController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -90,6 +94,7 @@ class PopUpSalas extends StatelessWidget {
                           children: [
                             Flexible(
                               child: TextField(
+                                controller: joinCodeController,
                                 keyboardType: TextInputType.number,
                                 style: const TextStyle(color: Colors.white),
                                 decoration: InputDecoration(
@@ -149,16 +154,16 @@ class PopUpSalas extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => const LobbyScreen(
-                isHost: true,
-              )),
+          builder: (context) => LobbyScreen(isHost: true, player: player)),
     );
   }
 
   void _navigateToLobbyGuest(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const LobbyScreen()),
+      MaterialPageRoute(
+          builder: (context) =>
+              LobbyScreen(joinCode: joinCodeController.text, player: player)),
     );
   }
 }

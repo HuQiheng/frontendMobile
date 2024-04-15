@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wealth_wars/methods/player_class.dart';
 
 class PlayersLobby extends StatelessWidget {
   final List<Color> colorsIcon = [
@@ -15,9 +16,7 @@ class PlayersLobby extends StatelessWidget {
     const Color.fromRGBO(17, 99, 47, 1),
   ];
 
-  final List<String> usuarios = ['User 1', 'User 2', 'User 3', 'User 4'];
-
-  final int players;
+  final List<Player> players;
 
   PlayersLobby({super.key, required this.players});
 
@@ -25,7 +24,7 @@ class PlayersLobby extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Widget> playerWidgets = [];
 
-    for (int i = 0; i < players; i++) {
+    for (int i = 0; i < players.length; i++) {
       playerWidgets.add(
         Card(
           margin: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 16.0),
@@ -40,14 +39,17 @@ class PlayersLobby extends StatelessWidget {
                 color: colorsIcon[i],
                 border: Border.all(color: Colors.black, width: 2.0),
               ),
-              child: const Icon(
-                Icons.supervised_user_circle,
-                size: 30,
-                color: Colors.white,
+              child: Image.network(
+                players[i].profileImageUrl,
+                width: 30,
+                height: 30,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.error, size: 30, color: Colors.yellow),
               ),
             ),
             title: Text(
-              usuarios[i],
+              players[i].email,
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,

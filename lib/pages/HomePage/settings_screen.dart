@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:wealth_wars/widgets/pop_up_close_session.dart';
-import 'package:wealth_wars/widgets/pop_up_delete_account.dart';
+import 'package:wealth_wars/widgets/homeWidgets/pop_up_close_session.dart';
+import 'package:wealth_wars/widgets/homeWidgets/pop_up_delete_account.dart';
 import 'package:logger/logger.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -86,7 +86,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     activeColor: Colors.white,
                     activeTrackColor: Colors.lightBlueAccent,
                   ),
-                  
                 ],
               ),
             ),
@@ -97,74 +96,74 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             const SizedBox(height: 5), // Espacio entre la línea y la lista
             Row(
-                children: [
-                  const Expanded(child: SizedBox.shrink()),
-                  ElevatedButton(
-                    onPressed: () {
-                      showDialog(
-                        // Cerrar sesión
-                        context: context,
-                        builder: (BuildContext context) {
-                          return const PopUpCloseSession();
-                        },
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      foregroundColor: Colors.white,
-                    ),
-                    child: const IntrinsicWidth(
-                      child: Column(
-                        children: [
-                          Text('Cerrar sesión'),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Icon(
-                            Icons.logout,
-                            color: Colors.white,
-                            size: 30,
-                          ),
-                        ],
-                      ),
+              children: [
+                const Expanded(child: SizedBox.shrink()),
+                ElevatedButton(
+                  onPressed: () {
+                    showDialog(
+                      // Cerrar sesión
+                      context: context,
+                      builder: (BuildContext context) {
+                        return const PopUpCloseSession();
+                      },
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const IntrinsicWidth(
+                    child: Column(
+                      children: [
+                        Text('Cerrar sesión'),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Icon(
+                          Icons.logout,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                      ],
                     ),
                   ),
-                  const Expanded(child: SizedBox.shrink()),
-                  ElevatedButton(
-                    onPressed: () {
-                      showDialog(
-                        // Borrar cuenta
-                        context: context,
-                        builder: (BuildContext context) {
-                          return PopUpDelete(email: email);
-                          //return const PopUpDelete();
-                        },
-                      );
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      foregroundColor: Colors.white,
-                    ),
-                    child: const IntrinsicWidth(
-                      child: Column(
-                        children: [
-                          Text('Borrar cuenta'),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Icon(
-                            Icons.delete_forever,
-                            color: Colors.white,
-                            size: 30,
-                          ),
-                        ],
-                      ),
+                ),
+                const Expanded(child: SizedBox.shrink()),
+                ElevatedButton(
+                  onPressed: () {
+                    showDialog(
+                      // Borrar cuenta
+                      context: context,
+                      builder: (BuildContext context) {
+                        return PopUpDelete(email: email);
+                        //return const PopUpDelete();
+                      },
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    foregroundColor: Colors.white,
+                  ),
+                  child: const IntrinsicWidth(
+                    child: Column(
+                      children: [
+                        Text('Borrar cuenta'),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Icon(
+                          Icons.delete_forever,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                      ],
                     ),
                   ),
-                  const Expanded(child: SizedBox.shrink()),
-                ],
-              ),
-              const SizedBox(height: 10), // Espacio entre la línea y la lista
+                ),
+                const Expanded(child: SizedBox.shrink()),
+              ],
+            ),
+            const SizedBox(height: 10), // Espacio entre la línea y la lista
           ],
         ),
       ),

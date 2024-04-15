@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:wealth_wars/pages/HomePage/home_screen.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
-import 'InitialPage/initial_page.dart';
+import 'initialPage/initial_page.dart';
 
 class LoadingScreen extends StatefulWidget {
   const LoadingScreen({super.key});

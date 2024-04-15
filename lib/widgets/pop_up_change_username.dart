@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:wealth_wars/pages/HomePage/home_screen.dart';
+import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 
 class PopUpChangeUsername extends StatefulWidget {
   final String email;
   final String password;
 
-  const PopUpChangeUsername({Key? key, required this.email, required this.password});
+  const PopUpChangeUsername(
+      {Key? key, required this.email, required this.password});
 
   @override
   _PopUpChangeUsernameState createState() => _PopUpChangeUsernameState();
@@ -28,7 +30,8 @@ class _PopUpChangeUsernameState extends State<PopUpChangeUsername> {
   Widget build(BuildContext context) {
     final Logger logger = Logger();
     return AlertDialog(
-      contentPadding: const EdgeInsets.only(top: 2, right: 20, left: 20, bottom: 20),
+      contentPadding:
+          const EdgeInsets.only(top: 2, right: 20, left: 20, bottom: 20),
       backgroundColor: const Color(0xFF083344),
       content: SingleChildScrollView(
         child: Column(
@@ -71,7 +74,8 @@ class _PopUpChangeUsernameState extends State<PopUpChangeUsername> {
                 children: [
                   const SizedBox(height: 8),
                   TextField(
-                    controller: _usernameController, // Asocia el controlador al TextField
+                    controller:
+                        _usernameController, // Asocia el controlador al TextField
                     decoration: InputDecoration(
                       hintText: 'Introduce tu nuevo nombre de usuario',
                       hintStyle: const TextStyle(color: Colors.white70),
@@ -92,11 +96,13 @@ class _PopUpChangeUsernameState extends State<PopUpChangeUsername> {
                         // Obtener el texto del TextField
                         String newUsername = _usernameController.text;
                         logger.d(newUsername);
-                        await updateUser(widget.email, newUsername, widget.password);
+                        await updateUser(
+                            widget.email, newUsername, widget.password);
                         // Regresa a pantalla principal (maybe un pop up más de feedback)
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const HomeScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => const HomeScreen()),
                         );
                       },
                       style: ElevatedButton.styleFrom(
@@ -128,9 +134,19 @@ class _PopUpChangeUsernameState extends State<PopUpChangeUsername> {
   }
 }
 
+Future<void> updateUser(
+    String email, String newUsername, String password) async {
+  final cookieManager = WebviewCookieManager();
 
-Future<void> updateUser(String email, String newUsername, String password) async {
-  String url = 'http://wealthwarsgames:3010/users/$email'; // La URL del endpoint debe ser /users/:email para que coincida con la ruta en el backend
+  final cookies = await cookieManager.getCookies('https://wealthwars.games');
+  String sessionCookie = cookies
+      .firstWhere(
+        (cookie) => cookie.name == 'connect.sid',
+      )
+      .value;
+
+  String url =
+      'https://wealthwars.games:3010/users/$email'; // La URL del endpoint debe ser /users/:email para que coincida con la ruta en el backend
   final Logger logger = Logger();
   try {
     // Construir el cuerpo de la solicitud JSON
@@ -144,6 +160,7 @@ Future<void> updateUser(String email, String newUsername, String password) async
       Uri.parse(url),
       headers: {
         'Content-Type': 'application/json',
+        'cookie': 'connect.sid=$sessionCookie'
       },
       body: jsonEncode(requestBody),
     );

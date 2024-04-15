@@ -4,7 +4,6 @@ import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 import 'package:logger/logger.dart';
 import 'package:http/http.dart' as http;
 
-
 class PopUpDelete extends StatelessWidget {
   final String email;
   const PopUpDelete({super.key, required this.email});
@@ -12,27 +11,43 @@ class PopUpDelete extends StatelessWidget {
   //const PopUpDelete({super.key});
 
   Future<void> deleteUser(String email) async {
-  // Construir la URL con el email del usuario a eliminar
-  Logger logger = Logger();
-  String url = 'https://wealthwars.games/users/$email';
+    final cookieManager = WebviewCookieManager();
 
-  try {
-    // Realizar la solicitud DELETE al backend
-    var response = await http.delete(Uri.parse(url));
+    // Construir la URL con el email del usuario a eliminar
+    Logger logger = Logger();
+    logger.d("Tengo las cookies");
+    String url = 'https://wealthwars.games:3010/users/$email';
 
-    // Verificar si la solicitud fue exitosa (código de estado 200)
-    if (response.statusCode == 200) {
-      // El usuario ha sido eliminado exitosamente
-      logger.d('Respuesta del servidor: ${response.body}');
-    } else {
-      // La solicitud no fue exitosa, mostrar el mensaje de error
-      logger.d('Error al eliminar usuario: ${response.statusCode}');
+    final cookies = await cookieManager.getCookies('https://wealthwars.games');
+    String sessionCookie = cookies
+        .firstWhere(
+          (cookie) => cookie.name == 'connect.sid',
+        )
+        .value;
+
+    try {
+      // Realizar la solicitud DELETE al backend
+      var response = await http.delete(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'cookie': 'connect.sid=$sessionCookie'
+        },
+      );
+
+      // Verificar si la solicitud fue exitosa (código de estado 200)
+      if (response.statusCode == 200) {
+        // El usuario ha sido eliminado exitosamente
+        logger.d('Respuesta del servidor: ${response.body}');
+      } else {
+        // La solicitud no fue exitosa, mostrar el mensaje de error
+        logger.d('Error al eliminar usuario: ${response.statusCode}');
+      }
+    } catch (error) {
+      // Manejar errores de conexión u otros errores
+      logger.d('Error al eliminar usuario: $error');
     }
-  } catch (error) {
-    // Manejar errores de conexión u otros errores
-    logger.d('Error al eliminar usuario: $error');
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +76,7 @@ class PopUpDelete extends StatelessWidget {
                   Navigator.of(context).pop();
                 },
                 icon: const Icon(
-                  Icons.close, 
+                  Icons.close,
                   color: Colors.white,
                   size: 40,
                 ),
@@ -97,14 +112,14 @@ class PopUpDelete extends StatelessWidget {
                     alignment: Alignment.bottomCenter,
                     child: ElevatedButton(
                       onPressed: () async {
-                        // Borrar cuenta aquí (primero se eliminan las coockies)
+                        // Borrar cuenta aquí
+                        await deleteUser(email);
+
                         cookieManager.clearCookies().then((_) {
                           logger.d("Cookies cleared successfully.");
                         }).catchError((e) {
                           logger.e("Failed to clear cookies: $e");
                         });
-
-                        await deleteUser(email);
 
                         Navigator.push(
                           context,

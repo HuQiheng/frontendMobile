@@ -243,139 +243,49 @@ class _MapWidgetState extends State<MapWidget> {
     ),
   };
 
-  Map<String, int> regionPlayers = {
-    "g9882": 1,
-    "g9900": 3,
-    "g10510": 2,
-    "g10207": 1,
-    "g10518": 1,
-    "g10526": 1,
-    "g10542": 2,
-    "g11540": 3,
-    "g12212": 0,
-    "g15909": 0,
-    "g12534": 0,
-    "g2225": 2,
-    "g12542": 2,
-    "g4467": 2,
-    "g13911": 3,
-    "g14246": 0,
-    "g15576": 0,
-    "g15244": 0,
-    "g16243": 0,
-    "g11532": 1,
-    "g16914": 1,
-    "g14254": 1,
-    "g10558": 1,
-    "g10550": 1,
-    "g10882": 2,
-    "g2": 2,
-    "g11564": 3,
-    "g13919": 3,
-    "g4": 3,
-    "g18259": 3,
-    "g17589": 3,
-    "g17251": 2,
-    "g16578": 2,
-    "g19959": 1,
-    "g19282": 2,
-    "g3": 1,
-    "g10898": 1,
-    "g10566": 1,
-    "g11210": 1,
-    "g11218": 0,
-    "g1167": 0,
-    "g10197": 0,
-  };
-
-  Map<String, String> circleNumbers = {
-    "g9882": "99",
-    "g9900": "3",
-    "g10510": "3",
-    "g10207": "3",
-    "g10518": "3",
-    "g10526": "3",
-    "g10542": "3",
-    "g11540": "3",
-    "g12212": "3",
-    "g15909": "3",
-    "g12534": "3",
-    "g2225": "3",
-    "g12542": "3",
-    "g4467": "3",
-    "g13911": "3",
-    "g14246": "3",
-    "g15576": "3",
-    "g15244": "3",
-    "g16243": "3",
-    "g11532": "3",
-    "g16914": "3",
-    "g14254": "3",
-    "g10558": "3",
-    "g10550": "3",
-    "g10882": "3",
-    "g2": "3",
-    "g11564": "3",
-    "g13919": "3",
-    "g4": "3",
-    "g18259": "3",
-    "g17589": "3",
-    "g17251": "3",
-    "g16578": "3",
-    "g19959": "3",
-    "g19282": "3",
-    "g3": "3",
-    "g10898": "3",
-    "g10566": "3",
-    "g11210": "3",
-    "g11218": "3",
-    "g1167": "3",
-    "g10197": "3",
-  };
-
-  Map<String, Color> regionColors = {
-    "g9882": colors[1],
-    "g9900": colors[3],
-    "g10510": colors[2],
-    "g10207": colors[1],
-    "g10518": colors[1],
-    "g10526": colors[1],
-    "g10542": colors[2],
-    "g11540": colors[3],
-    "g12212": colors[0],
-    "g15909": colors[0],
-    "g12534": colors[0],
-    "g2225": colors[2],
-    "g12542": colors[2],
-    "g4467": colors[2],
-    "g13911": colors[3],
-    "g14246": colors[0],
-    "g15576": colors[0],
-    "g15244": colors[0],
-    "g16243": colors[0],
-    "g11532": colors[1],
-    "g16914": colors[1],
-    "g14254": colors[1],
-    "g10558": colors[1],
-    "g10550": colors[1],
-    "g10882": colors[2],
-    "g2": colors[2],
-    "g11564": colors[3],
-    "g13919": colors[3],
-    "g4": colors[3],
-    "g18259": colors[3],
-    "g17589": colors[3],
-    "g17251": colors[2],
-    "g16578": colors[2],
-    "g19959": colors[1],
-    "g19282": colors[2],
-    "g3": colors[1],
-    "g10898": colors[1],
-    "g10566": colors[1],
-    "g11210": colors[1],
-    "g11218": colors[0],
-    "g1167": colors[0],
-    "g10197": colors[0],
+  Map<String, String> regionToPath = {
+    "g9882": "C",
+    "g9900": "LU",
+    "g10510": "LE",
+    "g10207": "O",
+    "g10518": "S",
+    "g10526": "PV",
+    "g10542": "LN",
+    "g11540": "BU",
+    "g12212": "SO",
+    "g15909": "CU",
+    "g12534": "GU",
+    "g2225": "VP",
+    "g12542": "M",
+    "g4467": "AS",
+    "g13911": "SA",
+    "g14246": "CC",
+    "g15576": "TO",
+    "g15244": "CR",
+    "g16243": "AB",
+    "g11532": "A",
+    "g16914": "MU",
+    "g14254": "BA",
+    "g10558": "Z",
+    "g10550": "HU",
+    "g10882": "L",
+    "g2": "BG",
+    "g11564": "PN",
+    "g13919": "PC",
+    "g4": "AL",
+    "g18259": "H",
+    "g17589": "SE",
+    "g17251": "CO",
+    "g16578": "J",
+    "g19959": "AM",
+    "g19282": "GR",
+    "g3": "MC",
+    "g10898": "T",
+    "g10566": "TE",
+    "g11210": "CS",
+    "g11218": "V",
+    "g1167": "ZA",
+    "g10197": "PO",
   };
 
   Map<String, Path> regionPaths = {
@@ -591,6 +501,9 @@ class _MapWidgetState extends State<MapWidget> {
     ),
   };
 
+  Map<String, String> circleNumbers = {};
+  Map<String, Color> regionColors = {};
+
   final int phase = 1;
   final int player = 0;
   final int playerPlaying = 0;
@@ -599,6 +512,7 @@ class _MapWidgetState extends State<MapWidget> {
   void initState() {
     super.initState();
     loadTerritories();
+    loadMapData();
   }
 
   int attackPhase = 0;
@@ -606,7 +520,9 @@ class _MapWidgetState extends State<MapWidget> {
 
   Map<String, String> nameToIdMap = {};
   Map<String, List<String>> idToAdjacentsMap = {};
+  List<GameRegion> gameRegions = [];
 
+  // Carga de territorios adyacentes
   Future<void> loadTerritories() async {
     final jsonString = await rootBundle.loadString('assets/territories.json');
     final Map<String, dynamic> territories = jsonDecode(jsonString);
@@ -628,10 +544,16 @@ class _MapWidgetState extends State<MapWidget> {
     return idToAdjacentsMap[attackRegionId]?.contains(defenseRegionId) ?? false;
   }
 
-  // Esto era para llenar una lista con regiones del mapa y poder modificar el mapa dado un archivo json
-  Future<List<GameRegion>> loadMapData() async {
-    List<GameRegion> gameRegions = [];
+  GameRegion searchRegionByName(String regionName) {
+    // Encuentra la región por nombre
+    GameRegion? foundRegion = gameRegions.firstWhere(
+        (region) => region.name.toLowerCase() == regionName.toLowerCase());
 
+    return foundRegion;
+  }
+
+  // Carga de datos del mapa
+  Future<List<GameRegion>> loadMapData() async {
     widget.gameMap['map'].forEach((key, value) {
       GameRegion gameRegion = GameRegion(
         name: value['name'],
@@ -641,6 +563,15 @@ class _MapWidgetState extends State<MapWidget> {
       );
 
       gameRegions.add(gameRegion);
+    });
+
+    regionToPath.forEach((key, value) {
+      var details = widget.gameMap['map'][value];
+      logger.d("VALOR: $value");
+      if (details != null) {
+        circleNumbers[key] = details['troops'].toString();
+        regionColors[key] = colors[details['player']];
+      }
     });
 
     return gameRegions;
@@ -678,10 +609,12 @@ class _MapWidgetState extends State<MapWidget> {
                     if (player == playerPlaying) {
                       if (phase == 0) {}
                       if (phase == 1) {
-                        //Faltaría comprobar que es su propia región
-                        if (attackPhase == 0) {
+                        // Comprobar que es su propia región
+                        GameRegion gr = searchRegionByName(region.name);
+                        if (attackPhase == 0 && gr.player == playerPlaying) {
                           attackRegion = region;
                           attackPhase++;
+                          logger.d("Es mi region");
                         } else if (attackPhase == 1 && attackRegion != region) {
                           if (areRegionsAdjacent(
                               attackRegion.name, region.name)) {

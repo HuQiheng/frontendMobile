@@ -567,7 +567,6 @@ class _MapWidgetState extends State<MapWidget> {
 
     regionToPath.forEach((key, value) {
       var details = widget.gameMap['map'][value];
-      logger.d("VALOR: $value");
       if (details != null) {
         circleNumbers[key] = details['troops'].toString();
         regionColors[key] = colors[details['player']];

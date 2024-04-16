@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wealth_wars/methods/player_class.dart';
 
 class PlayersInfo extends StatelessWidget {
   final List<Color> colorsIcon = [
@@ -15,9 +16,7 @@ class PlayersInfo extends StatelessWidget {
     const Color.fromRGBO(17, 99, 47, 1),
   ];
 
-  final List<String> usuarios = ['User 1', 'User 2', 'User 3', 'User 4'];
-
-  final int players;
+  final List<Player> players;
 
   PlayersInfo({super.key, required this.players});
 
@@ -28,9 +27,9 @@ class PlayersInfo extends StatelessWidget {
     double maxWidth = 0.0;
 
     //username width
-    for (String texto in usuarios) {
+    for (int i = 0; i < players.length; i++) {
       TextSpan span = TextSpan(
-        text: texto,
+        text: players[i].email,
       );
       TextPainter tp = TextPainter(
         text: span,
@@ -46,7 +45,7 @@ class PlayersInfo extends StatelessWidget {
       }
     }
 
-    for (int i = 0; i < players; i++) {
+    for (int i = 0; i < players.length; i++) {
       playerWidgets.add(
         Stack(
           children: [
@@ -65,7 +64,7 @@ class PlayersInfo extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  usuarios[i],
+                  players[i].email,
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -84,9 +83,13 @@ class PlayersInfo extends StatelessWidget {
                   color: colorsIcon[i],
                   border: Border.all(color: Colors.black, width: 2.0),
                 ),
-                child: const Icon(
-                  Icons.supervised_user_circle,
-                  size: 40,
+                child: Image.network(
+                  players[i].profileImageUrl,
+                  width: 30,
+                  height: 30,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) =>
+                      const Icon(Icons.error, size: 30, color: Colors.yellow),
                 ),
               ),
             ),

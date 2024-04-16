@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:wealth_wars/methods/player_class.dart';
 
 final List<Color> colors = [
   const Color.fromRGBO(59, 130, 246, 1),
@@ -8,11 +11,9 @@ final List<Color> colors = [
   const Color.fromRGBO(34, 197, 94, 1),
 ];
 
-// debug
-final List<String> usuarios = ['User 1', 'User 2', 'User 3', 'User 4'];
-
 class TurnInfo extends StatefulWidget {
-  const TurnInfo({super.key});
+  final List<Player> players;
+  const TurnInfo({super.key, required this.players});
 
   @override
   State<TurnInfo> createState() => _TurnInfoState();
@@ -22,16 +23,52 @@ class _TurnInfoState extends State<TurnInfo> {
   final logger = Logger();
   int phase = 0;
   int player = 0; // backend in json
+  int timerSeconds = 60;
+  Timer? countdownTimer;
 
-  void buttonClicked() {
+  @override
+  void initState() {
+    super.initState();
+    startTimer();
+  }
+
+  @override
+  void dispose() {
+    countdownTimer?.cancel();
+    super.dispose();
+  }
+
+  void startTimer() {
+    countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (timerSeconds > 0) {
+        setState(() {
+          timerSeconds--; // Decrementa el contador
+        });
+      } else {
+        timer.cancel(); // Detiene el temporizador
+        changePhase(); // Cambia de fase o jugador
+        resetTimer();
+      }
+    });
+  }
+
+  void resetTimer() {
+    setState(() {
+      timerSeconds = 60; // Restablece el contador a 60 segundos
+      startTimer(); // Reinicia el temporizador
+    });
+  }
+
+  void changePhase() {
     setState(() {
       // setstate using for the rerender the screen
       // if we not use than it not show the sceond text
       if (phase + 1 == 3) {
         logger.d("Tocaría cambiar de jugador");
-        player = (player + 1) % 4;
+        player = (player + 1) % widget.players.length;
       }
       phase = (phase + 1) % 3;
+      timerSeconds = 60;
     });
   }
 
@@ -57,7 +94,7 @@ class _TurnInfoState extends State<TurnInfo> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
-                usuarios[player],
+                widget.players[player].email,
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -87,9 +124,13 @@ class _TurnInfoState extends State<TurnInfo> {
               color: colors[player],
               border: Border.all(color: Colors.black, width: 3.0),
             ),
-            child: const Icon(
-              Icons.supervised_user_circle,
-              size: 60,
+            child: Image.network(
+              widget.players[player].profileImageUrl,
+              width: 60,
+              height: 60,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) =>
+                  const Icon(Icons.error, size: 30, color: Colors.yellow),
             ),
           ),
         ),
@@ -106,7 +147,7 @@ class _TurnInfoState extends State<TurnInfo> {
             ),
             child: IconButton(
               onPressed: () {
-                buttonClicked();
+                changePhase();
                 logger.d("Estás en fase: $phase ");
               },
               icon: const Icon(
@@ -128,10 +169,10 @@ class _TurnInfoState extends State<TurnInfo> {
               borderRadius: BorderRadius.circular(25.0),
               border: Border.all(color: Colors.black, width: 2.0),
             ),
-            child: const Center(
+            child: Center(
               child: Text(
-                '60',
-                style: TextStyle(
+                '$timerSeconds',
+                style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
                   fontSize: 14,

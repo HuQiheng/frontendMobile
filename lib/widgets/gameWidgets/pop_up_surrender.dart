@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+// ignore: library_prefixes
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:wealth_wars/pages/HomePage/home_screen.dart';
 
 class PopUpSurrender extends StatelessWidget {
-  const PopUpSurrender({super.key});
+  final IO.Socket socket;
+  const PopUpSurrender({super.key, required this.socket});
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +67,7 @@ class PopUpSurrender extends StatelessWidget {
                     alignment: Alignment.bottomCenter,
                     child: ElevatedButton(
                       onPressed: () {
+                        socket.disconnect();
                         Navigator.push(
                           context,
                           MaterialPageRoute(

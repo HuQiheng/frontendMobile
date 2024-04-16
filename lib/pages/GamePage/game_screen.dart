@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:logger/logger.dart';
 // ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:wealth_wars/methods/player_class.dart';
 import 'package:wealth_wars/widgets/gameWidgets/map.dart';
 import 'package:wealth_wars/widgets/gameWidgets/turn_info.dart';
 import 'package:wealth_wars/widgets/gameWidgets/resources_info.dart';
@@ -15,13 +18,22 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 class GameScreen extends StatelessWidget {
   final IO.Socket socket;
   final Map<String, dynamic> gameMap;
-  const GameScreen({super.key, required this.socket, required this.gameMap});
+  final List<Player> players;
+  const GameScreen(
+      {super.key,
+      required this.socket,
+      required this.gameMap,
+      required this.players});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        body: MapScreen(gameMap: gameMap),
+        body: MapScreen(
+          gameMap: gameMap,
+          players: players,
+          socket: socket,
+        ),
         resizeToAvoidBottomInset: false,
       ),
     );
@@ -29,8 +41,14 @@ class GameScreen extends StatelessWidget {
 }
 
 class MapScreen extends StatefulWidget {
+  final IO.Socket socket;
+  final List<Player> players;
   final Map<String, dynamic> gameMap;
-  const MapScreen({super.key, required this.gameMap});
+  const MapScreen(
+      {super.key,
+      required this.gameMap,
+      required this.players,
+      required this.socket});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -106,14 +124,16 @@ class _MapScreenState extends State<MapScreen> {
           ),
           //=============================
           //==========TURN_INFO==========
-          const Align(alignment: Alignment.bottomCenter, child: TurnInfo()),
+          Align(
+              alignment: Alignment.bottomCenter,
+              child: TurnInfo(players: widget.players)),
           //================================
           //==========PLAYERS_INFO==========
           Padding(
             padding: const EdgeInsets.only(bottom: 75),
             child: Align(
                 alignment: Alignment.centerRight,
-                child: PlayersInfo(players: 4)),
+                child: PlayersInfo(players: widget.players)),
           ),
           //============================
           //==========SURRENDER==========
@@ -129,7 +149,7 @@ class _MapScreenState extends State<MapScreen> {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return const PopUpSurrender();
+                    return PopUpSurrender(socket: widget.socket);
                   },
                 );
               },
@@ -142,9 +162,10 @@ class _MapScreenState extends State<MapScreen> {
           ),
           //==================================
           //==========RESOURCES_INFO==========
-          const Align(
+          Align(
             alignment: Alignment.centerLeft,
-            child: ResourcesInfo(),
+            child:
+                ResourcesInfo(gameMap: widget.gameMap, players: widget.players),
           ),
           //========================
           //==========CHAT==========

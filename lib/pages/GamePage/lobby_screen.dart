@@ -59,10 +59,10 @@ class _LobbyScreenState extends State<LobbyScreen> {
         socket.emit('createRoom');
       } else {
         setState(() {
-          logger.d("Codigo de sala: $widget.joinCode");
           accessCode = widget.joinCode.toString();
+          logger.d("Codigo de sala: $accessCode");
         });
-        socket.emit('joinRoom', widget.joinCode);
+        socket.emit('joinRoom', accessCode);
       }
     });
 
@@ -75,6 +75,24 @@ class _LobbyScreenState extends State<LobbyScreen> {
         backgroundColor: const Color(0xFFEA970A),
         textColor: Colors.black,
         fontSize: 16.0,
+      );
+    });
+
+    socket.on('nonExistingRoom', (data) {
+      socket.disconnect();
+
+      Fluttertoast.showToast(
+        msg: "Codigo de sala incorrecto: $accessCode",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: const Color(0xFFEA970A),
+        textColor: Colors.black,
+        fontSize: 16.0,
+      );
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
     });
 
@@ -103,6 +121,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
           builder: (_) => GameScreen(
                 socket: socket,
                 gameMap: map,
+                players: players,
               )));
     });
 
@@ -170,19 +189,23 @@ class _LobbyScreenState extends State<LobbyScreen> {
                                               content: Text('Texto copiado al portapapeles')),
                                         );*/
                                         Fluttertoast.showToast(
-                                          msg: "Código de la sala copiado en el portapapeles",
+                                          msg:
+                                              "Código de la sala copiado en el portapapeles",
                                           toastLength: Toast.LENGTH_SHORT,
                                           gravity: ToastGravity.BOTTOM,
-                                          backgroundColor: const Color(0xFFEA970A),
+                                          backgroundColor:
+                                              const Color(0xFFEA970A),
                                           textColor: Colors.black,
                                           fontSize: 16.0,
                                         );
                                       },
                                       style: TextButton.styleFrom(
                                         foregroundColor: Colors.white,
-                                        backgroundColor: const Color(0xFF0066CC),
+                                        backgroundColor:
+                                            const Color(0xFF0066CC),
                                         textStyle: const TextStyle(
-                                            fontSize: 16, fontStyle: FontStyle.italic),
+                                            fontSize: 16,
+                                            fontStyle: FontStyle.italic),
                                       ),
                                       child: Text(accessCode),
                                     ),

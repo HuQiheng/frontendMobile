@@ -9,11 +9,12 @@ import 'package:wealth_wars/methods/player_class.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+  
 
   @override
   Widget build(BuildContext context) {
     void navigateToAccount() async {
-      final userData = await getUserData();
+      var userData = await getUserData();
       String username = userData?['name'];
       String email = userData?['email'];
       String picture = userData?['picture'];
@@ -43,7 +44,7 @@ class HomeScreen extends StatelessWidget {
     }
 
     void navigateToSettings() async {
-      final userData = await getUserData();
+      var userData = await getUserData();
       String email = userData?['email'];
 
       Navigator.of(context).push(
@@ -54,7 +55,7 @@ class HomeScreen extends StatelessWidget {
     }
 
     void showGamePopup() async {
-      final userData = await getUserData();
+      var userData = await getUserData();
       Player player = Player(
           email: userData?['email'], profileImageUrl: userData?['picture']);
 

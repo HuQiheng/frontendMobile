@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wealth_wars/methods/shared_preferences.dart';
 import 'package:wealth_wars/pages/loading_page.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 import 'package:logger/logger.dart';
@@ -69,7 +70,8 @@ class PopUpCloseSession extends StatelessWidget {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
+                        await clearAllData();
                         cookieManager.clearCookies().then((_) {
                           logger.d("Cookies cleared successfully.");
                         }).catchError((e) {

@@ -159,6 +159,34 @@ class _LobbyScreenState extends State<LobbyScreen> {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
+                                    TextButton(
+                                      onPressed: () {
+                                        // Aquí va el codigo de amigo
+                                        Clipboard.setData(ClipboardData(
+                                            text:
+                                                accessCode)); // Copia el texto al portapapeles
+                                        /*ScaffoldMessenger.of(context).showSnackBar(
+                                          const SnackBar(
+                                              content: Text('Texto copiado al portapapeles')),
+                                        );*/
+                                        Fluttertoast.showToast(
+                                          msg: "Código de la sala copiado en el portapapeles",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.BOTTOM,
+                                          backgroundColor: const Color(0xFFEA970A),
+                                          textColor: Colors.black,
+                                          fontSize: 16.0,
+                                        );
+                                      },
+                                      style: TextButton.styleFrom(
+                                        foregroundColor: Colors.white,
+                                        backgroundColor: const Color(0xFF0066CC),
+                                        textStyle: const TextStyle(
+                                            fontSize: 16, fontStyle: FontStyle.italic),
+                                      ),
+                                      child: Text(accessCode),
+                                    ),
+                                    /*
                                     Text(
                                       accessCode,
                                       style: const TextStyle(
@@ -172,7 +200,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
                                           .colorScheme
                                           .onSurface
                                           .withOpacity(0.6),
-                                    ),
+                                    ),*/
                                   ],
                                 ),
                               ),

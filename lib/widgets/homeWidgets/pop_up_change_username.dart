@@ -165,6 +165,9 @@ Future<void> updateUser(
       body: jsonEncode(requestBody),
     );
 
+    // Actualizar cookie?
+
+    
     // Verificar si la solicitud fue exitosa (código de estado 200)
     if (response.statusCode == 200) {
       // El usuario ha sido actualizado exitosamente

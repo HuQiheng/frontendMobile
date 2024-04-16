@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:wealth_wars/widgets/homeWidgets/pop_up_change_username.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ProfileScreen extends StatelessWidget {
   final String username;
@@ -50,9 +51,17 @@ class ProfileScreen extends StatelessWidget {
                   Clipboard.setData(const ClipboardData(
                       text:
                           '<Mi código amigo>')); // Copia el texto al portapapeles
-                  ScaffoldMessenger.of(context).showSnackBar(
+                  /*ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                         content: Text('Texto copiado al portapapeles')),
+                  );*/
+                  Fluttertoast.showToast(
+                    msg: "Código de amigo copiado en el portapapeles",
+                    toastLength: Toast.LENGTH_SHORT,
+                    gravity: ToastGravity.BOTTOM,
+                    backgroundColor: const Color(0xFFEA970A),
+                    textColor: Colors.black,
+                    fontSize: 16.0,
                   );
                 },
                 style: TextButton.styleFrom(

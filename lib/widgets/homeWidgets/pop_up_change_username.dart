@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
+import 'package:wealth_wars/methods/shared_preferences.dart';
 import 'package:wealth_wars/pages/HomePage/home_screen.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 
@@ -146,7 +147,7 @@ Future<void> updateUser(
       .value;
 
   String url =
-      'https://wealthwars.games:3010/users/$email'; // La URL del endpoint debe ser /users/:email para que coincida con la ruta en el backend
+      'https://wealthwars.games/users/$email'; // La URL del endpoint debe ser /users/:email para que coincida con la ruta en el backend
   final Logger logger = Logger();
   try {
     // Construir el cuerpo de la solicitud JSON
@@ -164,9 +165,6 @@ Future<void> updateUser(
       },
       body: jsonEncode(requestBody),
     );
-
-    // Actualizar cookie?
-
     
     // Verificar si la solicitud fue exitosa (código de estado 200)
     if (response.statusCode == 200) {
@@ -174,6 +172,10 @@ Future<void> updateUser(
       logger.d('Usuario actualizado exitosamente.');
       // Imprimir la respuesta del servidor
       logger.d('Respuesta del servidor: ${response.body}');
+
+      // Actualizar cookie?
+      final data = getUserData();
+      saveUserData(data as Map<String, dynamic>);
     } else {
       // La solicitud no fue exitosa, mostrar el mensaje de error
       logger.d('Error al actualizar usuario: ${response.statusCode}');

@@ -82,7 +82,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
       socket.disconnect();
 
       Fluttertoast.showToast(
-        msg: "Codigo de sala incorrecto: $accessCode",
+        msg: "Código de sala incorrecto: $accessCode",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: const Color(0xFFEA970A),

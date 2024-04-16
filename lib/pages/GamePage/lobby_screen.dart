@@ -115,7 +115,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
       });
     });
 
-    socket.on('mapSended', (map) {
+    socket.on('mapSent', (map) {
       logger.d("Mapa recibido: $map");
       Navigator.of(context).push(MaterialPageRoute(
           builder: (_) => GameScreen(

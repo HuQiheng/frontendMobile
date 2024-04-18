@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wealth_wars/pages/gamePage/lobby_screen.dart';
 import 'package:wealth_wars/methods/player_class.dart';
+import 'package:wealth_wars/widgets/lobbyWidgets/pop_up_info.dart';
 
 class PopUpSalas extends StatelessWidget {
   final Player player;
@@ -113,7 +114,7 @@ class PopUpSalas extends StatelessWidget {
                               width: 10,
                             ),
                             SizedBox(
-                              width: 50, // Cambia este valor al tamaño deseado
+                              width: 50,
                               child: Image.asset(
                                 'assets/icons/join.png',
                                 fit: BoxFit.contain,
@@ -138,12 +139,41 @@ class PopUpSalas extends StatelessWidget {
           ),
         ),
         actions: <Widget>[
-          Center(
-            child: ElevatedButton(
-              style: buttonStyle,
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cerrar', style: buttonTextStyle),
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const SizedBox(
+                width: 60,
+              ),
+              ElevatedButton(
+                style: buttonStyle,
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Cerrar', style: buttonTextStyle),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return PopUpInfo(
+                        player: player,
+                      );
+                    },
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  shape: const CircleBorder(),
+                  backgroundColor: primaryColor,
+                  foregroundColor: Colors.black,
+                  padding: const EdgeInsets.all(8),
+                ),
+                child: const Icon(
+                  Icons.help_outline,
+                  size: 30,
+                ),
+              ),
+            ],
           ),
         ],
       ),

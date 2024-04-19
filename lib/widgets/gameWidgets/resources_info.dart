@@ -13,7 +13,7 @@ class ResourcesInfo extends StatelessWidget {
     var currentPlayer = gameMap['players'][0];
     Logger logger = Logger();
     logger.d(
-        "Nombre de usuario del que se muestra info: ${currentPlayer['email']} ");
+        "Email de usuario del que se muestra info: ${currentPlayer['email']} ");
 
     return Container(
       margin: const EdgeInsets.all(20),
@@ -43,48 +43,6 @@ class ResourcesInfo extends StatelessWidget {
                   Text(
                     '${currentPlayer['coins']}',
                     style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
-              ),
-              const Divider(),
-              const Row(
-                children: [
-                  Icon(
-                    Icons.map,
-                    size: 30,
-                    color: Color(0xFFEA970A),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    '10/42',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
-              ),
-              const Divider(),
-              const Row(
-                children: [
-                  Icon(
-                    Icons.factory,
-                    size: 30,
-                    color: Color(0xFFEA970A),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    '00/10',
-                    style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,

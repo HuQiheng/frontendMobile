@@ -37,95 +37,108 @@ class ProfileScreen extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: <Widget>[
-              CircleAvatar(
-                radius: 50,
-                backgroundImage: NetworkImage(
-                  picture,
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  // Aquí va el codigo de amigo
-                  Clipboard.setData(const ClipboardData(
-                      text:
-                          '<Mi código amigo>')); // Copia el texto al portapapeles
-                  /*ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text('Texto copiado al portapapeles')),
-                  );*/
-                  Fluttertoast.showToast(
-                    msg: "Código de amigo copiado en el portapapeles",
-                    toastLength: Toast.LENGTH_SHORT,
-                    gravity: ToastGravity.BOTTOM,
-                    backgroundColor: const Color(0xFFEA970A),
-                    textColor: Colors.black,
-                    fontSize: 16.0,
-                  );
-                },
-                style: TextButton.styleFrom(
-                  foregroundColor: Colors.white,
-                  backgroundColor: const Color(0xFF0066CC),
-                  textStyle: const TextStyle(
-                      fontSize: 16, fontStyle: FontStyle.italic),
-                ),
-                child: const Text('<Mi código amigo>'),
-              ),
-              Row(
-                children: [
-                  const Expanded(child: SizedBox.shrink()),
-                  TextButton(
-                    onPressed: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return PopUpChangeUsername(
-                              email: email, password: password);
-                        },
-                      );
-                    },
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: const Color(0xFF0066CC),
-                      textStyle: const TextStyle(
-                          fontSize: 16, fontStyle: FontStyle.italic),
-                    ),
-                    child: const Text('Cambiar nombre'),
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                CircleAvatar(
+                  radius: 70,
+                  backgroundImage: NetworkImage(
+                    picture,
                   ),
-                  const Expanded(child: SizedBox.shrink()),
-                ],
-              ),
-              Row(
-                children: [
-                  const Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Insignias:',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
+                ),
+                TextButton(
+                  onPressed: () {
+                    // Aquí va el código de amigo
+                    Clipboard.setData(const ClipboardData(
+                        text:
+                            '<Mi código amigo>')); // Copia el texto al portapapeles
+                    Fluttertoast.showToast(
+                      msg: "Código de amigo copiado en el portapapeles",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      backgroundColor: const Color(0xFFEA970A),
+                      textColor: Colors.black,
+                      fontSize: 16.0,
+                    );
+                  },
+                  style: TextButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    backgroundColor: const Color(0xFF0066CC),
+                    textStyle: const TextStyle(
+                        fontSize: 16, fontStyle: FontStyle.italic),
+                  ),
+                  child: const Text('<Mi código amigo>'),
+                ),
+                Row(
+                  children: [
+                    const Expanded(child: SizedBox.shrink()),
+                    TextButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return PopUpChangeUsername(
+                                email: email, password: password);
+                          },
+                        );
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: Colors.white,
+                        backgroundColor: const Color(0xFF0066CC),
+                        textStyle: const TextStyle(
+                            fontSize: 16, fontStyle: FontStyle.italic),
+                      ),
+                      child: const Text('Cambiar nombre'),
+                    ),
+                    const Expanded(child: SizedBox.shrink()),
+                  ],
+                ),
+                Row(
+                  children: [
+                    const Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Insignias:',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          fontStyle: FontStyle.italic
+                        ),
                       ),
                     ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.edit), // Icono de edición (puedes cambiarlo por otro si prefieres)
-                    iconSize: 15,
-                    onPressed: () {
-                      // Abrir pop up para elegir insignia
-                    },
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildBadgePlaceholder(),
-                  _buildBadgePlaceholder(),
-                  _buildBadgePlaceholder(),
-                ],
-              ),
-            ],
+                    const Expanded(child: SizedBox.shrink()),
+                    Container(
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle, // Esta propiedad define la forma del contenedor como un círculo
+                        color: Color(0xFF0066CC), // Color de fondo del contenedor
+                      ),
+                      child: 
+                      IconButton(
+                        icon: const Icon(Icons.edit, color: Colors.white), // Icono de edición con color blanco
+                        onPressed: () {
+                          // Abrir pop up para elegir insignia
+                        },
+                      ),
+                    )
+                  ],
+                ),
+                Container(
+                  height: 1,
+                  color: Colors.white24,
+                ),
+                const SizedBox(height: 10), // Espacio entre la línea y la lista
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    // Se habrán pasado las insignias que el usuario tiene equipadas
+                    _buildBadgePlaceholder(),
+                    _buildBadgePlaceholder(),
+                    _buildBadgePlaceholder(),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

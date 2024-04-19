@@ -33,10 +33,6 @@ class _MapWidgetState extends State<MapWidget> {
   @override
   void didUpdateWidget(MapWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.gameMap != widget.gameMap) {
-      // Aquí podrías actualizar el estado del widget si es necesario
-      // O simplemente dejar que el widget se reconstruya con los nuevos datos
-    }
   }
 
   final logger = Logger();

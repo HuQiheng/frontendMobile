@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:wealth_wars/methods/player_class.dart';
 
 final List<Color> colors = [
@@ -12,8 +13,9 @@ final List<Color> colors = [
 ];
 
 class TurnInfo extends StatefulWidget {
+  final IO.Socket socket;
   final List<Player> players;
-  const TurnInfo({super.key, required this.players});
+  const TurnInfo({super.key, required this.players, required this.socket});
 
   @override
   State<TurnInfo> createState() => _TurnInfoState();
@@ -66,6 +68,11 @@ class _TurnInfoState extends State<TurnInfo> {
       if (phase + 1 == 3) {
         logger.d("Tocaría cambiar de jugador");
         player = (player + 1) % widget.players.length;
+      }
+      if (phase + 1 == 3) {
+        widget.socket.emit("nextTurn");
+      } else {
+        widget.socket.emit("nextPhase");
       }
       phase = (phase + 1) % 3;
       timerSeconds = 90;

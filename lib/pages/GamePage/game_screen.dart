@@ -135,7 +135,7 @@ class _MapScreenState extends State<MapScreen> {
           //==========TURN_INFO==========
           Align(
               alignment: Alignment.bottomCenter,
-              child: TurnInfo(players: widget.players)),
+              child: TurnInfo(socket: widget.socket, players: widget.players)),
           //================================
           //==========PLAYERS_INFO==========
           Padding(

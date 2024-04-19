@@ -121,12 +121,13 @@ class _LobbyScreenState extends State<LobbyScreen> {
       });
     });
 
-    socket.on('gameStarting', (data) {
-      logger.d("Empezando partida");
+    socket.on('mapSent', (map) {
+      logger.d("Empezando partida desde lobby");
       Navigator.of(context).push(MaterialPageRoute(
           builder: (_) => GameScreen(
                 socket: socket,
                 players: players,
+                gameMap: map,
               )));
     });
 

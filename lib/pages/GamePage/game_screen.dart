@@ -18,7 +18,12 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 class GameScreen extends StatelessWidget {
   final IO.Socket socket;
   final List<Player> players;
-  const GameScreen({super.key, required this.socket, required this.players});
+  final Map<String, dynamic> gameMap;
+  const GameScreen(
+      {super.key,
+      required this.socket,
+      required this.players,
+      required this.gameMap});
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +32,7 @@ class GameScreen extends StatelessWidget {
         body: MapScreen(
           players: players,
           socket: socket,
+          gameMap: gameMap,
         ),
         resizeToAvoidBottomInset: false,
       ),
@@ -37,7 +43,12 @@ class GameScreen extends StatelessWidget {
 class MapScreen extends StatefulWidget {
   final IO.Socket socket;
   final List<Player> players;
-  const MapScreen({super.key, required this.players, required this.socket});
+  Map<String, dynamic> gameMap;
+  MapScreen(
+      {super.key,
+      required this.players,
+      required this.socket,
+      required this.gameMap});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -52,16 +63,16 @@ class _MapScreenState extends State<MapScreen> {
 
   int phase = 0;
 
-  late final Map<String, dynamic> gameMap;
-
   @override
   void initState() {
     super.initState();
 
+    widget.socket.off('mapSent');
+
     widget.socket.on('mapSent', (map) {
-      logger.d("Mapa recibido: $map");
+      logger.d("Mapa recibido desde pantalla game: $map");
       setState(() {
-        gameMap = map;
+        widget.gameMap = map;
       });
     });
 
@@ -96,15 +107,15 @@ class _MapScreenState extends State<MapScreen> {
           //==========MAP==========
           Positioned.fill(
             child: GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _positionChat = -300.0;
-                    FocusScope.of(context).unfocus();
-                  });
-                },
-                child: MapWidget(
-                  gameMap: gameMap,
-                )),
+              onTap: () {
+                setState(() {
+                  _positionChat = -300.0;
+                  FocusScope.of(context).unfocus();
+                });
+              },
+              child: MapWidget(
+                  key: ValueKey(widget.gameMap), gameMap: widget.gameMap),
+            ),
           ),
           //=============================
           //==========CHAT_ICON==========
@@ -162,7 +173,8 @@ class _MapScreenState extends State<MapScreen> {
           //==========RESOURCES_INFO==========
           Align(
             alignment: Alignment.centerLeft,
-            child: ResourcesInfo(gameMap: gameMap, players: widget.players),
+            child:
+                ResourcesInfo(gameMap: widget.gameMap, players: widget.players),
           ),
           //========================
           //==========CHAT==========

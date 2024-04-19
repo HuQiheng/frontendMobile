@@ -67,6 +67,8 @@ class PopUpSurrender extends StatelessWidget {
                     alignment: Alignment.bottomCenter,
                     child: ElevatedButton(
                       onPressed: () {
+                        socket.emit("surrender");
+                        socket.emit("leaveRoom");
                         socket.disconnect();
                         Navigator.push(
                           context,

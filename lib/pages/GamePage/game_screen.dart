@@ -17,20 +17,14 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class GameScreen extends StatelessWidget {
   final IO.Socket socket;
-  final Map<String, dynamic> gameMap;
   final List<Player> players;
-  const GameScreen(
-      {super.key,
-      required this.socket,
-      required this.gameMap,
-      required this.players});
+  const GameScreen({super.key, required this.socket, required this.players});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         body: MapScreen(
-          gameMap: gameMap,
           players: players,
           socket: socket,
         ),
@@ -43,12 +37,7 @@ class GameScreen extends StatelessWidget {
 class MapScreen extends StatefulWidget {
   final IO.Socket socket;
   final List<Player> players;
-  final Map<String, dynamic> gameMap;
-  const MapScreen(
-      {super.key,
-      required this.gameMap,
-      required this.players,
-      required this.socket});
+  const MapScreen({super.key, required this.players, required this.socket});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -63,9 +52,18 @@ class _MapScreenState extends State<MapScreen> {
 
   int phase = 0;
 
+  late final Map<String, dynamic> gameMap;
+
   @override
   void initState() {
     super.initState();
+
+    widget.socket.on('mapSent', (map) {
+      logger.d("Mapa recibido: $map");
+      setState(() {
+        gameMap = map;
+      });
+    });
 
     Future.delayed(const Duration(seconds: 2), () {
       logger.d("Carga completada, actualizando estado...");
@@ -105,7 +103,7 @@ class _MapScreenState extends State<MapScreen> {
                   });
                 },
                 child: MapWidget(
-                  gameMap: widget.gameMap,
+                  gameMap: gameMap,
                 )),
           ),
           //=============================
@@ -164,8 +162,7 @@ class _MapScreenState extends State<MapScreen> {
           //==========RESOURCES_INFO==========
           Align(
             alignment: Alignment.centerLeft,
-            child:
-                ResourcesInfo(gameMap: widget.gameMap, players: widget.players),
+            child: ResourcesInfo(gameMap: gameMap, players: widget.players),
           ),
           //========================
           //==========CHAT==========

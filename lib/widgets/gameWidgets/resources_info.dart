@@ -13,7 +13,7 @@ class ResourcesInfo extends StatelessWidget {
     var currentPlayer = gameMap['players'][0];
     Logger logger = Logger();
     logger.d(
-        "Nombre de usuario del que se muestra info: ${currentPlayer['email']} ");
+        "Email de usuario del que se muestra info: ${currentPlayer['email']} ");
 
     return Container(
       margin: const EdgeInsets.all(20),

@@ -9,6 +9,7 @@ import 'package:wealth_wars/methods/region_overlay_painter.dart';
 import 'package:wealth_wars/methods/circule_overlay_painter.dart';
 import 'package:wealth_wars/widgets/gameWidgets/pop_up_attack.dart';
 import 'package:wealth_wars/widgets/gameWidgets/pop_up_invest.dart';
+import 'package:wealth_wars/widgets/gameWidgets/pop_up_move.dart';
 
 const double width = -392.394 * 0.5;
 const double height = -317.762 * 0.5;
@@ -505,7 +506,7 @@ class _MapWidgetState extends State<MapWidget> {
   Map<String, String> circleNumbers = {};
   Map<String, Color> regionColors = {};
 
-  final int phase = 0;
+  final int phase = 2;
   final int player = 0;
   final int playerPlaying = 0;
 
@@ -518,6 +519,8 @@ class _MapWidgetState extends State<MapWidget> {
 
   int attackPhase = 0;
   late Region attackRegion;
+  int movePhase = 0;
+  late Region moveRegion;
 
   Map<String, String> nameToIdMap = {};
   Map<String, List<String>> idToAdjacentsMap = {};
@@ -630,6 +633,7 @@ class _MapWidgetState extends State<MapWidget> {
                           attackPhase++;
                           logger.d("Es mi region");
                         } else if (attackPhase == 1 && attackRegion != region) {
+                          //FALTA LÓGICA PARA COMPROBAR QUE NO ES TU TERRITORIO <----------------------------------
                           if (areRegionsAdjacent(
                               attackRegion.name, region.name)) {
                             showDialog(
@@ -648,7 +652,33 @@ class _MapWidgetState extends State<MapWidget> {
                           }
                         }
                       }
-                      if (phase == 2) {}
+                      if (phase == 2) {
+                        // Comprobar que es su propia región
+                        GameRegion gr = searchRegionByName(region.name);
+                        if (movePhase == 0 && gr.player == playerPlaying) {
+                          moveRegion = region;
+                          movePhase++;
+                          logger.d("Es mi region");
+                        } else if (movePhase == 1 && moveRegion != region) {
+                          //FALTA LÓGICA PARA COMPROBAR QUE ES TU TERRITORIO <----------------------------------
+                          if (areRegionsAdjacent(
+                              moveRegion.name, region.name)) {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return PopUpMove(
+                                  region: moveRegion.name,
+                                  moveRegion: region.name,
+                                );
+                              },
+                            );
+                            movePhase = 0;
+                          } else {
+                            logger.d("Las regiones no son adyacentes.");
+                            movePhase = 0;
+                          }
+                        }
+                      }
 
                       logger.d("Has pulsado la region: $name ");
                       setState(() {});

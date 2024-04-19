@@ -33,7 +33,7 @@ class PopUpInfo extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                SizedBox(width: 40), // Ajuste aquí
+                const SizedBox(width: 40),
                 const Text(
                   '¿Cómo jugar?',
                   style: TextStyle(
@@ -57,8 +57,8 @@ class PopUpInfo extends StatelessWidget {
               ],
             ),
             const Divider(
-              indent: 20, // Ajuste aquí
-              endIndent: 20, // Ajuste aquí
+              indent: 20,
+              endIndent: 20,
             ),
             SizedBox(
               height: 200.0,
@@ -81,12 +81,12 @@ class PopUpInfo extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 16.0,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                          color: Color(0xFFEA970A)),
                     ),
                   ),
                   Divider(
-                    indent: 20, // Ajuste aquí
-                    endIndent: 20, // Ajuste aquí
+                    indent: 20,
+                    endIndent: 20,
                   ),
                   Center(
                     child: Text(
@@ -105,12 +105,12 @@ class PopUpInfo extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 16.0,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                          color: Color(0xFFEA970A)),
                     ),
                   ),
                   Divider(
-                    indent: 20, // Ajuste aquí
-                    endIndent: 20, // Ajuste aquí
+                    indent: 20,
+                    endIndent: 20,
                   ),
                   Center(
                     child: Text(
@@ -129,12 +129,12 @@ class PopUpInfo extends StatelessWidget {
                       style: TextStyle(
                           fontSize: 16.0,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white),
+                          color: Color(0xFFEA970A)),
                     ),
                   ),
                   Divider(
-                    indent: 20, // Ajuste aquí
-                    endIndent: 20, // Ajuste aquí
+                    indent: 20,
+                    endIndent: 20,
                   ),
                 ],
               ),

@@ -104,11 +104,17 @@ class _LobbyScreenState extends State<LobbyScreen> {
     });
 
     socket.on('connectedPlayers', (data) {
-      logger.d("Jugador nuevo recibido: $data");
-      List<dynamic> emailList = data as List<dynamic>;
-      List<Player> newPlayers = emailList.map((email) {
-        return Player.fromEmail(email.toString());
+      logger.d("Datos: $data");
+
+      List<Player> newPlayers = (data as List).map<Player>((playerData) {
+        Map<String, dynamic> attributes = playerData as Map<String, dynamic>;
+        return Player.fromEmailNamePicture(
+            attributes['email'].toString(),
+            attributes['username'].toString(),
+            attributes['picture'].toString());
       }).toList();
+
+      logger.d(newPlayers.toString());
 
       setState(() {
         players = newPlayers;

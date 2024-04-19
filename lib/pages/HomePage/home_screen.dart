@@ -9,7 +9,6 @@ import 'package:wealth_wars/methods/player_class.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
-  
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +56,9 @@ class HomeScreen extends StatelessWidget {
     void showGamePopup() async {
       var userData = await getUserData();
       Player player = Player(
-          email: userData?['email'], profileImageUrl: userData?['picture']);
+          email: userData?['email'],
+          profileImageUrl: userData?['picture'],
+          name: userData?['name']);
 
       showDialog(
         context: context,

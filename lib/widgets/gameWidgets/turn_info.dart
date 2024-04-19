@@ -23,7 +23,7 @@ class _TurnInfoState extends State<TurnInfo> {
   final logger = Logger();
   int phase = 0;
   int player = 0; // backend in json
-  int timerSeconds = 60;
+  int timerSeconds = 90;
   Timer? countdownTimer;
 
   @override
@@ -54,7 +54,7 @@ class _TurnInfoState extends State<TurnInfo> {
 
   void resetTimer() {
     setState(() {
-      timerSeconds = 60; // Restablece el contador a 60 segundos
+      timerSeconds = 90; // Restablece el contador a 60 segundos
       startTimer(); // Reinicia el temporizador
     });
   }
@@ -68,7 +68,7 @@ class _TurnInfoState extends State<TurnInfo> {
         player = (player + 1) % widget.players.length;
       }
       phase = (phase + 1) % 3;
-      timerSeconds = 60;
+      timerSeconds = 90;
     });
   }
 
@@ -94,7 +94,7 @@ class _TurnInfoState extends State<TurnInfo> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
-                widget.players[player].email,
+                widget.players[player].name,
                 style: const TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -124,13 +124,13 @@ class _TurnInfoState extends State<TurnInfo> {
               color: colors[player],
               border: Border.all(color: Colors.black, width: 3.0),
             ),
-            child: Image.network(
-              widget.players[player].profileImageUrl,
-              width: 60,
-              height: 60,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) =>
-                  const Icon(Icons.error, size: 30, color: Colors.yellow),
+            child: ClipOval(
+              child: Image.network(
+                widget.players[player].profileImageUrl.trim(),
+                width: 60,
+                height: 60,
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ),

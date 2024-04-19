@@ -64,7 +64,7 @@ class PlayersInfo extends StatelessWidget {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  players[i].email,
+                  players[i].name,
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -83,13 +83,13 @@ class PlayersInfo extends StatelessWidget {
                   color: colorsIcon[i],
                   border: Border.all(color: Colors.black, width: 2.0),
                 ),
-                child: Image.network(
-                  players[i].profileImageUrl,
-                  width: 30,
-                  height: 30,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) =>
-                      const Icon(Icons.error, size: 30, color: Colors.yellow),
+                child: ClipOval(
+                  child: Image.network(
+                    players[i].profileImageUrl.trim(),
+                    width: 30,
+                    height: 30,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),

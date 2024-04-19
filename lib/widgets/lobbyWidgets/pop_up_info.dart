@@ -18,94 +18,129 @@ class PopUpInfo extends StatelessWidget {
     );
   }
 
-  contentBox(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20.0),
-      decoration: BoxDecoration(
-        shape: BoxShape.rectangle,
-        color: const Color(0xFF083344),
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              IconButton(
-                color: Colors.white,
-                iconSize: 35,
-                icon: const Icon(Icons.close),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) =>
-                        PopUpSalas(player: player),
-                  );
-                },
-              ),
-            ],
-          ),
-          const Text(
-            '¿Cómo jugar?',
-            style: TextStyle(
-                fontSize: 25.0,
-                fontWeight: FontWeight.bold,
-                color: Colors.white),
-          ),
-          const SizedBox(height: 20.0),
-          SizedBox(
-            height: 200.0,
-            child: ListView(
-              children: const [
-                Divider(
-                  indent: 150,
-                  endIndent: 150,
+  Widget contentBox(BuildContext context) {
+    return SingleChildScrollView(
+      child: Container(
+        padding: const EdgeInsets.all(20.0),
+        decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          color: const Color(0xFF083344),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                SizedBox(width: 40), // Ajuste aquí
+                const Text(
+                  '¿Cómo jugar?',
+                  style: TextStyle(
+                      fontSize: 30.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
-                Center(
-                  child: Text(
-                    '1. Invierte en fábricas o tropas',
-                    style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                ),
-                Divider(
-                  indent: 150,
-                  endIndent: 150,
-                ),
-                Center(
-                  child: Text(
-                    '2. Conquista territorios',
-                    style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                ),
-                Divider(
-                  indent: 150,
-                  endIndent: 150,
-                ),
-                Center(
-                  child: Text(
-                    '3. Reorganiza tus tropas',
-                    style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
-                  ),
-                ),
-                Divider(
-                  indent: 150,
-                  endIndent: 150,
+                IconButton(
+                  color: Colors.white,
+                  iconSize: 35,
+                  icon: const Icon(Icons.close),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) =>
+                          PopUpSalas(player: player),
+                    );
+                  },
                 ),
               ],
             ),
-          ),
-        ],
+            const Divider(
+              indent: 20, // Ajuste aquí
+              endIndent: 20, // Ajuste aquí
+            ),
+            SizedBox(
+              height: 200.0,
+              child: ListView(
+                children: const [
+                  Center(
+                    child: Text(
+                      '1. Invierte en fábricas o tropas',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                  ),
+                  Center(
+                    child: Text(
+                      'Durante esta fase podrás comprar una fábrica y tantas tropas como puedas, cada tropa cuesta 2 monedas y cada fábrica 15 monedas',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                  ),
+                  Divider(
+                    indent: 20, // Ajuste aquí
+                    endIndent: 20, // Ajuste aquí
+                  ),
+                  Center(
+                    child: Text(
+                      '2. Conquista territorios',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                  ),
+                  Center(
+                    child: Text(
+                      'Ataca tantos territorios de comandantes enemigos como puedas',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                  ),
+                  Divider(
+                    indent: 20, // Ajuste aquí
+                    endIndent: 20, // Ajuste aquí
+                  ),
+                  Center(
+                    child: Text(
+                      '3. Reorganiza tus tropas',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                  ),
+                  Center(
+                    child: Text(
+                      'Moviliza tropas entre dos territorios conectados entre sí por territorios de tu posición (solo podrás hacer esta acción una vez por ronda)',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                  ),
+                  Divider(
+                    indent: 20, // Ajuste aquí
+                    endIndent: 20, // Ajuste aquí
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

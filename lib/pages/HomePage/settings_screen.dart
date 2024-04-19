@@ -89,12 +89,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ],
               ),
             ),
-            const SizedBox(height: 5), // Espacio entre la línea y la lista
+            const SizedBox(height: 10), // Espacio entre la línea y la lista
             Container(
               height: 1,
               color: Colors.white24,
             ),
-            const SizedBox(height: 5), // Espacio entre la línea y la lista
+            const SizedBox(height: 10), // Espacio entre la línea y la lista
             Row(
               children: [
                 const Expanded(child: SizedBox.shrink()),

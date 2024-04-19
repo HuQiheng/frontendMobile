@@ -5,6 +5,45 @@ class AwardsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<String> imagenes = [
+      'assets/insignias/jugar_1_partida.png',
+      'assets/insignias/ganar_1_partida.png',
+      'assets/insignias/ganar_10_partidas.png',
+      'assets/insignias/ganar_100_partidas.png',
+      'assets/insignias/añadir_1_amigo.png',
+      'assets/insignias/conquista_1_territorio.png',
+      'assets/insignias/comprar_1_fabrica.png',
+      'assets/insignias/comprar_15_fabricas.png',
+      'assets/insignias/conseguir_99_tropas.png',
+      'assets/insignias/conseguir_1000_monedas.png'
+    ];
+
+    List<String> nomLogros = [
+      'Bienvenido a WealthWars',
+      'Comandante principiante',
+      'Comandante experimentado',
+      'Comandante veterano',
+      'Tu primer compañero',
+      'Conquistador',
+      'Industrializador',
+      'Revolución industrial',
+      'La Armada Invencible',
+      'Mileurista'
+    ];
+
+    List<String> descLogros = [
+      'Juega tu primera partida',
+      'Gana tu primera partida',
+      'Gana 10 partidas',
+      'Gana 100 partidas',
+      'Haz tu primer amigo',
+      'Conquista un territorio en una partida',
+      'Compra una fábrica en una partida',
+      'Obten 15 fábricas en una sola partida',
+      'Alcanza a tener 99 tropas en un solo territorio',
+      'Obten 1000 monedas en una sola partida',
+    ];
+
     return Scaffold(
       backgroundColor: const Color(0xFF083344),
       appBar: AppBar(
@@ -30,15 +69,26 @@ class AwardsScreen extends StatelessWidget {
                   separatorBuilder: (context, index) =>
                       const Divider(color: Colors.white24),
                   itemBuilder: (context, index) {
-                    // Hay que añadir los logros 
+                    // Falta implementación backend
+                    // IconData icono = logrosDesbloqueados[index] ? Icons.check : Icons.lock; 
                     return ListTile(
+                      leading: Image.asset(
+                        imagenes[index], // Selecciona la imagen correspondiente al índice actual
+                        width: 40, // Ajusta el tamaño de la imagen según tus necesidades
+                        height: 40,
+                      ),
                       title: Text(
-                        'Logro ${index + 1}',
+                        nomLogros[index],
                         style: const TextStyle(color: Colors.white),
                       ),
                       subtitle: Text(
-                        'Descripción del logro ${index + 1}',
+                        descLogros[index],
                         style: const TextStyle(color: Colors.white70),
+                      ),
+                      trailing: const Icon(
+                        // icono,
+                        Icons.check, // Cambia esto al icono que desees utilizar
+                        color: Colors.white, // Cambia el color del icono según tus necesidades
                       ),
                       tileColor: const Color(0xFF0066CC),
                     );

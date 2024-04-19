@@ -50,48 +50,6 @@ class ResourcesInfo extends StatelessWidget {
                   ),
                 ],
               ),
-              const Divider(),
-              const Row(
-                children: [
-                  Icon(
-                    Icons.map,
-                    size: 30,
-                    color: Color(0xFFEA970A),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    '10/42',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
-              ),
-              const Divider(),
-              const Row(
-                children: [
-                  Icon(
-                    Icons.factory,
-                    size: 30,
-                    color: Color(0xFFEA970A),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Text(
-                    '00/10',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
-                ],
-              ),
             ],
           ),
         ),

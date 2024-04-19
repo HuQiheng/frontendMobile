@@ -31,6 +31,7 @@ class _TurnInfoState extends State<TurnInfo> {
   @override
   void initState() {
     super.initState();
+
     startTimer();
   }
 
@@ -68,8 +69,6 @@ class _TurnInfoState extends State<TurnInfo> {
       if (phase + 1 == 3) {
         logger.d("Tocaría cambiar de jugador");
         player = (player + 1) % widget.players.length;
-      }
-      if (phase + 1 == 3) {
         widget.socket.emit("nextTurn");
       } else {
         widget.socket.emit("nextPhase");

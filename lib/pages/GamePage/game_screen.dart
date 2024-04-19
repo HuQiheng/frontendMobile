@@ -61,11 +61,11 @@ class _MapScreenState extends State<MapScreen> {
   Logger logger = Logger();
   bool _isLoading = true;
 
-  int phase = 0;
-
   @override
   void initState() {
     super.initState();
+
+    logger.d("Lista de jugadores: ${widget.players.toString()}");
 
     widget.socket.off('mapSent');
 

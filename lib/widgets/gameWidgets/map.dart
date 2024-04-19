@@ -8,6 +8,7 @@ import 'package:interactable_svg/interactable_svg/interactable_svg.dart';
 import 'package:wealth_wars/methods/region_overlay_painter.dart';
 import 'package:wealth_wars/methods/circule_overlay_painter.dart';
 import 'package:wealth_wars/widgets/gameWidgets/pop_up_attack.dart';
+import 'package:wealth_wars/widgets/gameWidgets/pop_up_invest.dart';
 
 const double width = -392.394 * 0.5;
 const double height = -317.762 * 0.5;
@@ -504,7 +505,7 @@ class _MapWidgetState extends State<MapWidget> {
   Map<String, String> circleNumbers = {};
   Map<String, Color> regionColors = {};
 
-  final int phase = 1;
+  final int phase = 0;
   final int player = 0;
   final int playerPlaying = 0;
 
@@ -606,7 +607,21 @@ class _MapWidgetState extends State<MapWidget> {
                     String name = region!.name;
 
                     if (player == playerPlaying) {
-                      if (phase == 0) {}
+                      if (phase == 0) {
+                        // Comprobar que es su propia región
+                        GameRegion gr = searchRegionByName(region.name);
+                        if (gr.player == playerPlaying) {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return PopUpInvest(
+                                region: region.name,
+                              );
+                            },
+                          );
+                          logger.d("Es mi region");
+                        }
+                      }
                       if (phase == 1) {
                         // Comprobar que es su propia región
                         GameRegion gr = searchRegionByName(region.name);
@@ -643,9 +658,9 @@ class _MapWidgetState extends State<MapWidget> {
                   height: double.infinity,
                   toggleEnable: true,
                   isMultiSelectable: false,
-                  selectedColor: Colors.purple.withOpacity(0.5),
+                  selectedColor: Colors.purple.withOpacity(0.0),
                   strokeColor: Colors.black,
-                  strokeWidth: 1.5,
+                  strokeWidth: 1.3,
                 ),
                 CustomPaint(
                   painter: CircleOverlayPainter(

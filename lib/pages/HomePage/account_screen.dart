@@ -96,15 +96,26 @@ class ProfileScreen extends StatelessWidget {
                   const Expanded(child: SizedBox.shrink()),
                 ],
               ),
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Insignias:',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
+              Row(
+                children: [
+                  const Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Insignias:',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
-                ),
+                  IconButton(
+                    icon: const Icon(Icons.edit), // Icono de edición (puedes cambiarlo por otro si prefieres)
+                    iconSize: 15,
+                    onPressed: () {
+                      // Abrir pop up para elegir insignia
+                    },
+                  ),
+                ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

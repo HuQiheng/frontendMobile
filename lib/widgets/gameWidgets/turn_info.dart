@@ -5,6 +5,7 @@ import 'package:logger/logger.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:wealth_wars/methods/player_class.dart';
 import 'package:wealth_wars/widgets/gameWidgets/map.dart' as mapa;
+import 'package:wealth_wars/methods/shared_preferences.dart';
 
 final List<Color> colors = [
   const Color.fromRGBO(59, 130, 246, 1),
@@ -14,9 +15,14 @@ final List<Color> colors = [
 ];
 
 class TurnInfo extends StatefulWidget {
+  final Map<String, dynamic> gameMap;
   final IO.Socket socket;
   final List<Player> players;
-  const TurnInfo({super.key, required this.players, required this.socket});
+  const TurnInfo(
+      {super.key,
+      required this.players,
+      required this.socket,
+      required this.gameMap});
 
   @override
   State<TurnInfo> createState() => _TurnInfoState();
@@ -29,11 +35,38 @@ class _TurnInfoState extends State<TurnInfo> {
   int timerSeconds = 90;
   Timer? countdownTimer;
 
+  // Jugador del sistema
+  // ignore: prefer_typing_uninitialized_variables
+  var playerSystem;
+
   @override
   void initState() {
     super.initState();
 
-    startTimer();
+    // Queremos saber quien es el usuario del sistema
+    getUserData().then((userData) {
+      setState(() {
+        var playerEmail = userData?['email'];
+        playerSystem =
+            widget.players.indexWhere((player) => player.email == playerEmail);
+        logger.d("Indice del jugador del sistema: $playerSystem");
+        if (playerSystem == player) {
+          startTimer();
+        }
+      });
+    });
+
+    widget.socket.on('nextTurn', (data) {
+      logger.d("Siguiente turno recibido");
+      setState(() {
+        player = (player + 1) % widget.players.length;
+        mapa.updatePlayer(player);
+        if (playerSystem == player) {
+          logger.d("Me toca a mi y soy el jugador del movil");
+          startTimer();
+        }
+      });
+    });
   }
 
   @override
@@ -50,10 +83,7 @@ class _TurnInfoState extends State<TurnInfo> {
         });
       } else {
         timer.cancel(); // Detiene el temporizador
-        player = (player + 1) % widget.players.length;
-        logger.d(player);
-        mapa.updatePlayer(player);
-        //changePhase(); // Cambia de fase o jugador
+        changePhase(); // Cambia de fase o jugador
         resetTimer();
       }
     });
@@ -68,17 +98,11 @@ class _TurnInfoState extends State<TurnInfo> {
 
   void changePhase() {
     setState(() {
-      // Si llegas aquí en la última fase reinicias timer
-      if (phase == 2){
-        timerSeconds = 90;
-      }
       if (phase + 1 == 3) {
-        logger.d("Tocaría cambiar de jugador");
-        player = (player + 1) % widget.players.length;
-        logger.d(player);
-        mapa.updatePlayer(player);
+        countdownTimer?.cancel();
         widget.socket.emit("nextTurn");
       } else {
+        timerSeconds = 90;
         widget.socket.emit("nextPhase");
       }
       phase = (phase + 1) % 3;
@@ -95,7 +119,8 @@ class _TurnInfoState extends State<TurnInfo> {
       "REORGANIZAR",
     ];
 
-    if(mapa.player == mapa.playerPlaying){
+    // Consider if the player is the user fo the app
+    if (player == playerSystem) {
       return Stack(
         children: [
           Container(
@@ -198,8 +223,7 @@ class _TurnInfoState extends State<TurnInfo> {
           ),
         ],
       );
-    }
-    else{
+    } else {
       return Stack(
         children: [
           Container(

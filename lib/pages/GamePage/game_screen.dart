@@ -65,8 +65,6 @@ class _MapScreenState extends State<MapScreen> {
   void initState() {
     super.initState();
 
-    logger.d("Lista de jugadores: ${widget.players.toString()}");
-
     widget.socket.off('mapSent');
 
     widget.socket.on('mapSent', (map) {
@@ -99,29 +97,29 @@ class _MapScreenState extends State<MapScreen> {
   }
 
   Widget build(BuildContext context) {
-  return Scaffold(
-    body: _isLoading
-        ? _buildLoadingScreen() // Muestra la pantalla de carga si isLoading es true
-        : _buildContent(), // Muestra el contenido si isLoading es false
-  );
-}
+    return Scaffold(
+      body: _isLoading
+          ? _buildLoadingScreen() // Muestra la pantalla de carga si isLoading es true
+          : _buildContent(), // Muestra el contenido si isLoading es false
+    );
+  }
 
-Widget _buildLoadingScreen() {
-  //=====================================
-  //==========PANTALLA DE CARGA==========
-  return Container(
-    color: Colors.white,
-    child: const Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text('Conectando con el servidor de juego'),
-        Center(
-          child: CircularProgressIndicator(),
-        ),
-      ],
-    ),
-  );
-}
+  Widget _buildLoadingScreen() {
+    //=====================================
+    //==========PANTALLA DE CARGA==========
+    return Container(
+      color: Colors.white,
+      child: const Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('Conectando con el servidor de juego'),
+          Center(
+            child: CircularProgressIndicator(),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget _buildContent() {
@@ -160,7 +158,11 @@ Widget _buildLoadingScreen() {
           //==========TURN_INFO==========
           Align(
               alignment: Alignment.bottomCenter,
-              child: TurnInfo(socket: widget.socket, players: widget.players)),
+              child: TurnInfo(
+                socket: widget.socket,
+                players: widget.players,
+                gameMap: widget.gameMap,
+              )),
           //================================
           //==========PLAYERS_INFO==========
           Padding(

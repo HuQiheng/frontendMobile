@@ -1,16 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:wealth_wars/methods/player_class.dart';
+import 'package:wealth_wars/methods/shared_preferences.dart';
 
-class ResourcesInfo extends StatelessWidget {
+class ResourcesInfo extends StatefulWidget {
   final Map<String, dynamic> gameMap;
   final List<Player> players;
+
   const ResourcesInfo(
       {super.key, required this.gameMap, required this.players});
 
   @override
+  _ResourcesInfoState createState() => _ResourcesInfoState();
+}
+
+class _ResourcesInfoState extends State<ResourcesInfo> {
+  // Jugador del sistema
+  // ignore: prefer_typing_uninitialized_variables
+  var playerSystem;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserData().then((userData) {
+      setState(() {
+        playerSystem = userData?['email'];
+      });
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var currentPlayer = gameMap['players'][0];
+    var currentPlayer = widget.gameMap['players']
+        [widget.players.indexWhere((player) => player.email == playerSystem)];
     Logger logger = Logger();
     logger.d(
         "Email de usuario del que se muestra info: ${currentPlayer['email']} ");

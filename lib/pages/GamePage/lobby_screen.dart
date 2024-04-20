@@ -106,19 +106,38 @@ class _LobbyScreenState extends State<LobbyScreen> {
     socket.on('connectedPlayers', (data) {
       logger.d("Datos: $data");
 
-      List<Player> newPlayers = (data as List).map<Player>((playerData) {
-        Map<String, dynamic> attributes = playerData as Map<String, dynamic>;
-        return Player.fromEmailNamePicture(
-            attributes['email'].toString(),
-            attributes['username'].toString(),
-            attributes['picture'].toString());
-      }).toList();
+      if (data is List) {
+        // Ensure data is a list
+        List<Player> newPlayers = [];
+        for (var playerData in data) {
+          if (playerData is Map<String, dynamic>) {
+            // Ensure each item is a map
+            try {
+              var email =
+                  playerData['email']?.toString() ?? 'default@email.com';
+              var username =
+                  playerData['username']?.toString() ?? 'default_username';
+              var picture =
+                  playerData['picture']?.toString() ?? 'default_picture_url';
 
-      logger.d(newPlayers.toString());
+              newPlayers
+                  .add(Player.fromEmailNamePicture(email, username, picture));
+            } catch (e) {
+              logger.e("Error processing player data: $e");
+            }
+          } else {
+            logger.e("Invalid player data type: ${playerData.runtimeType}");
+          }
+        }
 
-      setState(() {
-        players = newPlayers;
-      });
+        logger.d(newPlayers.toString());
+
+        setState(() {
+          players = newPlayers;
+        });
+      } else {
+        logger.e("Data is not a List: ${data.runtimeType}");
+      }
     });
 
     socket.on('mapSent', (map) {

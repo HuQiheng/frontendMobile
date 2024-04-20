@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:path_drawing/path_drawing.dart';
 import 'package:interactable_svg/interactable_svg/interactable_svg.dart';
@@ -11,6 +12,7 @@ import 'package:wealth_wars/widgets/gameWidgets/pop_up_attack.dart';
 import 'package:wealth_wars/widgets/gameWidgets/pop_up_invest.dart';
 import 'package:wealth_wars/widgets/gameWidgets/pop_up_move.dart';
 import 'package:wealth_wars/methods/shared_preferences.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 const double width = -392.394 * 0.5;
 const double height = -317.762 * 0.5;
@@ -27,7 +29,8 @@ final List<Color> colors = [
 
 class MapWidget extends StatefulWidget {
   final Map<String, dynamic> gameMap;
-  const MapWidget({super.key, required this.gameMap});
+  final IO.Socket socket;
+  const MapWidget({super.key, required this.gameMap, required this.socket});
 
   @override
   State<MapWidget> createState() => _MapWidgetState();
@@ -539,6 +542,7 @@ class _MapWidgetState extends State<MapWidget> {
 
   int attackPhase = 0;
   late Region attackRegion;
+  late GameRegion grAttack;
   int movePhase = 0;
   late Region moveRegion;
 
@@ -566,6 +570,17 @@ class _MapWidgetState extends State<MapWidget> {
     logger.d(idToAdjacentsMap.toString());
 
     return idToAdjacentsMap[attackRegionId]?.contains(defenseRegionId) ?? false;
+  }
+
+  bool areMine(GameRegion attackRegion, GameRegion defenseRegion) {
+    String? attackRegionId = attackRegion.code;
+    String? defenseRegionId = defenseRegion.code;
+    logger.d("Region atacante: $attackRegionId");
+    logger.d("Region defensora: $defenseRegionId");
+
+    logger.d(idToAdjacentsMap.toString());
+
+    return attackRegion.player != defenseRegion.player;
   }
 
   GameRegion searchRegionByName(String regionName) {
@@ -641,9 +656,10 @@ class _MapWidgetState extends State<MapWidget> {
                             context: context,
                             builder: (BuildContext context) {
                               return PopUpInvest(
-                                region: region.name,
+                                region: gr,
                                 numFab: numFab,
                                 callback: updateNumFab,
+                                socket: widget.socket,
                               );
                             },
                           );
@@ -654,26 +670,50 @@ class _MapWidgetState extends State<MapWidget> {
                       if (phase == 1) {
                         // Reiniciamos variable de fábricas
                         numFab = 0;
+
                         // Comprobar que es su propia región
                         GameRegion gr = searchRegionByName(region.name);
                         if (attackPhase == 0 && gr.player == playerPlaying) {
                           attackRegion = region;
                           attackPhase++;
-                          logger.d("Es mi region");
+                          grAttack = gr;
+                          String name = attackRegion.name;
+                          Fluttertoast.showToast(
+                            msg: "Has seleccionado: $name\nElige a qué región atacar",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: const Color(0xFFEA970A),
+                            textColor: Colors.black,
+                            fontSize: 16.0,
+                          );
                         } else if (attackPhase == 1 && attackRegion != region) {
                           //FALTA LÓGICA PARA COMPROBAR QUE NO ES TU TERRITORIO <----------------------------------
-                          if (areRegionsAdjacent(
-                              attackRegion.name, region.name)) {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return PopUpAttack(
-                                  attackRegion: attackRegion.name,
-                                  defenseRegion: region.name,
-                                );
-                              },
-                            );
-                            attackPhase = 0;
+                          if (areRegionsAdjacent(attackRegion.name, region.name)) {
+                            if(areMine(grAttack, gr)){
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return PopUpAttack(
+                                    region1: grAttack,
+                                    region2: gr,
+                                    socket: widget.socket,
+                                  );
+                                },
+                              );
+                              attackPhase = 0;
+                            }
+                            else{
+                              Fluttertoast.showToast(
+                                msg: "No puedes atacarte a ti mismo",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                backgroundColor: const Color(0xFFEA970A),
+                                textColor: Colors.black,
+                                fontSize: 16.0,
+                              );
+                              logger.d("Las regiones pertenecen al mismo dueño.");
+                              attackPhase = 0;
+                            }
                           } else {
                             logger.d("Las regiones no son adyacentes.");
                             attackPhase = 0;

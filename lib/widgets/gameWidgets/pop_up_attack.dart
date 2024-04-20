@@ -1,12 +1,36 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:logger/logger.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:wealth_wars/widgets/gameWidgets/map.dart';
 
-class PopUpAttack extends StatelessWidget {
-  final String attackRegion;
-  final String defenseRegion;
+class PopUpAttack extends StatefulWidget {
+  final GameRegion region1, region2;
+  final IO.Socket socket;
 
-  const PopUpAttack(
-      {super.key, required this.attackRegion, required this.defenseRegion});
+  const PopUpAttack({super.key, required this.region1, required this.region2, required this.socket});
+
+  @override
+  PopUpAttackState createState() => PopUpAttackState();
+}
+
+class PopUpAttackState extends State<PopUpAttack> {
+  int _counter = 1;
+  void incrementCounter() {
+    setState(() {
+      if (_counter < widget.region1.troops - 1) {
+        _counter++;
+      }
+    });
+  }
+
+  void decrementCounter() {
+    setState(() {
+      if (_counter > 1) {
+        _counter--;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,13 +43,25 @@ class PopUpAttack extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Selección de tropas',
-                style: TextStyle(
-                  color: Color(0xFFEA970A),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                ),
+              const Row(
+                children: [
+                  Text(
+                    'Conquistar',
+                    style: TextStyle(
+                      color: Color(0xFFEA970A),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Icon(
+                    Icons.monetization_on_outlined,
+                    size: 30,
+                    color: Color(0xFFEA970A),
+                  ),
+                ],
               ),
               IconButton(
                 onPressed: () {
@@ -55,7 +91,7 @@ class PopUpAttack extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   const Text(
-                    '¡Elige el número de tropas\ncon las que atacar!',
+                    '¿Cuantas tropas quieres utilizar en el ataque?',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -69,35 +105,67 @@ class PopUpAttack extends StatelessWidget {
                     thickness: 2,
                   ),
                   Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Text(
-                          attackRegion,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
-                          ),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        widget.region1.name,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Expanded(
-                        flex: 0,
-                        child: Image.asset(
-                          'assets/icons/duel.png',
-                          width: 40,
+                      const Text(
+                        " vs ",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Expanded(
-                        child: Text(
-                          defenseRegion,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      Text(
+                        widget.region2.name,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
+                  ),
+                  Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF083344),
+                          ),
+                          onPressed: decrementCounter,
+                          child: const Icon(
+                            Icons.remove,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          '$_counter',
+                          style: const TextStyle(
+                            fontSize: 24.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF083344),
+                          ),
+                          onPressed: incrementCounter,
+                          child: const Icon(
+                            Icons.add,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   const Divider(
                     color: Color(0xFF083344),
@@ -105,88 +173,22 @@ class PopUpAttack extends StatelessWidget {
                     endIndent: 45,
                     thickness: 2,
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF083344),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (BuildContext context) {
-                              Future.delayed(const Duration(seconds: 8), () {
-                                Navigator.of(context).pop();
-                              });
-                              return PopUpDuel(
-                                attackRegion: attackRegion,
-                                defenseRegion: defenseRegion,
-                              );
-                            },
-                          );
-                        },
-                        child: const Text(
-                          '1',
-                          style: TextStyle(fontSize: 20.0, color: Colors.white),
-                        ),
+                  Center(
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF083344),
                       ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF083344),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (BuildContext context) {
-                              Future.delayed(const Duration(seconds: 8), () {
-                                Navigator.of(context).pop();
-                              });
-                              return PopUpDuel(
-                                attackRegion: attackRegion,
-                                defenseRegion: defenseRegion,
-                              );
-                            },
-                          );
-                        },
-                        child: const Text(
-                          '2',
-                          style: TextStyle(fontSize: 20.0, color: Colors.white),
-                        ),
+                      onPressed: () {
+                        final logger = Logger();
+                        logger.d(widget.region1.code);
+                        widget.socket.emit('attackTerritories', [widget.region1.code, widget.region2.code, _counter]);
+                        Navigator.pop(context);
+                      },
+                      child: const Text(
+                        'CONFIRMAR',
+                        style: TextStyle(fontSize: 20.0, color: Colors.white),
                       ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF083344),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-
-                          showDialog(
-                            context: context,
-                            barrierDismissible: false,
-                            builder: (BuildContext context) {
-                              Future.delayed(const Duration(seconds: 8), () {
-                                Navigator.of(context).pop();
-                              });
-                              return PopUpDuel(
-                                attackRegion: attackRegion,
-                                defenseRegion: defenseRegion,
-                              );
-                            },
-                          );
-                        },
-                        child: const Text(
-                          '3',
-                          style: TextStyle(fontSize: 20.0, color: Colors.white),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ],
               ),
@@ -195,147 +197,5 @@ class PopUpAttack extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-class PopUpDuel extends StatefulWidget {
-  final String attackRegion;
-  final String defenseRegion;
-
-  const PopUpDuel(
-      {super.key, required this.attackRegion, required this.defenseRegion});
-
-  @override
-  _PopUpDuelState createState() => _PopUpDuelState();
-}
-
-class _PopUpDuelState extends State<PopUpDuel> {
-  int countdown = 3;
-  late Timer timer;
-
-  @override
-  void initState() {
-    super.initState();
-    startCountdown();
-  }
-
-  void startCountdown() {
-    timer = Timer.periodic(const Duration(seconds: 1), (Timer t) {
-      setState(() {
-        if (countdown > 0) {
-          countdown--;
-        } else {
-          timer.cancel();
-        }
-      });
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      contentPadding:
-          const EdgeInsets.only(top: 2, right: 20, left: 20, bottom: 20),
-      backgroundColor: const Color(0xFF083344),
-      content: Column(
-        children: [
-          const Text(
-            'Batalla',
-            style: TextStyle(
-              color: Color(0xFFEA970A),
-              fontWeight: FontWeight.bold,
-              fontSize: 25,
-            ),
-          ),
-          Expanded(
-            child: Container(
-              margin: const EdgeInsets.only(top: 2),
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                  width: 3.0,
-                ),
-                borderRadius: BorderRadius.circular(4.0),
-                color: const Color(0xFFEA970A),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  const Divider(
-                    color: Color(0xFF083344),
-                    indent: 45,
-                    endIndent: 45,
-                    thickness: 2,
-                  ),
-                  Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Text(
-                          widget.attackRegion,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 0,
-                        child: Image.asset(
-                          'assets/icons/duel.png',
-                          width: 40,
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          widget.defenseRegion,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const Divider(
-                    color: Color(0xFF083344),
-                    indent: 45,
-                    endIndent: 45,
-                    thickness: 2,
-                  ),
-                  if (countdown == 0)
-                    const Text(
-                      '7 vs 4\nEl ganador es...',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  if (countdown > 0)
-                    Text(
-                      '$countdown',
-                      style: const TextStyle(
-                        fontSize: 30.0,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  const SizedBox(),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    timer.cancel();
-    super.dispose();
   }
 }

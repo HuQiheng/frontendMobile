@@ -137,7 +137,7 @@ class _MapScreenState extends State<MapScreen> {
                 });
               },
               child: MapWidget(
-                  key: ValueKey(widget.gameMap), gameMap: widget.gameMap),
+                  key: ValueKey(widget.gameMap), gameMap: widget.gameMap, socket: widget.socket),
             ),
           ),
           //=============================

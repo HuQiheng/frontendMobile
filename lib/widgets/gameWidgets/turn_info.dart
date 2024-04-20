@@ -247,16 +247,6 @@ class _TurnInfoState extends State<TurnInfo> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const Divider(
-                  height: 0,
-                ),
-                Text(
-                  texts[phase],
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
               ],
             ),
           ),

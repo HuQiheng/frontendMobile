@@ -32,7 +32,7 @@ class _TurnInfoState extends State<TurnInfo> {
   final logger = Logger();
   int phase = 0;
   int player = 0; // backend in json
-  int timerSeconds = 10;
+  int timerSeconds = 90;
   Timer? countdownTimer;
 
   // Jugador del sistema
@@ -63,9 +63,10 @@ class _TurnInfoState extends State<TurnInfo> {
         player = (player + 1) % widget.players.length;
         logger.d(player);
         mapa.updatePlayer(player);
+        timerSeconds = 90;
         if (playerSystem == player) {
           logger.d("Me toca a mi y soy el jugador del movil");
-          resetTimer();
+          startTimer();
         }
       });
     });
@@ -82,9 +83,10 @@ class _TurnInfoState extends State<TurnInfo> {
       setState(() {
         if (timerSeconds > 0) {
           timerSeconds--; // Decrementa el contador
-        }
-        else {
+        } else {
           timer.cancel(); // Detiene el temporizador
+          widget.socket.emit("nextPhase");
+          widget.socket.emit("nextPhase");
           widget.socket.emit("nextTurn");
         }
       });
@@ -93,15 +95,16 @@ class _TurnInfoState extends State<TurnInfo> {
 
   void resetTimer() {
     setState(() {
-      timerSeconds = 10; // Restablece el contador a 60 segundos
+      timerSeconds = 90; // Restablece el contador a 60 segundos
       startTimer(); // Reinicia el temporizador
     });
   }
 
   void changePhase() {
     setState(() {
-      if (phase == 2){
+      if (phase == 2) {
         countdownTimer?.cancel();
+        timerSeconds = 90;
         widget.socket.emit("nextTurn");
       } else {
         widget.socket.emit("nextPhase");

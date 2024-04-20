@@ -51,7 +51,7 @@ class _TurnInfoState extends State<TurnInfo> {
             widget.players.indexWhere((player) => player.email == playerEmail);
         logger.d("Indice del jugador del sistema: $playerSystem");
         if (playerSystem == player) {
-          startTimer();
+          resetTimer();
         }
       });
     });
@@ -63,7 +63,7 @@ class _TurnInfoState extends State<TurnInfo> {
         mapa.updatePlayer(player);
         if (playerSystem == player) {
           logger.d("Me toca a mi y soy el jugador del movil");
-          startTimer();
+          resetTimer();
         }
       });
     });
@@ -83,8 +83,10 @@ class _TurnInfoState extends State<TurnInfo> {
         });
       } else {
         timer.cancel(); // Detiene el temporizador
-        changePhase(); // Cambia de fase o jugador
-        resetTimer();
+        player = (player + 1) % widget.players.length;
+        logger.d(player);
+        mapa.updatePlayer(player); // Cambia de fase o jugador
+        widget.socket.emit("nextTurn");
       }
     });
   }
@@ -98,11 +100,10 @@ class _TurnInfoState extends State<TurnInfo> {
 
   void changePhase() {
     setState(() {
-      if (phase + 1 == 3) {
+      if (phase == 2){
         countdownTimer?.cancel();
         widget.socket.emit("nextTurn");
       } else {
-        timerSeconds = 90;
         widget.socket.emit("nextPhase");
       }
       phase = (phase + 1) % 3;

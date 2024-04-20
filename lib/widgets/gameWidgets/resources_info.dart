@@ -31,10 +31,14 @@ class _ResourcesInfoState extends State<ResourcesInfo> {
 
   @override
   Widget build(BuildContext context) {
-    var currentPlayer = widget.gameMap['players']
-        [widget.players.indexWhere((player) => player.email == playerSystem)];
     Logger logger = Logger();
-    logger.d(
+    int index = widget.players.indexWhere((player) => player.email == playerSystem);
+    var currentPlayer;
+    logger.d(index);
+    if(index != -1){
+      currentPlayer = widget.gameMap['players']
+        [widget.players.indexWhere((player) => player.email == playerSystem)];
+      logger.d(
         "Email de usuario del que se muestra info: ${currentPlayer['email']} ");
 
     return Container(
@@ -77,5 +81,40 @@ class _ResourcesInfoState extends State<ResourcesInfo> {
         ),
       ),
     );
+    }
+    else{
+      return Container(
+      margin: const EdgeInsets.all(20),
+      padding: const EdgeInsets.all(7.5),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: const Color(0xFF083344),
+          width: 2.0,
+        ),
+      ),
+      child: const IntrinsicHeight(
+        child: IntrinsicWidth(
+          child: Column(
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.monetization_on_outlined,
+                    size: 30,
+                    color: Color(0xFFEA970A),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    ); 
+    }
   }
 }

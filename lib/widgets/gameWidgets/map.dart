@@ -581,6 +581,7 @@ class _MapWidgetState extends State<MapWidget> {
     widget.gameMap['map'].forEach((key, value) {
       GameRegion gameRegion = GameRegion(
         name: value['name'],
+        code: key.toString(),
         player: value['player'],
         troops: value['troops'],
         factories: value['factories'],
@@ -750,12 +751,14 @@ void updatePhase(int newPhase) {
 
 class GameRegion {
   String name;
+  String code;
   int player;
   int troops;
   int factories;
 
   GameRegion({
     required this.name,
+    required this.code,
     required this.player,
     required this.troops,
     required this.factories,

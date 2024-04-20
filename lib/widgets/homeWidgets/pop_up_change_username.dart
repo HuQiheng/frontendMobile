@@ -149,6 +149,7 @@ Future<void> updateUser(
   String url =
       'https://wealthwars.games:3010/users/$email'; // La URL del endpoint debe ser /users/:email para que coincida con la ruta en el backend
   final Logger logger = Logger();
+
   try {
     // Construir el cuerpo de la solicitud JSON
     Map<String, dynamic> requestBody = {
@@ -165,7 +166,8 @@ Future<void> updateUser(
       },
       body: jsonEncode(requestBody),
     );
-    
+
+    logger.d(response.body);
     // Verificar si la solicitud fue exitosa (código de estado 200)
     if (response.statusCode == 200) {
       // El usuario ha sido actualizado exitosamente

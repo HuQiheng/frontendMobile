@@ -13,6 +13,9 @@ import 'package:wealth_wars/widgets/gameWidgets/pop_up_move.dart';
 
 const double width = -392.394 * 0.5;
 const double height = -317.762 * 0.5;
+int player = 0;
+int playerPlaying = 0;
+int phase = 0;
 
 final List<Color> colors = [
   const Color.fromRGBO(59, 130, 246, 1),
@@ -510,10 +513,8 @@ class _MapWidgetState extends State<MapWidget> {
 
   Map<String, String> circleNumbers = {};
   Map<String, Color> regionColors = {};
-
-  final int phase = 2;
-  final int player = 0;
-  final int playerPlaying = 0;
+  
+  int numFab = 0;
 
   @override
   void initState() {
@@ -615,22 +616,29 @@ class _MapWidgetState extends State<MapWidget> {
                     String name = region!.name;
 
                     if (player == playerPlaying) {
+                      // Fase de compra
                       if (phase == 0) {
                         // Comprobar que es su propia región
                         GameRegion gr = searchRegionByName(region.name);
                         if (gr.player == playerPlaying) {
+                          logger.d(numFab);
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
                               return PopUpInvest(
                                 region: region.name,
+                                numFab: numFab,
+                                callback: updateNumFab,
                               );
                             },
                           );
                           logger.d("Es mi region");
                         }
                       }
+                      // Fase de ataques
                       if (phase == 1) {
+                        // Reiniciamos variable de fábricas
+                        numFab = 0;
                         // Comprobar que es su propia región
                         GameRegion gr = searchRegionByName(region.name);
                         if (attackPhase == 0 && gr.player == playerPlaying) {
@@ -657,6 +665,7 @@ class _MapWidgetState extends State<MapWidget> {
                           }
                         }
                       }
+                      // Fase de movimientos
                       if (phase == 2) {
                         // Comprobar que es su propia región
                         GameRegion gr = searchRegionByName(region.name);
@@ -708,6 +717,22 @@ class _MapWidgetState extends State<MapWidget> {
       ),
     );
   }
+
+  void updateNumFab(int newNumFab) {
+    // Actualiza numFab con el nuevo valor
+    numFab = newNumFab;
+  }
+  
+}
+
+void updatePlayer(int newPlayer) {
+  // Actualiza jugador actual con el nuevo valor
+  playerPlaying = newPlayer;
+}
+
+void updatePhase(int newPhase) {
+  // Actualiza jugador actual con el nuevo valor
+  phase = newPhase;
 }
 
 class GameRegion {

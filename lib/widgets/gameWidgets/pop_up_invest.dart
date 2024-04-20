@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class PopUpInvest extends StatelessWidget {
   final String region;
+  int numFab;
+  final Function(int) callback;
 
-  const PopUpInvest({super.key, required this.region});
+  PopUpInvest({super.key, required this.region, required this.numFab, required this.callback});
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +97,8 @@ class PopUpInvest extends StatelessWidget {
                             builder: (BuildContext context) {
                               return PopUpFactory(
                                 region: region,
+                                numFab: numFab,
+                                callback: callback,
                               );
                             },
                           );
@@ -138,131 +143,221 @@ class PopUpInvest extends StatelessWidget {
 
 class PopUpFactory extends StatelessWidget {
   final String region;
-
-  const PopUpFactory({super.key, required this.region});
+  int numFab;
+  final Function(int) callback;
+  PopUpFactory({super.key, required this.region, required this.numFab, required this.callback});
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      contentPadding:
-          const EdgeInsets.only(top: 2, right: 20, left: 20, bottom: 20),
-      backgroundColor: const Color(0xFF083344),
-      content: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Row(
-                children: [
-                  Text(
-                    'Comprar fábrica - 15',
-                    style: TextStyle(
+    final Logger logger = Logger();
+    logger.d("Mi numero es: ");
+    logger.d(numFab);
+    if(numFab == 0){
+      return AlertDialog(
+        contentPadding:
+            const EdgeInsets.only(top: 2, right: 20, left: 20, bottom: 20),
+        backgroundColor: const Color(0xFF083344),
+        content: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Row(
+                  children: [
+                    Text(
+                      'Comprar fábrica - 15',
+                      style: TextStyle(
+                        color: Color(0xFFEA970A),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Icon(
+                      Icons.monetization_on_outlined,
+                      size: 30,
                       color: Color(0xFFEA970A),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25,
                     ),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Icon(
-                    Icons.monetization_on_outlined,
-                    size: 30,
-                    color: Color(0xFFEA970A),
-                  ),
-                ],
-              ),
-              IconButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: const Icon(
-                  Icons.close,
-                  color: Colors.white,
-                  size: 40,
+                  ],
                 ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: Container(
-              margin: const EdgeInsets.only(top: 2),
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                border: Border.all(
-                  color: const Color.fromARGB(255, 0, 0, 0),
-                  width: 3.0,
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  icon: const Icon(
+                    Icons.close,
+                    color: Colors.white,
+                    size: 40,
+                  ),
                 ),
-                borderRadius: BorderRadius.circular(4.0),
-                color: const Color(0xFFEA970A),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  const Text(
-                    '¿Deseas comprar una fábrica \npara el siguiente territorio?',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 23,
-                    ),
+              ],
+            ),
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.only(top: 2),
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: const Color.fromARGB(255, 0, 0, 0),
+                    width: 3.0,
                   ),
-                  const Divider(
-                    color: Color(0xFF083344),
-                    indent: 45,
-                    endIndent: 45,
-                    thickness: 2,
-                  ),
-                  Text(
-                    region,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const Divider(
-                    color: Color(0xFF083344),
-                    indent: 45,
-                    endIndent: 45,
-                    thickness: 2,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF083344),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text(
-                          'SI',
-                          style: TextStyle(fontSize: 20.0, color: Colors.white),
-                        ),
+                  borderRadius: BorderRadius.circular(4.0),
+                  color: const Color(0xFFEA970A),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const Text(
+                      '¿Deseas comprar una fábrica \npara el siguiente territorio?',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 23,
                       ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF083344),
-                        ),
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text(
-                          'NO',
-                          style: TextStyle(fontSize: 20.0, color: Colors.white),
-                        ),
+                    ),
+                    const Divider(
+                      color: Color(0xFF083344),
+                      indent: 45,
+                      endIndent: 45,
+                      thickness: 2,
+                    ),
+                    Text(
+                      region,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                    const Divider(
+                      color: Color(0xFF083344),
+                      indent: 45,
+                      endIndent: 45,
+                      thickness: 2,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF083344),
+                          ),
+                          onPressed: () {
+                            numFab = 1;
+                            callback(numFab);
+                            Navigator.pop(context);
+                          },
+                          child: const Text(
+                            'SI',
+                            style: TextStyle(fontSize: 20.0, color: Colors.white),
+                          ),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF083344),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text(
+                            'Ok',
+                            style: TextStyle(fontSize: 20.0, color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    }
+    else{
+      return AlertDialog(
+        contentPadding:
+            const EdgeInsets.only(top: 2, right: 20, left: 20, bottom: 20),
+        backgroundColor: const Color(0xFF083344),
+        content: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Row(
+                  children: [
+                    Text(
+                      'Ya has comprado una fábrica',
+                      style: TextStyle(
+                        color: Color(0xFFEA970A),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25,
+                      ),
+                    ),
+                  ],
+                ),
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  icon: const Icon(
+                    Icons.close,
+                    color: Colors.white,
+                    size: 40,
+                  ),
+                ),
+              ],
+            ),
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.only(top: 2),
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: const Color.fromARGB(255, 0, 0, 0),
+                    width: 3.0,
+                  ),
+                  borderRadius: BorderRadius.circular(4.0),
+                  color: const Color(0xFFEA970A),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const Text(
+                      'Ya has puesto una fábrica en esta ronda tendrás que esperar a tu siguiente fase de inversión para poder colocar otra nueva',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 23,
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF083344),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text(
+                            'NO',
+                            style: TextStyle(fontSize: 20.0, color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
   }
 }
 

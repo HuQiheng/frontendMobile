@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:wealth_wars/methods/player_class.dart';
+import 'package:wealth_wars/widgets/gameWidgets/map.dart' as mapa;
 
 final List<Color> colors = [
   const Color.fromRGBO(59, 130, 246, 1),
@@ -49,7 +50,10 @@ class _TurnInfoState extends State<TurnInfo> {
         });
       } else {
         timer.cancel(); // Detiene el temporizador
-        changePhase(); // Cambia de fase o jugador
+        player = (player + 1) % widget.players.length;
+        logger.d(player);
+        mapa.updatePlayer(player);
+        //changePhase(); // Cambia de fase o jugador
         resetTimer();
       }
     });
@@ -64,17 +68,21 @@ class _TurnInfoState extends State<TurnInfo> {
 
   void changePhase() {
     setState(() {
-      // setstate using for the rerender the screen
-      // if we not use than it not show the sceond text
+      // Si llegas aquí en la última fase reinicias timer
+      if (phase == 2){
+        timerSeconds = 90;
+      }
       if (phase + 1 == 3) {
         logger.d("Tocaría cambiar de jugador");
         player = (player + 1) % widget.players.length;
+        logger.d(player);
+        mapa.updatePlayer(player);
         widget.socket.emit("nextTurn");
       } else {
         widget.socket.emit("nextPhase");
       }
       phase = (phase + 1) % 3;
-      timerSeconds = 90;
+      mapa.updatePhase(phase);
     });
   }
 
@@ -87,107 +95,166 @@ class _TurnInfoState extends State<TurnInfo> {
       "REORGANIZAR",
     ];
 
-    return Stack(
-      children: [
-        Container(
-          margin: const EdgeInsets.all(20),
-          width: 315.0,
-          height: 60.0,
-          decoration: const BoxDecoration(
-            color: Color.fromARGB(175, 57, 57, 57),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text(
-                widget.players[player].name,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+    if(mapa.player == mapa.playerPlaying){
+      return Stack(
+        children: [
+          Container(
+            margin: const EdgeInsets.all(20),
+            width: 315.0,
+            height: 60.0,
+            decoration: const BoxDecoration(
+              color: Color.fromARGB(175, 57, 57, 57),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text(
+                  widget.players[player].name,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const Divider(
-                height: 0,
-              ),
-              Text(
-                texts[phase],
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
+                const Divider(
+                  height: 0,
                 ),
-              ),
-            ],
-          ),
-        ),
-        Positioned(
-          left: 0,
-          top: 10,
-          child: Container(
-            width: 75.0,
-            height: 75.0,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: colors[player],
-              border: Border.all(color: Colors.black, width: 3.0),
-            ),
-            child: ClipOval(
-              child: Image.network(
-                widget.players[player].profileImageUrl.trim(),
-                width: 60,
-                height: 60,
-                fit: BoxFit.cover,
-              ),
+                Text(
+                  texts[phase],
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
           ),
-        ),
-        Positioned(
-          right: 0,
-          top: 10,
-          child: Container(
-            width: 75.0,
-            height: 75.0,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: colors[player],
-              border: Border.all(color: Colors.black, width: 3.0),
-            ),
-            child: IconButton(
-              onPressed: () {
-                changePhase();
-                logger.d("Estás en fase: $phase ");
-              },
-              icon: const Icon(
-                Icons.skip_next,
-                size: 55,
-                color: Colors.black,
+          Positioned(
+            left: 0,
+            top: 10,
+            child: Container(
+              width: 75.0,
+              height: 75.0,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: colors[player],
+                border: Border.all(color: Colors.black, width: 3.0),
               ),
-            ),
-          ),
-        ),
-        Positioned(
-          right: 17.5,
-          top: 70,
-          child: Container(
-            width: 40,
-            height: 25,
-            decoration: BoxDecoration(
-              color: colors[player],
-              borderRadius: BorderRadius.circular(25.0),
-              border: Border.all(color: Colors.black, width: 2.0),
-            ),
-            child: Center(
-              child: Text(
-                '$timerSeconds',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
+              child: ClipOval(
+                child: Image.network(
+                  widget.players[player].profileImageUrl.trim(),
+                  width: 60,
+                  height: 60,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),
           ),
-        ),
-      ],
-    );
+          Positioned(
+            right: 0,
+            top: 10,
+            child: Container(
+              width: 75.0,
+              height: 75.0,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: colors[player],
+                border: Border.all(color: Colors.black, width: 3.0),
+              ),
+              child: IconButton(
+                onPressed: () {
+                  changePhase();
+                  logger.d("Estás en fase: $phase ");
+                },
+                icon: const Icon(
+                  Icons.skip_next,
+                  size: 55,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            right: 17.5,
+            top: 70,
+            child: Container(
+              width: 40,
+              height: 25,
+              decoration: BoxDecoration(
+                color: colors[player],
+                borderRadius: BorderRadius.circular(25.0),
+                border: Border.all(color: Colors.black, width: 2.0),
+              ),
+              child: Center(
+                child: Text(
+                  '$timerSeconds',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+    else{
+      return Stack(
+        children: [
+          Container(
+            margin: const EdgeInsets.all(20),
+            width: 315.0,
+            height: 60.0,
+            decoration: const BoxDecoration(
+              color: Color.fromARGB(175, 57, 57, 57),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Text(
+                  widget.players[player].name,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Divider(
+                  height: 0,
+                ),
+                Text(
+                  texts[phase],
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            left: 0,
+            top: 10,
+            child: Container(
+              width: 75.0,
+              height: 75.0,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: colors[player],
+                border: Border.all(color: Colors.black, width: 3.0),
+              ),
+              child: ClipOval(
+                child: Image.network(
+                  widget.players[player].profileImageUrl.trim(),
+                  width: 60,
+                  height: 60,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
   }
 }

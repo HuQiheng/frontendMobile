@@ -76,7 +76,7 @@ class _MapScreenState extends State<MapScreen> {
       });
     });
 
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 4), () {
       logger.d("Carga completada, actualizando estado...");
 
       setState(() {
@@ -98,8 +98,33 @@ class _MapScreenState extends State<MapScreen> {
     });
   }
 
-  @override
   Widget build(BuildContext context) {
+  return Scaffold(
+    body: _isLoading
+        ? _buildLoadingScreen() // Muestra la pantalla de carga si isLoading es true
+        : _buildContent(), // Muestra el contenido si isLoading es false
+  );
+}
+
+Widget _buildLoadingScreen() {
+  //=====================================
+  //==========PANTALLA DE CARGA==========
+  return Container(
+    color: Colors.white,
+    child: const Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text('Conectando con el servidor de juego'),
+        Center(
+          child: CircularProgressIndicator(),
+        ),
+      ],
+    ),
+  );
+}
+
+  @override
+  Widget _buildContent() {
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -206,15 +231,6 @@ class _MapScreenState extends State<MapScreen> {
                   showUserNames: true,
                 )),
           ),
-          //=====================================
-          //==========PANTALLA DE CARGA==========
-          if (_isLoading)
-            Container(
-              decoration: const BoxDecoration(color: Colors.white),
-              child: const Center(
-                child: CircularProgressIndicator(),
-              ),
-            ),
         ],
       ),
     );

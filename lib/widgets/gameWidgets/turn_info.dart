@@ -271,6 +271,24 @@ class _TurnInfoState extends State<TurnInfo> {
               ),
             ),
           ),
+          Positioned(
+            right: 0,
+            top: 10,
+            child: Container(
+              width: 75.0,
+              height: 75.0,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: colors[player],
+                border: Border.all(color: Colors.black, width: 3.0),
+              ),
+              child: const Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              ),
+            ),
+          ),
         ],
       );
     }

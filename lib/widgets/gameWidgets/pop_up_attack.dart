@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:wealth_wars/widgets/gameWidgets/map.dart';
@@ -8,7 +7,11 @@ class PopUpAttack extends StatefulWidget {
   final GameRegion region1, region2;
   final IO.Socket socket;
 
-  const PopUpAttack({super.key, required this.region1, required this.region2, required this.socket});
+  const PopUpAttack(
+      {super.key,
+      required this.region1,
+      required this.region2,
+      required this.socket});
 
   @override
   PopUpAttackState createState() => PopUpAttackState();
@@ -181,7 +184,11 @@ class PopUpAttackState extends State<PopUpAttack> {
                       onPressed: () {
                         final logger = Logger();
                         logger.d(widget.region1.code);
-                        widget.socket.emit('attackTerritories', [widget.region1.code, widget.region2.code, _counter]);
+                        widget.socket.emit('attackTerritories', [
+                          widget.region1.code,
+                          widget.region2.code,
+                          _counter
+                        ]);
                         Navigator.pop(context);
                       },
                       child: const Text(

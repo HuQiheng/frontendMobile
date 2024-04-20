@@ -4,27 +4,32 @@ import 'dart:ui' as ui;
 class CircleOverlayPainter extends CustomPainter {
   final Map<String, Path> circlePaths;
   final Map<String, String> circleNumbers;
+  final Map<String, Color> colors;
 
   CircleOverlayPainter(
-      {required this.circlePaths, required this.circleNumbers});
+      {required this.circlePaths,
+      required this.circleNumbers,
+      required this.colors});
 
   @override
   void paint(ui.Canvas canvas, ui.Size size) {
     circlePaths.forEach((id, path) {
+      final Color color = colors[id] ?? Colors.transparent;
       final fillPaint = ui.Paint()
-        ..color = Colors.white
+        ..color = color
         ..style = ui.PaintingStyle.fill;
       canvas.drawPath(path, fillPaint);
 
       final strokePaint = ui.Paint()
         ..color = Colors.black
         ..style = ui.PaintingStyle.stroke
-        ..strokeWidth = 2.0;
+        ..strokeWidth = 1.3;
       canvas.drawPath(path, strokePaint);
 
       final String number = circleNumbers[id] ?? '';
       final textSpan = TextSpan(
-        style: const TextStyle(color: Colors.black, fontSize: 14),
+        style: const TextStyle(
+            color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
         text: number,
       );
       final textPainter = TextPainter(

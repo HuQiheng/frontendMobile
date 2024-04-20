@@ -10,6 +10,7 @@ import 'package:wealth_wars/methods/circule_overlay_painter.dart';
 import 'package:wealth_wars/widgets/gameWidgets/pop_up_attack.dart';
 import 'package:wealth_wars/widgets/gameWidgets/pop_up_invest.dart';
 import 'package:wealth_wars/widgets/gameWidgets/pop_up_move.dart';
+import 'package:wealth_wars/methods/shared_preferences.dart';
 
 const double width = -392.394 * 0.5;
 const double height = -317.762 * 0.5;
@@ -513,12 +514,25 @@ class _MapWidgetState extends State<MapWidget> {
 
   Map<String, String> circleNumbers = {};
   Map<String, Color> regionColors = {};
-  
+
   int numFab = 0;
 
   @override
   void initState() {
     super.initState();
+
+    // Queremos saber quien es el usuario del sistema
+    getUserData().then((userData) {
+      setState(() {
+        var playerEmail = userData?['email'];
+        var playersList = widget.gameMap['players'] as List<dynamic>;
+        // Encuentra el índice del jugador que coincide con el email del usuario
+        player =
+            playersList.indexWhere((player) => player['email'] == playerEmail);
+        logger.d("Indice del jugador del sistema en el mapa: $player");
+      });
+    });
+
     loadTerritories();
     loadMapData();
   }
@@ -722,7 +736,6 @@ class _MapWidgetState extends State<MapWidget> {
     // Actualiza numFab con el nuevo valor
     numFab = newNumFab;
   }
-  
 }
 
 void updatePlayer(int newPlayer) {

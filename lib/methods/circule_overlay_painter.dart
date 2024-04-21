@@ -5,11 +5,13 @@ class CircleOverlayPainter extends CustomPainter {
   final Map<String, Path> circlePaths;
   final Map<String, String> circleNumbers;
   final Map<String, Color> colors;
+  final Map<String, int> factories;
 
   CircleOverlayPainter(
       {required this.circlePaths,
       required this.circleNumbers,
-      required this.colors});
+      required this.colors,
+      required this.factories});
 
   @override
   void paint(ui.Canvas canvas, ui.Size size) {
@@ -20,16 +22,18 @@ class CircleOverlayPainter extends CustomPainter {
         ..style = ui.PaintingStyle.fill;
       canvas.drawPath(path, fillPaint);
 
+      final int factory = factories[id] ?? 0;
+      final double strokeWidth = factory == 0 ? 1.2 : 2.7;
       final strokePaint = ui.Paint()
         ..color = Colors.black
         ..style = ui.PaintingStyle.stroke
-        ..strokeWidth = 1.3;
+        ..strokeWidth = strokeWidth;
       canvas.drawPath(path, strokePaint);
 
       final String number = circleNumbers[id] ?? '';
       final textSpan = TextSpan(
         style: const TextStyle(
-            color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold),
+            color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
         text: number,
       );
       final textPainter = TextPainter(

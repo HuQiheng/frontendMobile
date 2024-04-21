@@ -525,6 +525,7 @@ class _MapWidgetState extends State<MapWidget> {
   Map<String, String> circleNumbers = {};
   Map<String, Color> regionColors = {};
   Map<String, Color> circleColors = {};
+  Map<String, int> circleFactory = {};
 
   int numFab = 0;
 
@@ -619,6 +620,7 @@ class _MapWidgetState extends State<MapWidget> {
         circleNumbers[key] = details['troops'].toString();
         regionColors[key] = colors[details['player']];
         circleColors[key] = colorsCircles[details['player']];
+        circleFactory[key] = details['factories'];
       }
     });
 
@@ -776,7 +778,8 @@ class _MapWidgetState extends State<MapWidget> {
                   painter: CircleOverlayPainter(
                       circlePaths: circulePaths,
                       circleNumbers: circleNumbers,
-                      colors: circleColors),
+                      colors: circleColors,
+                      factories: circleFactory),
                 ),
               ],
             ),

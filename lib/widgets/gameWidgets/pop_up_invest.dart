@@ -10,7 +10,12 @@ class PopUpInvest extends StatelessWidget {
   final IO.Socket socket;
   final Function(int) callback;
 
-  PopUpInvest({super.key, required this.region, required this.numFab, required this.callback, required this.socket});
+  PopUpInvest(
+      {super.key,
+      required this.region,
+      required this.numFab,
+      required this.callback,
+      required this.socket});
 
   @override
   Widget build(BuildContext context) {
@@ -152,14 +157,20 @@ class PopUpFactory extends StatelessWidget {
   int numFab;
   final IO.Socket socket;
   final Function(int) callback;
-  PopUpFactory({super.key, required this.region, required this.numFab, required this.callback, required this.socket,});
+  PopUpFactory({
+    super.key,
+    required this.region,
+    required this.numFab,
+    required this.callback,
+    required this.socket,
+  });
 
   @override
   Widget build(BuildContext context) {
     final Logger logger = Logger();
     logger.d("Mi numero es: ");
     logger.d(numFab);
-    if(numFab == 0){
+    if (numFab == 0) {
       return AlertDialog(
         contentPadding:
             const EdgeInsets.only(top: 2, right: 20, left: 20, bottom: 20),
@@ -252,27 +263,29 @@ class PopUpFactory extends StatelessWidget {
                             backgroundColor: const Color(0xFF083344),
                           ),
                           onPressed: () {
-                            if(region.factories == 1){
+                            if (region.factories == 1) {
                               // Saca un popUp
                               Fluttertoast.showToast(
-                                msg: "No puedes tener más de una\nfábrica por territorio",
+                                msg:
+                                    "No puedes tener más de una\nfábrica por territorio",
                                 toastLength: Toast.LENGTH_SHORT,
                                 gravity: ToastGravity.BOTTOM,
                                 backgroundColor: const Color(0xFFEA970A),
                                 textColor: Colors.black,
                                 fontSize: 16.0,
                               );
-                            }
-                            else{
+                            } else {
                               numFab = 1;
                               callback(numFab);
-                              socket.emit('buyActives', ['factory', region.code, 1]);
+                              socket.emit(
+                                  'buyActives', ['factory', region.code, 1]);
                             }
                             Navigator.pop(context);
                           },
                           child: const Text(
                             'SI',
-                            style: TextStyle(fontSize: 20.0, color: Colors.white),
+                            style:
+                                TextStyle(fontSize: 20.0, color: Colors.white),
                           ),
                         ),
                         ElevatedButton(
@@ -284,7 +297,8 @@ class PopUpFactory extends StatelessWidget {
                           },
                           child: const Text(
                             'NO',
-                            style: TextStyle(fontSize: 20.0, color: Colors.white),
+                            style:
+                                TextStyle(fontSize: 20.0, color: Colors.white),
                           ),
                         ),
                       ],
@@ -296,8 +310,7 @@ class PopUpFactory extends StatelessWidget {
           ],
         ),
       );
-    }
-    else{
+    } else {
       return AlertDialog(
         contentPadding:
             const EdgeInsets.only(top: 2, right: 20, left: 20, bottom: 20),
@@ -366,7 +379,8 @@ class PopUpFactory extends StatelessWidget {
                           },
                           child: const Text(
                             'OK',
-                            style: TextStyle(fontSize: 20.0, color: Colors.white),
+                            style:
+                                TextStyle(fontSize: 20.0, color: Colors.white),
                           ),
                         ),
                       ],
@@ -394,12 +408,12 @@ class PopUpTroop extends StatefulWidget {
 
 class PopUpTroopState extends State<PopUpTroop> {
   int _counter = 1;
-  int _cost = 0;
+  int _cost = 2;
   void incrementCounter() {
     setState(() {
       if (_counter < 99) {
         _counter++;
-        _cost = _counter*2;
+        _cost = _counter * 2;
       }
     });
   }
@@ -408,7 +422,7 @@ class PopUpTroopState extends State<PopUpTroop> {
     setState(() {
       if (_counter > 1) {
         _counter--;
-        _cost = _counter*2;
+        _cost = _counter * 2;
       }
     });
   }
@@ -546,21 +560,22 @@ class PopUpTroopState extends State<PopUpTroop> {
                         backgroundColor: const Color(0xFF083344),
                       ),
                       onPressed: () {
-                        if(widget.region.troops + _counter > 99){
+                        if (widget.region.troops + _counter > 99) {
                           // Saca un popUp
                           Fluttertoast.showToast(
-                            msg: "No puedes sobrepasar las 99 tropas por territorio",
+                            msg:
+                                "No puedes sobrepasar las 99 tropas por territorio",
                             toastLength: Toast.LENGTH_SHORT,
                             gravity: ToastGravity.BOTTOM,
                             backgroundColor: const Color(0xFFEA970A),
                             textColor: Colors.black,
                             fontSize: 16.0,
                           );
-                        }
-                        else{
+                        } else {
                           final logger = Logger();
                           logger.d(widget.region.code);
-                          widget.socket.emit('buyActives', ['troop', widget.region.code, _counter]);
+                          widget.socket.emit('buyActives',
+                              ['troop', widget.region.code, _counter]);
                           Navigator.pop(context);
                         }
                       },

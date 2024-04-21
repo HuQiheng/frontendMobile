@@ -27,6 +27,13 @@ final List<Color> colors = [
   const Color.fromRGBO(34, 197, 94, 1),
 ];
 
+final List<Color> colorsCircles = [
+  const Color.fromRGBO(52, 114, 215, 1),
+  const Color.fromRGBO(214, 55, 82, 1),
+  const Color.fromRGBO(214, 138, 10, 1),
+  const Color.fromRGBO(30, 172, 82, 1),
+];
+
 class MapWidget extends StatefulWidget {
   final Map<String, dynamic> gameMap;
   final IO.Socket socket;
@@ -517,6 +524,8 @@ class _MapWidgetState extends State<MapWidget> {
 
   Map<String, String> circleNumbers = {};
   Map<String, Color> regionColors = {};
+  Map<String, Color> circleColors = {};
+  Map<String, int> circleFactory = {};
 
   int numFab = 0;
 
@@ -610,6 +619,8 @@ class _MapWidgetState extends State<MapWidget> {
       if (details != null) {
         circleNumbers[key] = details['troops'].toString();
         regionColors[key] = colors[details['player']];
+        circleColors[key] = colorsCircles[details['player']];
+        circleFactory[key] = details['factories'];
       }
     });
 
@@ -679,7 +690,8 @@ class _MapWidgetState extends State<MapWidget> {
                           grAttack = gr;
                           String name = attackRegion.name;
                           Fluttertoast.showToast(
-                            msg: "Has seleccionado: $name\nElige a qué región atacar",
+                            msg:
+                                "Has seleccionado: $name\nElige a qué región atacar",
                             toastLength: Toast.LENGTH_SHORT,
                             gravity: ToastGravity.BOTTOM,
                             backgroundColor: const Color(0xFFEA970A),
@@ -687,9 +699,9 @@ class _MapWidgetState extends State<MapWidget> {
                             fontSize: 16.0,
                           );
                         } else if (attackPhase == 1 && attackRegion != region) {
-                          //FALTA LÓGICA PARA COMPROBAR QUE NO ES TU TERRITORIO <----------------------------------
-                          if (areRegionsAdjacent(attackRegion.name, region.name)) {
-                            if(areMine(grAttack, gr)){
+                          if (areRegionsAdjacent(
+                              attackRegion.name, region.name)) {
+                            if (areMine(grAttack, gr)) {
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -701,8 +713,7 @@ class _MapWidgetState extends State<MapWidget> {
                                 },
                               );
                               attackPhase = 0;
-                            }
-                            else{
+                            } else {
                               Fluttertoast.showToast(
                                 msg: "No puedes atacarte a ti mismo",
                                 toastLength: Toast.LENGTH_SHORT,
@@ -711,7 +722,8 @@ class _MapWidgetState extends State<MapWidget> {
                                 textColor: Colors.black,
                                 fontSize: 16.0,
                               );
-                              logger.d("Las regiones pertenecen al mismo dueño.");
+                              logger
+                                  .d("Las regiones pertenecen al mismo dueño.");
                               attackPhase = 0;
                             }
                           } else {
@@ -729,18 +741,19 @@ class _MapWidgetState extends State<MapWidget> {
                           movePhase++;
                           logger.d("Es mi region");
                         } else if (movePhase == 1 && moveRegion != region) {
-                          //FALTA LÓGICA PARA COMPROBAR QUE ES TU TERRITORIO <----------------------------------
                           if (areRegionsAdjacent(
                               moveRegion.name, region.name)) {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) {
-                                return PopUpMove(
-                                  region: moveRegion.name,
-                                  moveRegion: region.name,
-                                );
-                              },
-                            );
+                            if (!areMine(grAttack, gr)) {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return PopUpMove(
+                                    region: moveRegion.name,
+                                    moveRegion: region.name,
+                                  );
+                                },
+                              );
+                            }
                             movePhase = 0;
                           } else {
                             logger.d("Las regiones no son adyacentes.");
@@ -763,7 +776,10 @@ class _MapWidgetState extends State<MapWidget> {
                 ),
                 CustomPaint(
                   painter: CircleOverlayPainter(
-                      circlePaths: circulePaths, circleNumbers: circleNumbers),
+                      circlePaths: circulePaths,
+                      circleNumbers: circleNumbers,
+                      colors: circleColors,
+                      factories: circleFactory),
                 ),
               ],
             ),

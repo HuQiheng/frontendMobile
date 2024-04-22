@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:wealth_wars/widgets/gameWidgets/map.dart';
 
 class PopUpMove extends StatefulWidget {
-  final String region;
-  final String moveRegion;
+  final GameRegion region1, region2;
+  final IO.Socket socket;
 
-  const PopUpMove({super.key, required this.region, required this.moveRegion});
+  const PopUpAttack(
+      {super.key,
+      required this.region1,
+      required this.region2,
+      required this.socket});
 
   @override
   PopUpMoveState createState() => PopUpMoveState();
 }
 
-class PopUpMoveState extends State<PopUpMove> {
-  int _counter = 1;
+class PopUpMoveState extends State<PopUpMove> {  
 
+  int _counter = 1;
   void incrementCounter() {
     setState(() {
-      if (_counter < 99) {
+      if (_counter < widget.region1.troops - 1) {
         _counter++;
       }
     });
@@ -40,13 +47,25 @@ class PopUpMoveState extends State<PopUpMove> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Mover tropas',
-                style: TextStyle(
-                  color: Color(0xFFEA970A),
-                  fontWeight: FontWeight.bold,
-                  fontSize: 25,
-                ),
+              const Row(
+                children: [
+                  Text(
+                    'Mover tropas',
+                    style: TextStyle(
+                      color: Color(0xFFEA970A),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
+                    ),
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Icon(
+                    Icons.monetization_on_outlined,
+                    size: 30,
+                    color: Color(0xFFEA970A),
+                  ),
+                ],
               ),
               IconButton(
                 onPressed: () {
@@ -76,7 +95,7 @@ class PopUpMoveState extends State<PopUpMove> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   const Text(
-                    'Número de tropas a mover',
+                    '¿Cuantas tropas quieres movilizar?',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -90,32 +109,38 @@ class PopUpMoveState extends State<PopUpMove> {
                     thickness: 2,
                   ),
                   Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Text(
-                          widget.region,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
-                          ),
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Desde ",
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const Expanded(
-                        flex: 0,
-                        child: Icon(
-                          Icons.arrow_forward,
-                          size: 40,
+                      Text(
+                        widget.region1.name,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Expanded(
-                        child: Text(
-                          widget.moveRegion,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            fontSize: 15.0,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      const Text(
+                        " van a ",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        widget.region2.name,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
@@ -166,6 +191,13 @@ class PopUpMoveState extends State<PopUpMove> {
                         backgroundColor: const Color(0xFF083344),
                       ),
                       onPressed: () {
+                        final logger = Logger();
+                        logger.d(widget.region1.code);
+                        widget.socket.emit('moveTroops', [
+                          widget.region1.code,
+                          widget.region2.code,
+                          _counter
+                        ]);
                         Navigator.pop(context);
                       },
                       child: const Text(

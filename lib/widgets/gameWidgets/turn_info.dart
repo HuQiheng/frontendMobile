@@ -85,6 +85,8 @@ class _TurnInfoState extends State<TurnInfo> {
           timerSeconds--; // Decrementa el contador
         } else {
           timer.cancel(); // Detiene el temporizador
+          phase = 0;
+          mapa.updatePhase(phase);
           widget.socket.emit("nextPhase");
           widget.socket.emit("nextPhase");
           widget.socket.emit("nextTurn");

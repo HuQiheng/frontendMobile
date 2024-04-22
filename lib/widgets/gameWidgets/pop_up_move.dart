@@ -7,7 +7,7 @@ class PopUpMove extends StatefulWidget {
   final GameRegion region1, region2;
   final IO.Socket socket;
 
-  const PopUpAttack(
+  const PopUpMove(
       {super.key,
       required this.region1,
       required this.region2,
@@ -17,8 +17,7 @@ class PopUpMove extends StatefulWidget {
   PopUpMoveState createState() => PopUpMoveState();
 }
 
-class PopUpMoveState extends State<PopUpMove> {  
-
+class PopUpMoveState extends State<PopUpMove> {
   int _counter = 1;
   void incrementCounter() {
     setState(() {

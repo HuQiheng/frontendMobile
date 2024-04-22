@@ -551,7 +551,7 @@ class _MapWidgetState extends State<MapWidget> {
 
   int attackPhase = 0;
   late Region attackRegion;
-  late GameRegion grAttack;
+  late GameRegion gr2;
   int movePhase = 0;
   late Region moveRegion;
 
@@ -687,7 +687,7 @@ class _MapWidgetState extends State<MapWidget> {
                         if (attackPhase == 0 && gr.player == playerPlaying) {
                           attackRegion = region;
                           attackPhase++;
-                          grAttack = gr;
+                          gr2 = gr;
                           String name = attackRegion.name;
                           Fluttertoast.showToast(
                             msg:
@@ -698,22 +698,24 @@ class _MapWidgetState extends State<MapWidget> {
                             textColor: Colors.black,
                             fontSize: 16.0,
                           );
-                        } else if (attackPhase == 1 && attackRegion != region) {
+                        } 
+                        else if (attackPhase == 1 && attackRegion != region) {
                           if (areRegionsAdjacent(
                               attackRegion.name, region.name)) {
-                            if (areMine(grAttack, gr)) {
+                            if (areMine(gr2, gr)) {
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
                                   return PopUpAttack(
-                                    region1: grAttack,
+                                    region1: gr2,
                                     region2: gr,
                                     socket: widget.socket,
                                   );
                                 },
                               );
                               attackPhase = 0;
-                            } else {
+                            } 
+                            else {
                               Fluttertoast.showToast(
                                 msg: "No puedes atacarte a ti mismo",
                                 toastLength: Toast.LENGTH_SHORT,
@@ -722,11 +724,11 @@ class _MapWidgetState extends State<MapWidget> {
                                 textColor: Colors.black,
                                 fontSize: 16.0,
                               );
-                              logger
-                                  .d("Las regiones pertenecen al mismo dueño.");
+                              logger.d("Las regiones pertenecen al mismo dueño.");
                               attackPhase = 0;
                             }
-                          } else {
+                          } 
+                          else {
                             logger.d("Las regiones no son adyacentes.");
                             attackPhase = 0;
                           }
@@ -734,34 +736,57 @@ class _MapWidgetState extends State<MapWidget> {
                       }
                       // Fase de movimientos
                       if (phase == 2) {
-                        // Comprobar que es su propia región
+
                         GameRegion gr = searchRegionByName(region.name);
                         if (movePhase == 0 && gr.player == playerPlaying) {
                           moveRegion = region;
                           movePhase++;
-                          logger.d("Es mi region");
+                          gr2 = gr;
+                          String name = moveRegion.name;
+                          Fluttertoast.showToast(
+                            msg:
+                                "Has seleccionado: $name\nElige a qué región desplazar tropas",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: const Color(0xFFEA970A),
+                            textColor: Colors.black,
+                            fontSize: 16.0,
+                          );
                         } else if (movePhase == 1 && moveRegion != region) {
                           if (areRegionsAdjacent(
                               moveRegion.name, region.name)) {
-                            if (!areMine(grAttack, gr)) {
+                            if (areMine(gr2, gr)) {
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
                                   return PopUpMove(
-                                    region: moveRegion.name,
-                                    moveRegion: region.name,
+                                    region1: gr2,
+                                    region2: gr,
+                                    socket: widget.socket,
                                   );
                                 },
                               );
+                              movePhase = 0;
+                            } 
+                            else {
+                              Fluttertoast.showToast(
+                                msg: "No puedes atacarte a ti mismo",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                backgroundColor: const Color(0xFFEA970A),
+                                textColor: Colors.black,
+                                fontSize: 16.0,
+                              );
+                              logger.d("Las regiones pertenecen al mismo dueño.");
+                              movePhase = 0;
                             }
-                            movePhase = 0;
-                          } else {
+                          } 
+                          else {
                             logger.d("Las regiones no son adyacentes.");
                             movePhase = 0;
                           }
                         }
                       }
-
                       logger.d("Has pulsado la region: $name ");
                       setState(() {});
                     }

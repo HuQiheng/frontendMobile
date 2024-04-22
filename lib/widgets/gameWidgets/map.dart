@@ -700,8 +700,7 @@ class _MapWidgetState extends State<MapWidget> {
                           );
                         } 
                         else if (attackPhase == 1 && attackRegion != region) {
-                          if (areRegionsAdjacent(
-                              attackRegion.name, region.name)) {
+                          if (areRegionsAdjacent(attackRegion.name, region.name)) {
                             if (areMine(gr2, gr)) {
                               showDialog(
                                 context: context,
@@ -753,9 +752,9 @@ class _MapWidgetState extends State<MapWidget> {
                             fontSize: 16.0,
                           );
                         } else if (movePhase == 1 && moveRegion != region) {
-                          if (areRegionsAdjacent(
-                              moveRegion.name, region.name)) {
-                            if (areMine(gr2, gr)) {
+                          if (areRegionsAdjacent(moveRegion.name, region.name)) {
+                            // Negado para solo elegir propias
+                            if (!areMine(gr2, gr)) {
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
@@ -770,7 +769,7 @@ class _MapWidgetState extends State<MapWidget> {
                             } 
                             else {
                               Fluttertoast.showToast(
-                                msg: "No puedes atacarte a ti mismo",
+                                msg: "No puedes mover tropas a un enemigo",
                                 toastLength: Toast.LENGTH_SHORT,
                                 gravity: ToastGravity.BOTTOM,
                                 backgroundColor: const Color(0xFFEA970A),

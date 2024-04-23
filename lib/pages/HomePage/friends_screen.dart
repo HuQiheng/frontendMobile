@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class FriendsScreen extends StatelessWidget {
-  const FriendsScreen({super.key});
+  List<dynamic> myFriends;
+  
+  FriendsScreen({super.key, required this.myFriends});
 
   @override
   Widget build(BuildContext context) {
+    final Logger logger = Logger();
+    logger.d(myFriends);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFF083344),

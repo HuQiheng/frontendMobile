@@ -218,7 +218,8 @@ Future<List<dynamic>> getUserFriends(String email) async {
 
     if (response.statusCode == 200) {
       // La solicitud fue exitosa, decodificar el JSON y devolver los datos
-      List<dynamic> friendsData = json.decode(response.body);
+      logger.d(response.body);
+      List<dynamic> friendsData = jsonDecode(response.body);
       return friendsData;
     } else if (response.statusCode == 403) {
       // Acceso denegado

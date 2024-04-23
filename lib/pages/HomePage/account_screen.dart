@@ -78,7 +78,7 @@ class ProfileScreen extends StatelessWidget {
                           context: context,
                           builder: (BuildContext context) {
                             return PopUpChangeUsername(
-                                email: email, password: password);
+                                email: email, password: password, picture: picture);
                           },
                         );
                       },

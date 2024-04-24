@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import '../../widgets/lobbyWidgets/pop_up_salas.dart';
 import 'package:wealth_wars/pages/HomePage/account_screen.dart';
 import 'package:wealth_wars/pages/HomePage/awards_screen.dart';
@@ -7,10 +6,7 @@ import 'package:wealth_wars/pages/HomePage/friends_screen.dart';
 import 'package:wealth_wars/pages/HomePage/settings_screen.dart';
 import 'package:wealth_wars/methods/shared_preferences.dart';
 import 'package:wealth_wars/methods/player_class.dart';
-
-import 'package:webview_cookie_manager/webview_cookie_manager.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:wealth_wars/methods/friend_manager.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -48,7 +44,9 @@ class HomeScreen extends StatelessWidget {
       List<dynamic> myFriends = await getUserFriends(email);
 
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => FriendsScreen(myFriends: myFriends)),
+        MaterialPageRoute(
+            builder: (context) =>
+                FriendsScreen(myFriends: myFriends, email: email)),
       );
     }
 
@@ -191,45 +189,5 @@ class MenuButton extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-Future<List<dynamic>> getUserFriends(String email) async {
-  final cookieManager = WebviewCookieManager();
-  final cookies = await cookieManager.getCookies('https://wealthwars.games');
-  String sessionCookie = cookies
-      .firstWhere(
-        (cookie) => cookie.name == 'connect.sid',
-      )
-      .value;
-  String url = 'https://wealthwars.games:3010/users/$email/friends';
-  
-  final Logger logger = Logger();
-  logger.d(url);
-
-  try {
-    final response = await http.get(
-      Uri.parse(url),
-      headers: {
-        'Content-Type': 'application/json',
-        'cookie': 'connect.sid=$sessionCookie',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      // La solicitud fue exitosa, decodificar el JSON y devolver los datos
-      logger.d(response.body);
-      List<dynamic> friendsData = jsonDecode(response.body);
-      return friendsData;
-    } else if (response.statusCode == 403) {
-      // Acceso denegado
-      throw Exception('Acceso denegado');
-    } else {
-      // Otro código de estado, manejar según sea necesario
-      throw Exception('Error en la solicitud: ${response.statusCode}');
-    }
-  } catch (error) {
-    // Manejar errores de conexión o de otro tipo
-    throw Exception('Error al hacer la solicitud: $error');
   }
 }

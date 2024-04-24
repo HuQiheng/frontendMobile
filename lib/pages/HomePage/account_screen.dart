@@ -8,19 +8,20 @@ class ProfileScreen extends StatelessWidget {
   final String username;
   final String email;
   final String picture;
-  final String password;
+  final String? password;
 
-  const ProfileScreen(
-      {super.key,
-      required this.username,
-      required this.email,
-      required this.picture,
-      required this.password});
+  const ProfileScreen({
+    super.key,
+    required this.username,
+    required this.email,
+    required this.picture,
+    this.password,
+  });
 
   @override
   Widget build(BuildContext context) {
     final Logger logger = Logger();
-    logger.d(username + email + picture);
+    logger.d("$username $email $picture");
     return Scaffold(
       backgroundColor: const Color(0xFF083344),
       appBar: AppBar(
@@ -41,58 +42,58 @@ class ProfileScreen extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 CircleAvatar(
-                  radius: 70,
-                  backgroundImage: NetworkImage(
-                    picture,
-                  ),
+                  radius: 50,
+                  backgroundImage: NetworkImage(picture),
                 ),
-                TextButton(
-                  onPressed: () {
-                    // Aquí va el código de amigo
-                    Clipboard.setData(const ClipboardData(
-                        text:
-                            '<Mi código amigo>')); // Copia el texto al portapapeles
-                    Fluttertoast.showToast(
-                      msg: "Código de amigo copiado en el portapapeles",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      backgroundColor: const Color(0xFFEA970A),
-                      textColor: Colors.black,
-                      fontSize: 16.0,
-                    );
-                  },
-                  style: TextButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: const Color(0xFF0066CC),
-                    textStyle: const TextStyle(
-                        fontSize: 16, fontStyle: FontStyle.italic),
-                  ),
-                  child: const Text('<Mi código amigo>'),
-                ),
-                Row(
-                  children: [
-                    const Expanded(child: SizedBox.shrink()),
-                    TextButton(
-                      onPressed: () {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return PopUpChangeUsername(
-                                email: email, password: password, picture: picture);
-                          },
-                        );
-                      },
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.white,
-                        backgroundColor: const Color(0xFF0066CC),
-                        textStyle: const TextStyle(
-                            fontSize: 16, fontStyle: FontStyle.italic),
-                      ),
-                      child: const Text('Cambiar nombre'),
+                if (password != null) ...[
+                  TextButton(
+                    onPressed: () {
+                      Clipboard.setData(
+                          const ClipboardData(text: '<Mi código amigo>'));
+                      Fluttertoast.showToast(
+                        msg: "Código de amigo copiado en el portapapeles",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        backgroundColor: const Color(0xFFEA970A),
+                        textColor: Colors.black,
+                        fontSize: 16.0,
+                      );
+                    },
+                    style: TextButton.styleFrom(
+                      foregroundColor: Colors.white,
+                      backgroundColor: const Color(0xFF0066CC),
+                      textStyle: const TextStyle(
+                          fontSize: 16, fontStyle: FontStyle.italic),
                     ),
-                    const Expanded(child: SizedBox.shrink()),
-                  ],
-                ),
+                    child: const Text('<Mi código amigo>'),
+                  ),
+                  Row(
+                    children: [
+                      const Expanded(child: SizedBox.shrink()),
+                      TextButton(
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return PopUpChangeUsername(
+                                  email: email,
+                                  password: password!,
+                                  picture: picture);
+                            },
+                          );
+                        },
+                        style: TextButton.styleFrom(
+                          foregroundColor: Colors.white,
+                          backgroundColor: const Color(0xFF0066CC),
+                          textStyle: const TextStyle(
+                              fontSize: 16, fontStyle: FontStyle.italic),
+                        ),
+                        child: const Text('Cambiar nombre'),
+                      ),
+                      const Expanded(child: SizedBox.shrink()),
+                    ],
+                  ),
+                ],
                 Row(
                   children: [
                     const Align(
@@ -100,26 +101,26 @@ class ProfileScreen extends StatelessWidget {
                       child: Text(
                         'Insignias:',
                         style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          fontStyle: FontStyle.italic
-                        ),
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20,
+                            fontStyle: FontStyle.italic),
                       ),
                     ),
                     const Expanded(child: SizedBox.shrink()),
                     Container(
                       decoration: const BoxDecoration(
-                        shape: BoxShape.circle, // Esta propiedad define la forma del contenedor como un círculo
-                        color: Color(0xFF0066CC), // Color de fondo del contenedor
+                        shape: BoxShape.circle,
+                        color: Color(0xFF0066CC),
                       ),
-                      child: 
-                      IconButton(
-                        icon: const Icon(Icons.edit, color: Colors.white), // Icono de edición con color blanco
-                        onPressed: () {
-                          // Abrir pop up para elegir insignia
-                        },
-                      ),
+                      child: password != null
+                          ? IconButton(
+                              icon: const Icon(Icons.edit, color: Colors.white),
+                              onPressed: () {
+                                // Código para abrir el pop up y elegir insignia
+                              },
+                            )
+                          : const SizedBox.shrink(),
                     )
                   ],
                 ),
@@ -127,11 +128,10 @@ class ProfileScreen extends StatelessWidget {
                   height: 1,
                   color: Colors.white24,
                 ),
-                const SizedBox(height: 10), // Espacio entre la línea y la lista
+                const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    // Se habrán pasado las insignias que el usuario tiene equipadas
                     _buildBadgePlaceholder(),
                     _buildBadgePlaceholder(),
                     _buildBadgePlaceholder(),

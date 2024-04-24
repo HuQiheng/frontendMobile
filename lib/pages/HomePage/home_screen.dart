@@ -43,10 +43,17 @@ class HomeScreen extends StatelessWidget {
 
       List<dynamic> myFriends = await getUserFriends(email);
 
+      List<dynamic> myRequests = await getUserRequests(email);
+
+      List<dynamic> sendedRequests = await getUserSendedRequests(email);
+
       Navigator.of(context).push(
         MaterialPageRoute(
-            builder: (context) =>
-                FriendsScreen(myFriends: myFriends, email: email)),
+            builder: (context) => FriendsScreen(
+                myFriends: myFriends,
+                myRequests: myRequests,
+                sendedRequests: sendedRequests,
+                email: email)),
       );
     }
 

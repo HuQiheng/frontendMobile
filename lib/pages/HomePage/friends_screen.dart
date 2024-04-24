@@ -47,7 +47,7 @@ class _FriendsScreenState extends State<FriendsScreen>
       backgroundColor: const Color(0xFF083344),
       appBar: AppBar(
         iconTheme: const IconThemeData(color: Colors.white),
-        title: const Text('Mis amigos:', style: TextStyle(color: Colors.white)),
+        title: const Text('Mis amigos', style: TextStyle(color: Colors.white)),
         backgroundColor: const Color(0xFF083344),
       ),
       body: Container(
@@ -148,6 +148,43 @@ class _FriendsScreenState extends State<FriendsScreen>
                 ),
               );
             },
+            trailing: IconButton(
+              icon: const Icon(Icons.delete,
+                  color: Colors.black), // Cambio de color a blanco
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: const Text('Eliminar Amistad'),
+                      content: Text(
+                          '¿Estás seguro de que quieres eliminar a ${friend['username']} de tus amigos?'),
+                      actions: <Widget>[
+                        TextButton(
+                          child: const Text('Cancelar'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        TextButton(
+                          child: const Text('Eliminar'),
+                          onPressed: () {
+                            deleteFriend(
+                                widget.email,
+                                friend[
+                                    'friend_email']); // Asumiendo que tienes esta función implementada
+                            setState(() {
+                              widget.myFriends.removeAt(index);
+                            });
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+            ),
           ),
         );
       },
@@ -155,12 +192,82 @@ class _FriendsScreenState extends State<FriendsScreen>
   }
 
   Widget _buildSentRequests() {
-    // Implementación específica para la lista de solicitudes enviadas
-    return const Center(child: Text("Solicitudes Enviadas"));
+    return ListView.separated(
+      separatorBuilder: (context, index) =>
+          const Divider(color: Colors.white24),
+      itemCount: widget.sendedRequests.length,
+      itemBuilder: (BuildContext context, int index) {
+        var friend = widget.sendedRequests[index];
+        return Card(
+          color: const Color(0xffd68a0a),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          elevation: 5.0,
+          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundImage: NetworkImage(friend['picture']),
+            ),
+            title: Text(
+              friend['username'],
+              style: const TextStyle(color: Colors.black),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfileScreen(
+                    username: friend['username'],
+                    email: friend['friend_email'],
+                    picture: friend['picture'],
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 
   Widget _buildReceivedRequests() {
-    // Implementación específica para la lista de peticiones recibidas
-    return const Center(child: Text("Peticiones Recibidas"));
+    return ListView.separated(
+      separatorBuilder: (context, index) =>
+          const Divider(color: Colors.white24),
+      itemCount: widget.myRequests.length,
+      itemBuilder: (BuildContext context, int index) {
+        var friend = widget.myRequests[index];
+        return Card(
+          color: const Color(0xffd68a0a),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          elevation: 5.0,
+          margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          child: ListTile(
+            leading: CircleAvatar(
+              backgroundImage: NetworkImage(friend['picture']),
+            ),
+            title: Text(
+              friend['username'],
+              style: const TextStyle(color: Colors.black),
+            ),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfileScreen(
+                    username: friend['username'],
+                    email: friend['friend_email'],
+                    picture: friend['picture'],
+                  ),
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 }

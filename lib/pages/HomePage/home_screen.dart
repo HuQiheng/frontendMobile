@@ -75,9 +75,12 @@ class HomeScreen extends StatelessWidget {
           profileImageUrl: userData?['picture'],
           name: userData?['name']);
 
+      List<dynamic> myFriends = await getUserFriends(userData?['email']);
+
       showDialog(
         context: context,
-        builder: (BuildContext context) => PopUpSalas(player: player),
+        builder: (BuildContext context) =>
+            PopUpSalas(player: player, userFriends: myFriends),
       );
     }
 

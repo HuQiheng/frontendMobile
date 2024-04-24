@@ -13,9 +13,14 @@ class LobbyScreen extends StatefulWidget {
   final bool isHost;
   final String? joinCode;
   final Player player;
+  List<dynamic>? userFriends;
 
-  const LobbyScreen(
-      {super.key, this.isHost = false, this.joinCode, required this.player});
+  LobbyScreen(
+      {super.key,
+      this.isHost = false,
+      this.joinCode,
+      required this.player,
+      this.userFriends});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -79,7 +84,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
     });
 
     socket.on('nonExistingRoom', (data) {
-      socket.disconnect();
+      socket.dispose();
 
       Fluttertoast.showToast(
         msg: "Código de sala incorrecto: $accessCode",
@@ -181,6 +186,76 @@ class _LobbyScreenState extends State<LobbyScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
+                        if (widget.isHost) ...[
+                          ElevatedButton(
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Invitar amigos'),
+                                    content: SizedBox(
+                                      width: double.minPositive,
+                                      child: ListView.builder(
+                                        shrinkWrap: true,
+                                        itemCount:
+                                            widget.userFriends?.length ?? 0,
+                                        itemBuilder: (context, index) {
+                                          var friend =
+                                              widget.userFriends![index];
+                                          return ListTile(
+                                            leading: CircleAvatar(
+                                              backgroundImage: NetworkImage(
+                                                  friend['picture']),
+                                            ),
+                                            title: Text(friend['username']),
+                                            trailing: IconButton(
+                                              icon:
+                                                  const Icon(Icons.person_add),
+                                              onPressed: () {
+                                                socket.emit('invite',
+                                                    friend['friend_email']);
+                                                Fluttertoast.showToast(
+                                                  msg: "Invitación enviada",
+                                                  toastLength:
+                                                      Toast.LENGTH_SHORT,
+                                                  gravity: ToastGravity.BOTTOM,
+                                                  backgroundColor:
+                                                      const Color(0xFFEA970A),
+                                                  textColor: Colors.black,
+                                                  fontSize: 16.0,
+                                                );
+                                              },
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        child: const Text('Cerrar'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              foregroundColor: Colors.black,
+                              backgroundColor: const Color(0xFFEA970A),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20.0),
+                              ),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 12.0),
+                            ),
+                            child: const Text('Invitar amigos'),
+                          ),
+                          const SizedBox(height: 16),
+                        ],
                         Container(
                           margin: const EdgeInsets.symmetric(vertical: 8.0),
                           decoration: BoxDecoration(

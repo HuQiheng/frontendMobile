@@ -48,8 +48,6 @@ Future<List<dynamic>> getUserRequests(String email) async {
       .value;
   String url = 'https://wealthwars.games:3010/users/$email/friendsRequests';
 
-  final Logger logger = Logger();
-
   try {
     final response = await http.get(
       Uri.parse(url),
@@ -108,7 +106,7 @@ Future<List<dynamic>> getUserSendedRequests(String email) async {
   }
 }
 
-void makeFriendRequest(String email, String friendEmail) async {
+Future<bool> makeFriendRequest(String email, String friendEmail) async {
   final cookieManager = WebviewCookieManager();
   final cookies = await cookieManager.getCookies('https://wealthwars.games');
   String sessionCookie = cookies
@@ -132,11 +130,14 @@ void makeFriendRequest(String email, String friendEmail) async {
 
     if (response.statusCode == 200) {
       logger.d("Respuesta de la peticion de añadir amigo ${response.body}");
+      return true;
     } else {
       logger.e('Error en la solicitud: ${response.statusCode}');
+      return false;
     }
   } catch (error) {
     logger.e('Error al hacer la solicitud: $error');
+    return false;
   }
 }
 
@@ -192,7 +193,7 @@ void acceptFriendRequest(String userEmail, String requesterEmail) async {
         'Content-Type': 'application/json',
         'Cookie': 'connect.sid=$sessionCookie',
       },
-      body: jsonEncode({'email': requesterEmail}),
+      body: jsonEncode({'friend': requesterEmail}),
     );
 
     if (response.statusCode == 200) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:wealth_wars/methods/friend_manager.dart';
 import 'package:wealth_wars/pages/homePage/account_screen.dart';
@@ -7,9 +8,9 @@ class FriendsScreen extends StatefulWidget {
   final String email;
   final List<dynamic> myFriends;
   final List<dynamic> myRequests;
-  final List<dynamic> sendedRequests;
+  List<dynamic> sendedRequests;
 
-  const FriendsScreen(
+  FriendsScreen(
       {super.key,
       required this.email,
       required this.myFriends,
@@ -78,9 +79,45 @@ class _FriendsScreenState extends State<FriendsScreen>
                     ),
                     IconButton(
                       icon: const Icon(Icons.check, color: Colors.white),
-                      onPressed: () {
+                      onPressed: () async {
                         String friendEmail = friendEmailController.text;
-                        makeFriendRequest(widget.email, friendEmail);
+                        if (!await checkFriendship(widget.email, friendEmail)) {
+                          if (await makeFriendRequest(
+                              widget.email, friendEmail)) {
+                            List<dynamic> updatedRequests =
+                                await getUserSendedRequests(widget.email);
+                            setState(() {
+                              widget.sendedRequests = updatedRequests;
+                            });
+
+                            Fluttertoast.showToast(
+                              msg: "Solicitud de amistad enviada",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: const Color(0xFFEA970A),
+                              textColor: Colors.black,
+                              fontSize: 16.0,
+                            );
+                          } else {
+                            Fluttertoast.showToast(
+                              msg: "La solicitud ya fue enviada",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: const Color(0xFFEA970A),
+                              textColor: Colors.black,
+                              fontSize: 16.0,
+                            );
+                          }
+                        } else {
+                          Fluttertoast.showToast(
+                            msg: "Ya eres amigo de este usuario",
+                            toastLength: Toast.LENGTH_SHORT,
+                            gravity: ToastGravity.BOTTOM,
+                            backgroundColor: const Color(0xFFEA970A),
+                            textColor: Colors.black,
+                            fontSize: 16.0,
+                          );
+                        }
                       },
                     ),
                   ],
@@ -149,8 +186,7 @@ class _FriendsScreenState extends State<FriendsScreen>
               );
             },
             trailing: IconButton(
-              icon: const Icon(Icons.delete,
-                  color: Colors.black), // Cambio de color a blanco
+              icon: const Icon(Icons.delete, color: Colors.black),
               onPressed: () {
                 showDialog(
                   context: context,
@@ -169,10 +205,7 @@ class _FriendsScreenState extends State<FriendsScreen>
                         TextButton(
                           child: const Text('Eliminar'),
                           onPressed: () {
-                            deleteFriend(
-                                widget.email,
-                                friend[
-                                    'friend_email']); // Asumiendo que tienes esta función implementada
+                            deleteFriend(widget.email, friend['friend_email']);
                             setState(() {
                               widget.myFriends.removeAt(index);
                             });
@@ -225,6 +258,20 @@ class _FriendsScreenState extends State<FriendsScreen>
                 ),
               );
             },
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.close, color: Colors.red),
+                  onPressed: () {
+                    deleteFriendRequest(widget.email, friend['email']);
+                    setState(() {
+                      widget.sendedRequests.removeAt(index);
+                    });
+                  },
+                ),
+              ],
+            ),
           ),
         );
       },
@@ -259,12 +306,36 @@ class _FriendsScreenState extends State<FriendsScreen>
                 MaterialPageRoute(
                   builder: (context) => ProfileScreen(
                     username: friend['username'],
-                    email: friend['friend_email'],
+                    email: friend['email'],
                     picture: friend['picture'],
                   ),
                 ),
               );
             },
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.check, color: Colors.green),
+                  onPressed: () {
+                    acceptFriendRequest(widget.email, friend['email']);
+                    setState(() {
+                      widget.myFriends.add(widget.myRequests[index]);
+                      widget.myRequests.removeAt(index);
+                    });
+                  },
+                ),
+                IconButton(
+                  icon: const Icon(Icons.close, color: Colors.red),
+                  onPressed: () {
+                    deleteFriendRequest(widget.email, friend['email']);
+                    setState(() {
+                      widget.myRequests.removeAt(index);
+                    });
+                  },
+                ),
+              ],
+            ),
           ),
         );
       },

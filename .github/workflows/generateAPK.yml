@@ -1,13 +1,15 @@
-name: Build APK
+name: Build APK and Release
 
 on:
   push:
     branches:
-      - main  # Cambiar por el nombre de tu rama principal
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
     - name: Checkout code
@@ -16,7 +18,7 @@ jobs:
     - name: Install Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.19.3'  # O la versión de Flutter que desees utilizar
+        flutter-version: '3.19.3'
 
     - name: Check Flutter version
       run: flutter --version
@@ -24,16 +26,22 @@ jobs:
     - name: Setup JDK
       uses: actions/setup-java@v1
       with:
-        java-version: '11'  # Cambiar por la versión de Java que necesites
+        java-version: '11'
       
     - name: Build with Flutter
-      run: flutter build apk --release  # Comando para construir la APK
-      
-    - name: Move APK to directory
-      run: mv build/app/outputs/flutter-apk/app-release.apk apk/app-release.apk  # Moviendo el archivo al directorio apk en la raíz del proyecto
+      run: flutter build apk --release
       
     - name: Upload APK
       uses: actions/upload-artifact@v2
       with:
         name: app-release
-        path: apk/app-release.apk
+        path: build/app/outputs/flutter-apk/app-release.apk
+
+    - name: Release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: >
+        gh release create ${{ github.ref_name }}
+        "build/app/outputs/flutter-apk/app-release.apk#App Release APK"
+        --generate-notes
+        --title "Version ${{ github.ref_name }}"

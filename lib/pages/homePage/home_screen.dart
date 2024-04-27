@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../widgets/lobbyWidgets/pop_up_salas.dart';
-import 'package:wealth_wars/pages/HomePage/account_screen.dart';
-import 'package:wealth_wars/pages/HomePage/awards_screen.dart';
-import 'package:wealth_wars/pages/HomePage/friends_screen.dart';
-import 'package:wealth_wars/pages/HomePage/settings_screen.dart';
+import 'package:wealth_wars/pages/homePage/account_screen.dart';
+import 'package:wealth_wars/pages/homePage/awards_screen.dart';
+import 'package:wealth_wars/pages/homePage/friends_screen.dart';
+import 'package:wealth_wars/pages/homePage/settings_screen.dart';
 import 'package:wealth_wars/methods/shared_preferences.dart';
 import 'package:wealth_wars/methods/player_class.dart';
 import 'package:wealth_wars/methods/friend_manager.dart';

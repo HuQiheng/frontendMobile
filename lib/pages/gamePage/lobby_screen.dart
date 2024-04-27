@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:wealth_wars/methods/player_class.dart';
 import 'package:wealth_wars/pages/gamePage/game_screen.dart';
-import 'package:wealth_wars/pages/HomePage/home_screen.dart';
+import 'package:wealth_wars/pages/homePage/home_screen.dart';
 import 'package:wealth_wars/widgets/lobbyWidgets/players_lobby.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';

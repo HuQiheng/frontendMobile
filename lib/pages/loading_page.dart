@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:wealth_wars/pages/HomePage/home_screen.dart';
+import 'package:wealth_wars/pages/homePage/home_screen.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 import 'initialPage/initial_page.dart';
 

@@ -19,7 +19,7 @@ jobs:
           java-version: '11'
 
       - name: Build APK
-        run: ./gradle assembleRelease
+        run: ./gradle wrapper
 
       - name: Upload APK
         uses: actions/upload-artifact@v2

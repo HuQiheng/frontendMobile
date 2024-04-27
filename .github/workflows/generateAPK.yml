@@ -12,13 +12,16 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: flutter pub get
       
     - name: Setup JDK
       uses: actions/setup-java@v1
       with:
         java-version: '11'  # Cambiar por la versión de Java que necesites
       
-    - name: Build with Gradle
+    - name: Build with Flutter
       run: flutter build apk  # Comando para construir la APK
       
     - name: Upload APK

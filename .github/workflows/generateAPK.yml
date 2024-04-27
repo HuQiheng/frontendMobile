@@ -1,9 +1,9 @@
-name: Build APK
+name: Build APK and Release
 
 on:
   push:
     branches:
-      - main  # Cambiar por el nombre de tu rama principal
+      - main
 
 jobs:
   build:
@@ -16,7 +16,7 @@ jobs:
     - name: Install Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.19.3'  # O la versión de Flutter que desees utilizar
+        flutter-version: '3.19.3'
 
     - name: Check Flutter version
       run: flutter --version
@@ -24,16 +24,23 @@ jobs:
     - name: Setup JDK
       uses: actions/setup-java@v1
       with:
-        java-version: '11'  # Cambiar por la versión de Java que necesites
+        java-version: '11'
       
     - name: Build with Flutter
-      run: flutter build apk --release  # Comando para construir la APK
-      
-    - name: Move APK to directory
-      run: mv build/app/outputs/flutter-apk/app-release.apk apk/app-release.apk  # Moviendo el archivo al directorio apk en la raíz del proyecto
+      run: flutter build apk --release
       
     - name: Upload APK
       uses: actions/upload-artifact@v2
       with:
         name: app-release
-        path: apk/app-release.apk
+        path: build/app/outputs/flutter-apk/app-release.apk  # Ruta del archivo APK generado
+
+    - name: Create Release
+      id: create_release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: build/app/outputs/flutter-apk/app-release.apk  # Especifica la ruta completa del archivo APK
+        tag_name: v1.0  # Puedes especificar el número de versión de tu release
+        release_name: Release v1.0  # Nombre del release
+        body: This is the release of version 1.0  # Cuerpo del release
+        draft: false  # Publicar el release automáticamente

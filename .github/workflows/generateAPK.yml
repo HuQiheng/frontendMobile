@@ -22,7 +22,7 @@ jobs:
       run: flutter --version
       
     - name: Setup JDK
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v1
       with:
         java-version: '11'  # Cambiar por la versión de Java que necesites
       

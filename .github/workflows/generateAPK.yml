@@ -14,12 +14,12 @@ jobs:
       uses: actions/checkout@v2
       
     - name: Setup JDK
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v1
       with:
         java-version: '11'  # Cambiar por la versión de Java que necesites
       
     - name: Build with Gradle
-      run: .flutter build apk  # O el comando que utilices para construir tu APK
+      run: .flutter build apk  # Comando para construir la APK
       
     - name: Upload APK
       uses: actions/upload-artifact@v2

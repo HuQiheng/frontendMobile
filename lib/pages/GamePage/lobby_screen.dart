@@ -396,7 +396,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
                               backgroundImage: NetworkImage(friend['picture']),
                             ),
                             title: Text(
-                              friend['username'],
+                              friend['name'],
                               style: const TextStyle(
                                 color: Colors.white,
                               ),

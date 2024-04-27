@@ -170,7 +170,7 @@ class _FriendsScreenState extends State<FriendsScreen>
               backgroundImage: NetworkImage(friend['picture']),
             ),
             title: Text(
-              friend['username'],
+              friend['name'],
               style: const TextStyle(color: Colors.black),
             ),
             onTap: () {
@@ -178,8 +178,8 @@ class _FriendsScreenState extends State<FriendsScreen>
                 context,
                 MaterialPageRoute(
                   builder: (context) => ProfileScreen(
-                    username: friend['username'],
-                    email: friend['friend_email'],
+                    username: friend['name'],
+                    email: friend['email'],
                     picture: friend['picture'],
                   ),
                 ),
@@ -205,7 +205,7 @@ class _FriendsScreenState extends State<FriendsScreen>
                         TextButton(
                           child: const Text('Eliminar'),
                           onPressed: () {
-                            deleteFriend(widget.email, friend['friend_email']);
+                            deleteFriend(widget.email, friend['email']);
                             setState(() {
                               widget.myFriends.removeAt(index);
                             });
@@ -252,7 +252,7 @@ class _FriendsScreenState extends State<FriendsScreen>
                 MaterialPageRoute(
                   builder: (context) => ProfileScreen(
                     username: friend['username'],
-                    email: friend['friend_email'],
+                    email: friend['email'],
                     picture: friend['picture'],
                   ),
                 ),

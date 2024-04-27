@@ -19,7 +19,7 @@ jobs:
         java-version: '11'  # Cambiar por la versión de Java que necesites
       
     - name: Build with Gradle
-      run: .flutter build apk  # Comando para construir la APK
+      run: flutter build apk  # Comando para construir la APK
       
     - name: Upload APK
       uses: actions/upload-artifact@v2

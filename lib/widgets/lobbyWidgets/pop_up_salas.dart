@@ -5,7 +5,8 @@ import 'package:wealth_wars/widgets/lobbyWidgets/pop_up_info.dart';
 
 class PopUpSalas extends StatelessWidget {
   final Player player;
-  PopUpSalas({super.key, required this.player});
+  final List<dynamic> userFriends;
+  PopUpSalas({super.key, required this.player, required this.userFriends});
 
   final TextEditingController joinCodeController = TextEditingController();
 
@@ -152,13 +153,10 @@ class PopUpSalas extends StatelessWidget {
               ),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return PopUpInfo(
-                        player: player,
-                      );
+                      return const PopUpInfo();
                     },
                   );
                 },
@@ -184,7 +182,8 @@ class PopUpSalas extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => LobbyScreen(isHost: true, player: player)),
+          builder: (context) => LobbyScreen(
+              isHost: true, player: player, userFriends: userFriends)),
     );
   }
 
@@ -192,8 +191,10 @@ class PopUpSalas extends StatelessWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) =>
-              LobbyScreen(joinCode: joinCodeController.text, player: player)),
+          builder: (context) => LobbyScreen(
+              joinCode: joinCodeController.text,
+              player: player,
+              userFriends: null)),
     );
   }
 }

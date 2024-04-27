@@ -60,6 +60,7 @@ class _MapScreenState extends State<MapScreen> {
   final List<types.Message> _messages = [];
   Logger logger = Logger();
   bool _isLoading = true;
+  bool sended = false;
 
   @override
   void initState() {
@@ -72,6 +73,36 @@ class _MapScreenState extends State<MapScreen> {
       setState(() {
         widget.gameMap = map;
       });
+    });
+
+    widget.socket.on('messageReceived', (message) {
+      logger.d("Mensaje recibido $message");
+      // Si no es mensaje mio
+      if (!sended) {
+        int index = widget.players
+            .indexWhere((player) => player.email.trim() == message['user']);
+
+        if (index != -1) {
+          final textMessage = types.TextMessage(
+            author: types.User(
+                id: '${message['user']}',
+                firstName: widget.players[index].name,
+                imageUrl: widget.players[index].profileImageUrl),
+            createdAt: DateTime.now().millisecondsSinceEpoch,
+            id: DateTime.now().toString(),
+            text: message['message'],
+          );
+
+          setState(() {
+            _messages.insert(0, textMessage);
+          });
+        }
+      } else {
+        // He recibido un mensaje mio
+        setState(() {
+          sended = false;
+        });
+      }
     });
 
     Future.delayed(const Duration(seconds: 2), () {
@@ -91,7 +122,10 @@ class _MapScreenState extends State<MapScreen> {
       text: message.text,
     );
 
+    widget.socket.emit('sendMessage', message.text.toString());
+
     setState(() {
+      sended = true;
       _messages.insert(0, textMessage);
     });
   }

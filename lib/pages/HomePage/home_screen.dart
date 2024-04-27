@@ -6,6 +6,7 @@ import 'package:wealth_wars/pages/HomePage/friends_screen.dart';
 import 'package:wealth_wars/pages/HomePage/settings_screen.dart';
 import 'package:wealth_wars/methods/shared_preferences.dart';
 import 'package:wealth_wars/methods/player_class.dart';
+import 'package:wealth_wars/methods/friend_manager.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -36,9 +37,23 @@ class HomeScreen extends StatelessWidget {
       );
     }
 
-    void navigateToFriends() {
+    Future<void> navigateToFriends() async {
+      var userData = await getUserData();
+      String email = userData?['email'];
+
+      List<dynamic> myFriends = await getUserFriends(email);
+
+      List<dynamic> myRequests = await getUserRequests(email);
+
+      List<dynamic> sendedRequests = await getUserSendedRequests(email);
+
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => const FriendsScreen()),
+        MaterialPageRoute(
+            builder: (context) => FriendsScreen(
+                myFriends: myFriends,
+                myRequests: myRequests,
+                sendedRequests: sendedRequests,
+                email: email)),
       );
     }
 
@@ -60,9 +75,12 @@ class HomeScreen extends StatelessWidget {
           profileImageUrl: userData?['picture'],
           name: userData?['name']);
 
+      List<dynamic> myFriends = await getUserFriends(userData?['email']);
+
       showDialog(
         context: context,
-        builder: (BuildContext context) => PopUpSalas(player: player),
+        builder: (BuildContext context) =>
+            PopUpSalas(player: player, userFriends: myFriends),
       );
     }
 

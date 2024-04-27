@@ -13,9 +13,14 @@ class LobbyScreen extends StatefulWidget {
   final bool isHost;
   final String? joinCode;
   final Player player;
+  List<dynamic>? userFriends;
 
-  const LobbyScreen(
-      {super.key, this.isHost = false, this.joinCode, required this.player});
+  LobbyScreen(
+      {super.key,
+      this.isHost = false,
+      this.joinCode,
+      required this.player,
+      this.userFriends});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -79,7 +84,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
     });
 
     socket.on('nonExistingRoom', (data) {
-      socket.disconnect();
+      socket.dispose();
 
       Fluttertoast.showToast(
         msg: "Código de sala incorrecto: $accessCode",
@@ -157,84 +162,116 @@ class _LobbyScreenState extends State<LobbyScreen> {
     socket.onDisconnect((_) => logger.d('disconnect'));
   }
 
+  double _positionFriends = -350.0;
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         backgroundColor: const Color(0xFF083344),
-        body: SafeArea(
-          child: Row(
+        body: GestureDetector(
+          onTap: () {
+            setState(() {
+              _positionFriends = -350.0;
+            });
+          },
+          child: Stack(
             children: [
-              Expanded(
-                flex: 3,
-                child: PlayersLobby(players: players),
-              ),
-              Expanded(
-                flex: 2,
-                child: Card(
-                  elevation: 5,
-                  margin: const EdgeInsets.all(16),
-                  color: const Color(0xFF1A3A4A),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.symmetric(vertical: 8.0),
-                          decoration: BoxDecoration(
-                            color: Colors.yellow,
-                            borderRadius: BorderRadius.circular(4.0),
-                          ),
-                          child: ListTile(
-                            title: const Center(
-                              child: Text(
-                                'Código de la sala:',
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            subtitle: GestureDetector(
-                              onTap: () {
-                                Clipboard.setData(
-                                    ClipboardData(text: accessCode));
-                              },
-                              child: Center(
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    TextButton(
-                                      onPressed: () {
-                                        // Aquí va el codigo de amigo
-                                        Clipboard.setData(ClipboardData(
-                                            text:
-                                                accessCode)); // Copia el texto al portapapeles
-                                        /*ScaffoldMessenger.of(context).showSnackBar(
+              SafeArea(
+                child: Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: PlayersLobby(players: players),
+                    ),
+                    Expanded(
+                      flex: 2,
+                      child: Card(
+                        elevation: 5,
+                        margin: const EdgeInsets.all(16),
+                        color: const Color(0xFF1A3A4A),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              if (widget.isHost) ...[
+                                ElevatedButton(
+                                  onPressed: () {
+                                    setState(() {
+                                      _positionFriends = 0.0;
+                                    });
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    foregroundColor: Colors.black,
+                                    backgroundColor: const Color(0xFFEA970A),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12.0),
+                                  ),
+                                  child: const Text('Invitar amigos'),
+                                ),
+                                const SizedBox(height: 16),
+                              ],
+                              Container(
+                                margin:
+                                    const EdgeInsets.symmetric(vertical: 8.0),
+                                decoration: BoxDecoration(
+                                  color: Colors.yellow,
+                                  borderRadius: BorderRadius.circular(4.0),
+                                ),
+                                child: ListTile(
+                                  title: const Center(
+                                    child: Text(
+                                      'Código de la sala:',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                  subtitle: GestureDetector(
+                                    onTap: () {
+                                      Clipboard.setData(
+                                          ClipboardData(text: accessCode));
+                                    },
+                                    child: Center(
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          TextButton(
+                                            onPressed: () {
+                                              // Aquí va el codigo de amigo
+                                              Clipboard.setData(ClipboardData(
+                                                  text:
+                                                      accessCode)); // Copia el texto al portapapeles
+                                              /*ScaffoldMessenger.of(context).showSnackBar(
                                           const SnackBar(
                                               content: Text('Texto copiado al portapapeles')),
                                         );*/
-                                        Fluttertoast.showToast(
-                                          msg:
-                                              "Código de la sala copiado en el portapapeles",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          gravity: ToastGravity.BOTTOM,
-                                          backgroundColor:
-                                              const Color(0xFFEA970A),
-                                          textColor: Colors.black,
-                                          fontSize: 16.0,
-                                        );
-                                      },
-                                      style: TextButton.styleFrom(
-                                        foregroundColor: Colors.white,
-                                        backgroundColor:
-                                            const Color(0xFF0066CC),
-                                        textStyle: const TextStyle(
-                                            fontSize: 16,
-                                            fontStyle: FontStyle.italic),
-                                      ),
-                                      child: Text(accessCode),
-                                    ),
-                                    /*
+                                              Fluttertoast.showToast(
+                                                msg:
+                                                    "Código de la sala copiado en el portapapeles",
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.BOTTOM,
+                                                backgroundColor:
+                                                    const Color(0xFFEA970A),
+                                                textColor: Colors.black,
+                                                fontSize: 16.0,
+                                              );
+                                            },
+                                            style: TextButton.styleFrom(
+                                              foregroundColor: Colors.white,
+                                              backgroundColor:
+                                                  const Color(0xFF0066CC),
+                                              textStyle: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontStyle: FontStyle.italic),
+                                            ),
+                                            child: Text(accessCode),
+                                          ),
+                                          /*
                                     Text(
                                       accessCode,
                                       style: const TextStyle(
@@ -249,59 +286,142 @@ class _LobbyScreenState extends State<LobbyScreen> {
                                           .onSurface
                                           .withOpacity(0.6),
                                     ),*/
-                                  ],
+                                        ],
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: () {
-                            if (widget.isHost) {
-                              socket.disconnect();
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (_) => const HomeScreen()));
-                            } else {
-                              socket.emit('leaveRoom');
-                              socket.disconnect();
-                              Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                      builder: (_) => const HomeScreen()));
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            foregroundColor: Colors.black,
-                            backgroundColor: const Color(0xFFEA970A),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20.0),
-                            ),
-                            padding: const EdgeInsets.symmetric(vertical: 12.0),
-                          ),
-                          child: Text(
-                              widget.isHost ? 'Cerrar sala' : 'Abandonar sala'),
-                        ),
-                        const SizedBox(height: 16),
-                        if (widget.isHost) ...[
-                          ElevatedButton(
-                            onPressed: () {
-                              socket.emit('startGame', accessCode);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              foregroundColor: Colors.black,
-                              backgroundColor: const Color(0xFFEA970A),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20.0),
+                              const SizedBox(height: 16),
+                              ElevatedButton(
+                                onPressed: () {
+                                  if (widget.isHost) {
+                                    socket.disconnect();
+                                    Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                            builder: (_) =>
+                                                const HomeScreen()));
+                                  } else {
+                                    socket.emit('leaveRoom');
+                                    socket.disconnect();
+                                    Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                            builder: (_) =>
+                                                const HomeScreen()));
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  foregroundColor: Colors.black,
+                                  backgroundColor: const Color(0xFFEA970A),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 12.0),
+                                ),
+                                child: Text(widget.isHost
+                                    ? 'Cerrar sala'
+                                    : 'Abandonar sala'),
                               ),
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 12.0),
-                            ),
-                            child: const Text('Empezar juego'),
+                              const SizedBox(height: 16),
+                              if (widget.isHost) ...[
+                                ElevatedButton(
+                                  onPressed: () {
+                                    socket.emit('startGame', accessCode);
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    foregroundColor: Colors.black,
+                                    backgroundColor: const Color(0xFFEA970A),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20.0),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 12.0),
+                                  ),
+                                  child: const Text('Empezar juego'),
+                                ),
+                              ],
+                            ],
                           ),
-                        ],
-                      ],
+                        ),
+                      ),
                     ),
+                  ],
+                ),
+              ),
+              //======Friends invitations========
+
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 250),
+                top: 0,
+                bottom: 0,
+                right: _positionFriends,
+                child: Container(
+                  width: 350,
+                  padding: const EdgeInsets.all(15),
+                  decoration: BoxDecoration(
+                    border: const Border(
+                      left: BorderSide(
+                        color: Color.fromARGB(255, 0, 0, 0),
+                        width: 2.0,
+                      ),
+                    ),
+                    borderRadius: BorderRadius.circular(4.0),
+                    color: const Color(0xFF1A3A4A),
+                  ),
+                  child: Column(
+                    children: [
+                      Align(
+                        alignment: Alignment.topRight,
+                        child: IconButton(
+                          icon: const Icon(
+                            Icons.close,
+                            color: Colors.white,
+                            size: 35,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _positionFriends = -350.0;
+                            });
+                          },
+                        ),
+                      ),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: widget.userFriends?.length ?? 0,
+                        itemBuilder: (context, index) {
+                          var friend = widget.userFriends![index];
+                          return ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage: NetworkImage(friend['picture']),
+                            ),
+                            title: Text(
+                              friend['username'],
+                              style: const TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            trailing: IconButton(
+                              icon: const Icon(
+                                Icons.person_add,
+                                color: Colors.white,
+                              ),
+                              onPressed: () {
+                                socket.emit('invite', friend['friend_email']);
+                                Fluttertoast.showToast(
+                                  msg: "Invitación enviada",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  backgroundColor: const Color(0xFFEA970A),
+                                  textColor: Colors.black,
+                                  fontSize: 16.0,
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ),
               ),

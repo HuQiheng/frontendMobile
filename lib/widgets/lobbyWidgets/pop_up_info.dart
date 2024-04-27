@@ -3,9 +3,7 @@ import 'package:wealth_wars/widgets/lobbyWidgets/pop_up_salas.dart';
 import 'package:wealth_wars/methods/player_class.dart';
 
 class PopUpInfo extends StatelessWidget {
-  final Player player;
-
-  const PopUpInfo({super.key, required this.player});
+  const PopUpInfo({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -47,11 +45,6 @@ class PopUpInfo extends StatelessWidget {
                   icon: const Icon(Icons.close),
                   onPressed: () {
                     Navigator.of(context).pop();
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) =>
-                          PopUpSalas(player: player),
-                    );
                   },
                 ),
               ],

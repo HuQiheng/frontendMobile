@@ -10,9 +10,10 @@ import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 class PopUpChangeUsername extends StatefulWidget {
   final String email;
   final String password;
+  final String picture;
 
   const PopUpChangeUsername(
-      {Key? key, required this.email, required this.password});
+      {Key? key, required this.email, required this.password, required this.picture});
 
   @override
   _PopUpChangeUsernameState createState() => _PopUpChangeUsernameState();
@@ -98,7 +99,7 @@ class _PopUpChangeUsernameState extends State<PopUpChangeUsername> {
                         String newUsername = _usernameController.text;
                         logger.d(newUsername);
                         await updateUser(
-                            widget.email, newUsername, widget.password);
+                            widget.email, newUsername, widget.password, widget.picture);
                         // Regresa a pantalla principal (maybe un pop up más de feedback)
                         Navigator.push(
                           context,
@@ -136,7 +137,7 @@ class _PopUpChangeUsernameState extends State<PopUpChangeUsername> {
 }
 
 Future<void> updateUser(
-    String email, String newUsername, String password) async {
+    String email, String newUsername, String password, String picture) async {
   final cookieManager = WebviewCookieManager();
 
   final cookies = await cookieManager.getCookies('https://wealthwars.games');
@@ -155,6 +156,7 @@ Future<void> updateUser(
     Map<String, dynamic> requestBody = {
       'username': newUsername,
       'password': password,
+      'picture': picture,
     };
 
     // Realizar la solicitud PUT al backend

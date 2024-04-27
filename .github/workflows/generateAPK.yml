@@ -6,5 +6,9 @@ on:
       - main  # Cambiar por el nombre de tu rama principal
 
 jobs:
-  - name: Builds - build Flutter APK and create github release
-    uses: Dank-del/flutter-build-and-publish-action@v1
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Builds - build Flutter APK and create github release
+      uses: Dank-del/flutter-build-and-publish-action@v1

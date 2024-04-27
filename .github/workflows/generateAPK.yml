@@ -29,8 +29,11 @@ jobs:
     - name: Build with Flutter
       run: flutter build apk --release  # Comando para construir la APK
       
+    - name: Move APK to directory
+      run: mv build/app/outputs/flutter-apk/app-release.apk apk/app-release.apk  # Moviendo el archivo al directorio apk en la raíz del proyecto
+      
     - name: Upload APK
       uses: actions/upload-artifact@v2
       with:
         name: app-release
-        path: build/app/outputs/flutter-apk/app-release.apk  # Ruta al APK generado
+        path: apk/app-release.apk

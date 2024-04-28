@@ -72,8 +72,7 @@ class _TurnInfoState extends State<TurnInfo> {
     });
   }
 
-  @override
-  void dispose() {
+  void disposeTimer() {
     countdownTimer?.cancel();
     super.dispose();
   }

@@ -1,5 +1,4 @@
 //import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:logger/logger.dart';
@@ -11,6 +10,8 @@ import 'package:wealth_wars/widgets/gameWidgets/turn_info.dart';
 import 'package:wealth_wars/widgets/gameWidgets/resources_info.dart';
 import 'package:wealth_wars/widgets/gameWidgets/players_info.dart';
 import 'package:wealth_wars/widgets/gameWidgets/pop_up_surrender.dart';
+import 'package:wealth_wars/widgets/gameWidgets/pop_up_winner.dart';
+
 
 // ignore: depend_on_referenced_packages 
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -73,6 +74,18 @@ class _MapScreenState extends State<MapScreen> {
       setState(() {
         widget.gameMap = map;
       });
+    });
+
+    widget.socket.on('victory', (sal) {
+      logger.d(sal);
+      widget.socket.dispose();
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return const PopUpWinner();
+        },
+      );
     });
 
     widget.socket.on('messageReceived', (message) {
@@ -265,5 +278,10 @@ class _MapScreenState extends State<MapScreen> {
         ],
       ),
     );
+  }
+  @override
+  void dispose() {
+    widget.socket.dispose();
+    super.dispose();
   }
 }

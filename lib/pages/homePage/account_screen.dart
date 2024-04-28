@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+//import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:wealth_wars/widgets/homeWidgets/pop_up_change_username.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -45,8 +45,25 @@ class ProfileScreen extends StatelessWidget {
                   radius: 50,
                   backgroundImage: NetworkImage(picture),
                 ),
+                Container(
+                  // FALTA PASAR NUM VICTORIAS
+                  padding: const EdgeInsets.all(10), // Valor ajustable
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20), // Valor ajustable
+                    color: const Color(0xFF0066CC),
+                  ),
+                  child: const Text(
+                    'Victorias: 777',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ),
                 if (password != null) ...[
-                  TextButton(
+                  /*TextButton(
                     onPressed: () {
                       Clipboard.setData(
                           const ClipboardData(text: '<Mi código amigo>'));
@@ -66,7 +83,7 @@ class ProfileScreen extends StatelessWidget {
                           fontSize: 16, fontStyle: FontStyle.italic),
                     ),
                     child: const Text('<Mi código amigo>'),
-                  ),
+                  ),*/
                   Row(
                     children: [
                       const Expanded(child: SizedBox.shrink()),

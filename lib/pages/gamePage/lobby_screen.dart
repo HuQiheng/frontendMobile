@@ -145,6 +145,19 @@ class _LobbyScreenState extends State<LobbyScreen> {
       }
     });
 
+    socket.on('achievementUnlocked', (data) {
+      logger.d("Enhorabuena, has completado el logro: $data");
+
+      Fluttertoast.showToast(
+        msg: "Enhorabuena, has completado el logro: $data",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: const Color(0xFFEA970A),
+        textColor: Colors.black,
+        fontSize: 16.0,
+      );
+    });
+
     socket.on('mapSent', (map) {
       logger.d("Empezando partida desde lobby");
       Navigator.of(context).push(MaterialPageRoute(
@@ -296,18 +309,22 @@ class _LobbyScreenState extends State<LobbyScreen> {
                               ElevatedButton(
                                 onPressed: () {
                                   if (widget.isHost) {
-                                    socket.disconnect();
-                                    Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute(
-                                            builder: (_) =>
-                                                const HomeScreen()));
+                                    socket.dispose();
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const HomeScreen()),
+                                    );
                                   } else {
                                     socket.emit('leaveRoom');
-                                    socket.disconnect();
-                                    Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute(
-                                            builder: (_) =>
-                                                const HomeScreen()));
+                                    socket.dispose();
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const HomeScreen()),
+                                    );
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(

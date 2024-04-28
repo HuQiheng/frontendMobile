@@ -145,16 +145,6 @@ class _LobbyScreenState extends State<LobbyScreen> {
       }
     });
 
-    socket.on('mapSent', (map) {
-      logger.d("Empezando partida desde lobby");
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (_) => GameScreen(
-                socket: socket,
-                players: players,
-                gameMap: map,
-              )));
-    });
-
     socket.on('achievementUnlocked', (data) {
       logger.d("Enhorabuena, has completado el logro: $data");
       
@@ -166,6 +156,16 @@ class _LobbyScreenState extends State<LobbyScreen> {
         textColor: Colors.black,
         fontSize: 16.0,
       );
+    });
+
+    socket.on('mapSent', (map) {
+      logger.d("Empezando partida desde lobby");
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) => GameScreen(
+                socket: socket,
+                players: players,
+                gameMap: map,
+              )));
     });
 
     socket.onError((data) {

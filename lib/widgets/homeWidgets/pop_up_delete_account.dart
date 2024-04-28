@@ -16,6 +16,7 @@ class PopUpDelete extends StatelessWidget {
     Logger logger = Logger();
     logger.d("Tengo las cookies");
     String url = 'https://wealthwars.games:3010/users/$email';
+    logger.d(url);
 
     final cookies = await cookieManager.getCookies('https://wealthwars.games');
     String sessionCookie = cookies

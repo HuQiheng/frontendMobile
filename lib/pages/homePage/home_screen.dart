@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:wealth_wars/pages/gamePage/lobby_screen.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 import '../../widgets/lobbyWidgets/pop_up_salas.dart';
 import 'package:wealth_wars/pages/homePage/account_screen.dart';
@@ -46,7 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
       logger.d('Socket connected for invitation');
     });
 
-    socket.on('invitationReceived', (data) {
+    socket.on('invitationRecevied', (data) {
       logger.d("Se ha recibido una invitación: $data");
 
       showInvitationDialog(data);
@@ -66,17 +67,50 @@ class _HomeScreenState extends State<HomeScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text("Invitación Recibida"),
-          content: Text("Invitación de: ${invitationData['userInfo']['name']}"),
+          title: const Text("Invitación Recibida",
+              style: TextStyle(fontWeight: FontWeight.bold)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text("Invitación de: ${invitationData['userInfo']['name']}",
+                  style: const TextStyle(fontSize: 16)),
+              const SizedBox(height: 20),
+              ClipOval(
+                child: Image.network(
+                  invitationData['userInfo']['picture'],
+                  width: 100,
+                  height: 100,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ],
+          ),
           actions: <Widget>[
             TextButton(
-              child: const Text('Aceptar'),
-              onPressed: () {
-                Navigator.of(context).pop();
+              child:
+                  const Text('Aceptar', style: TextStyle(color: Colors.green)),
+              onPressed: () async {
+                var userData = await getUserData();
+                Player player = Player(
+                    email: userData?['email'],
+                    profileImageUrl: userData?['picture'],
+                    name: userData?['name']);
+
+                socket.dispose();
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => LobbyScreen(
+                          joinCode: invitationData['userCode'].toString(),
+                          player: player,
+                          userFriends: null)),
+                );
               },
             ),
             TextButton(
-              child: const Text('Rechazar'),
+              child:
+                  const Text('Rechazar', style: TextStyle(color: Colors.red)),
               onPressed: () {
                 Navigator.of(context).pop();
               },

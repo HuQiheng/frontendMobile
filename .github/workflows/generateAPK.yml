@@ -37,19 +37,24 @@ jobs:
         name: app-release
         path: build/app/outputs/flutter-apk/app-release.apk
 
-    - name: Read version
-      id: version
-      run: echo "::set-output name=version::$(cat version.txt)"
+    - name: Determine next version
+      id: next_version
+      run: |
+        git fetch --tags
+        latest_tag=$(git describe --tags `git rev-list --tags --max-count=1`)
+        next_version="${latest_tag%.*}.$((${latest_tag##*.}+1))"
+        echo "::set-output name=version::$next_version"
+
+    - name: Create Git Tag
+      run: |
+        git tag ${{ steps.next_version.outputs.version }}
+        git push origin ${{ steps.next_version.outputs.version }}
 
     - name: Release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        if [ -z "${{ steps.version.outputs.version }}" ]; then
-          echo "Version is empty, not creating release."
-          exit 1
-        fi
-        gh release create "v${{ steps.version.outputs.version }}" \
+        gh release create ${{ steps.next_version.outputs.version }} \
           "build/app/outputs/flutter-apk/app-release.apk#App Release APK" \
           --generate-notes \
-          --title "Version v${{ steps.version.outputs.version }}"
+          --title "Version ${{ steps.next_version.outputs.version }}"

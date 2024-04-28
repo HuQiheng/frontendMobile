@@ -247,7 +247,15 @@ class _FriendsScreenState extends State<FriendsScreen>
               style: const TextStyle(color: Colors.black),
             ),
             onTap: () {
-              Navigator.push(
+              Fluttertoast.showToast(
+                msg: "No puedes ver el perfil de alguien\nque no sea tu amigo",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                backgroundColor: const Color(0xFFEA970A),
+                textColor: Colors.black,
+                fontSize: 16.0,
+              );
+              /*Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => ProfileScreen(
@@ -256,21 +264,22 @@ class _FriendsScreenState extends State<FriendsScreen>
                     picture: friend['picture'],
                   ),
                 ),
-              );
+              );*/
             },
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.close, color: Colors.red),
-                  onPressed: () {
-                    deleteFriendRequest(widget.email, friend['email']);
-                    setState(() {
-                      widget.sendedRequests.removeAt(index);
-                    });
-                  },
-                ),
-              ],
+            trailing: Container(
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle, // Hace que el contenedor sea circular
+                color: Color(0xFF0066CC), // Color de fondo del contenedor
+              ),
+              child: IconButton(
+                icon: const Icon(Icons.close, color: Colors.red),
+                onPressed: () {
+                  deleteFriendRequest(widget.email, friend['email']);
+                  setState(() {
+                    widget.sendedRequests.removeAt(index);
+                  });
+                },
+              ),
             ),
           ),
         );
@@ -301,7 +310,15 @@ class _FriendsScreenState extends State<FriendsScreen>
               style: const TextStyle(color: Colors.black),
             ),
             onTap: () {
-              Navigator.push(
+              Fluttertoast.showToast(
+                msg: "No puedes ver el perfil de alguien\nque no sea tu amigo",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.BOTTOM,
+                backgroundColor: const Color(0xFFEA970A),
+                textColor: Colors.black,
+                fontSize: 16.0,
+              );
+              /*Navigator.push(
                 context,
                 MaterialPageRoute(
                   builder: (context) => ProfileScreen(
@@ -310,34 +327,46 @@ class _FriendsScreenState extends State<FriendsScreen>
                     picture: friend['picture'],
                   ),
                 ),
-              );
+              );*/
             },
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                IconButton(
-                  icon: const Icon(Icons.check, color: Colors.green),
-                  onPressed: () {
-                    acceptFriendRequest(widget.email, friend['email']);
-                    setState(() {
-                      Map<String, dynamic> newUser = {
-                        'name': widget.myRequests[index]['username'],
-                        'email': widget.myRequests[index]['email'],
-                        'picture': widget.myRequests[index]['picture']
-                      };
-                      widget.myFriends.add(newUser);
-                      widget.myRequests.removeAt(index);
-                    });
-                  },
+                Container(
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle, // Hace que el contenedor sea circular
+                    color: Color(0xFF0066CC), // Color de fondo del contenedor
+                  ),
+                  child: IconButton(
+                    icon: const Icon(Icons.check, color: Colors.green),
+                    onPressed: () {
+                      acceptFriendRequest(widget.email, friend['email']);
+                      setState(() {
+                        Map<String, dynamic> newUser = {
+                          'name': widget.myRequests[index]['username'],
+                          'email': widget.myRequests[index]['email'],
+                          'picture': widget.myRequests[index]['picture']
+                        };
+                        widget.myFriends.add(newUser);
+                        widget.myRequests.removeAt(index);
+                      });
+                    },
+                  ),
                 ),
-                IconButton(
-                  icon: const Icon(Icons.close, color: Colors.red),
-                  onPressed: () {
-                    deleteFriendRequest(widget.email, friend['email']);
-                    setState(() {
-                      widget.myRequests.removeAt(index);
-                    });
-                  },
+                Container(
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle, // Hace que el contenedor sea circular
+                    color: Color(0xFF0066CC), // Color de fondo del contenedor
+                  ),
+                  child:IconButton(
+                    icon: const Icon(Icons.close, color: Colors.red),
+                    onPressed: () {
+                      deleteFriendRequest(widget.email, friend['email']);
+                      setState(() {
+                        widget.myRequests.removeAt(index);
+                      });
+                    },
+                  ),
                 ),
               ],
             ),

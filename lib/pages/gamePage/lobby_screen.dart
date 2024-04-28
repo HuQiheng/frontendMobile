@@ -407,7 +407,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
                                 color: Colors.white,
                               ),
                               onPressed: () {
-                                socket.emit('invite', friend['friend_email']);
+                                socket.emit('invite', friend['email']);
                                 Fluttertoast.showToast(
                                   msg: "Invitación enviada",
                                   toastLength: Toast.LENGTH_SHORT,

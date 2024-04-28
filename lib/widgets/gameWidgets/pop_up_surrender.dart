@@ -69,7 +69,7 @@ class PopUpSurrender extends StatelessWidget {
                       onPressed: () {
                         socket.emit("surrender");
                         socket.emit("leaveRoom");
-                        socket.disconnect();
+                        socket.dispose();
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => HomeScreen()),

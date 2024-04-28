@@ -147,7 +147,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
 
     socket.on('achievementUnlocked', (data) {
       logger.d("Enhorabuena, has completado el logro: $data");
-      
+
       Fluttertoast.showToast(
         msg: "Enhorabuena, has completado el logro: $data",
         toastLength: Toast.LENGTH_SHORT,
@@ -309,18 +309,22 @@ class _LobbyScreenState extends State<LobbyScreen> {
                               ElevatedButton(
                                 onPressed: () {
                                   if (widget.isHost) {
-                                    socket.disconnect();
-                                    Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute(
-                                            builder: (_) =>
-                                                const HomeScreen()));
+                                    socket.dispose();
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const HomeScreen()),
+                                    );
                                   } else {
                                     socket.emit('leaveRoom');
-                                    socket.disconnect();
-                                    Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute(
-                                            builder: (_) =>
-                                                const HomeScreen()));
+                                    socket.dispose();
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const HomeScreen()),
+                                    );
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(

@@ -9,15 +9,13 @@ class PopUpDelete extends StatelessWidget {
   final String email;
   const PopUpDelete({super.key, required this.email});
 
-  //const PopUpDelete({super.key});
-
   Future<void> deleteUser(String email) async {
     final cookieManager = WebviewCookieManager();
 
     // Construir la URL con el email del usuario a eliminar
     Logger logger = Logger();
     logger.d("Tengo las cookies");
-    String url = 'https://wealthwars.games/users/$email';
+    String url = 'https://wealthwars.games:3010/users/$email';
 
     final cookies = await cookieManager.getCookies('https://wealthwars.games');
     String sessionCookie = cookies

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:wealth_wars/pages/gamePage/lobby_screen.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
@@ -51,6 +52,19 @@ class _HomeScreenState extends State<HomeScreen> {
       logger.d("Se ha recibido una invitación: $data");
 
       showInvitationDialog(data);
+    });
+
+    socket.on('achievementUnlocked', (data) {
+      logger.d("Enhorabuena, has completado el logro: $data");
+      
+      Fluttertoast.showToast(
+        msg: "Enhorabuena, has completado el logro: $data",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: const Color(0xFFEA970A),
+        textColor: Colors.black,
+        fontSize: 16.0,
+      );
     });
 
     socket.onError((data) {

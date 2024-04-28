@@ -155,6 +155,19 @@ class _LobbyScreenState extends State<LobbyScreen> {
               )));
     });
 
+    socket.on('achievementUnlocked', (data) {
+      logger.d("Enhorabuena, has completado el logro: $data");
+      
+      Fluttertoast.showToast(
+        msg: "Enhorabuena, has completado el logro: $data",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: const Color(0xFFEA970A),
+        textColor: Colors.black,
+        fontSize: 16.0,
+      );
+    });
+
     socket.onError((data) {
       logger.d('Error: $data');
     });

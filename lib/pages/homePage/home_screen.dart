@@ -42,15 +42,14 @@ class _HomeScreenState extends State<HomeScreen> {
       'withCredentials': true,
     });
 
-    // Aseguramos la conexión del socket
-    socket.connect();
-
     socket.on('connect', (_) {
-      logger.d('Socket connected');
+      logger.d('Socket connected for invitation');
     });
 
     socket.on('invitationReceived', (data) {
       logger.d("Se ha recibido una invitación: $data");
+
+      showInvitationDialog(data);
     });
 
     socket.onError((data) {
@@ -58,6 +57,34 @@ class _HomeScreenState extends State<HomeScreen> {
     });
 
     socket.onDisconnect((_) => logger.d('disconnect'));
+
+    socket.connect();
+  }
+
+  void showInvitationDialog(dynamic invitationData) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Invitación Recibida"),
+          content: Text("Invitación de: ${invitationData['userInfo']['name']}"),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Aceptar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Rechazar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override

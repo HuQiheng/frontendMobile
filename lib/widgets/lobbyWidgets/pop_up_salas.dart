@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:wealth_wars/pages/gamePage/lobby_screen.dart';
 import 'package:wealth_wars/methods/player_class.dart';
 import 'package:wealth_wars/widgets/lobbyWidgets/pop_up_info.dart';
@@ -6,7 +7,12 @@ import 'package:wealth_wars/widgets/lobbyWidgets/pop_up_info.dart';
 class PopUpSalas extends StatelessWidget {
   final Player player;
   final List<dynamic> userFriends;
-  PopUpSalas({super.key, required this.player, required this.userFriends});
+  final IO.Socket socket;
+  PopUpSalas(
+      {super.key,
+      required this.player,
+      required this.userFriends,
+      required this.socket});
 
   final TextEditingController joinCodeController = TextEditingController();
 
@@ -179,6 +185,7 @@ class PopUpSalas extends StatelessWidget {
   }
 
   void _navigateToLobbyHost(BuildContext context) {
+    socket.dispose();
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -188,6 +195,7 @@ class PopUpSalas extends StatelessWidget {
   }
 
   void _navigateToLobbyGuest(BuildContext context) {
+    socket.dispose();
     Navigator.push(
       context,
       MaterialPageRoute(

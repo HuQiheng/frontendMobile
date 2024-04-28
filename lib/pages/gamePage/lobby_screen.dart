@@ -97,7 +97,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
 
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        MaterialPageRoute(builder: (context) => HomeScreen()),
       );
     });
 
@@ -299,15 +299,13 @@ class _LobbyScreenState extends State<LobbyScreen> {
                                     socket.disconnect();
                                     Navigator.of(context).pushReplacement(
                                         MaterialPageRoute(
-                                            builder: (_) =>
-                                                const HomeScreen()));
+                                            builder: (_) => HomeScreen()));
                                   } else {
                                     socket.emit('leaveRoom');
                                     socket.disconnect();
                                     Navigator.of(context).pushReplacement(
                                         MaterialPageRoute(
-                                            builder: (_) =>
-                                                const HomeScreen()));
+                                            builder: (_) => HomeScreen()));
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(

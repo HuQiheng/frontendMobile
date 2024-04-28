@@ -9,7 +9,7 @@ class InitialPage extends StatefulWidget {
 
   @override
   // ignore: library_private_types_in_public_api
-  _InitialPageState createState() => _InitialPageState(); 
+  _InitialPageState createState() => _InitialPageState();
 }
 
 class _InitialPageState extends State<InitialPage> {
@@ -34,7 +34,7 @@ class _InitialPageState extends State<InitialPage> {
 
   void _navigateToHome() {
     Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => const HomeScreen()),
+      MaterialPageRoute(builder: (context) => HomeScreen()),
       (Route<dynamic> route) => false,
     );
   }

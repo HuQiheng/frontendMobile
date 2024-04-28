@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 import '../../widgets/lobbyWidgets/pop_up_salas.dart';
 import 'package:wealth_wars/pages/homePage/account_screen.dart';
 import 'package:wealth_wars/pages/homePage/awards_screen.dart';
@@ -8,8 +10,82 @@ import 'package:wealth_wars/methods/shared_preferences.dart';
 import 'package:wealth_wars/methods/player_class.dart';
 import 'package:wealth_wars/methods/friend_manager.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  // ignore: library_private_types_in_public_api
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  late IO.Socket socket;
+  final cookieManager = WebviewCookieManager();
+
+  @override
+  void initState() {
+    super.initState();
+    initSocket();
+  }
+
+  Future<void> initSocket() async {
+    final cookies = await cookieManager.getCookies('https://wealthwars.games');
+    String sessionCookie = cookies
+        .firstWhere(
+          (cookie) => cookie.name == 'connect.sid',
+        )
+        .value;
+
+    socket = IO.io('https://wealthwars.games:3010', <String, dynamic>{
+      'transports': ['websocket'],
+      'extraHeaders': {'cookie': 'connect.sid=$sessionCookie'},
+      'withCredentials': true,
+    });
+
+    socket.on('connect', (_) {
+      logger.d('Socket connected for invitation');
+    });
+
+    socket.on('invitationReceived', (data) {
+      logger.d("Se ha recibido una invitación: $data");
+
+      showInvitationDialog(data);
+    });
+
+    socket.onError((data) {
+      logger.d('Error: $data');
+    });
+
+    socket.onDisconnect((_) => logger.d('disconnect'));
+
+    socket.connect();
+  }
+
+  void showInvitationDialog(dynamic invitationData) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Invitación Recibida"),
+          content: Text("Invitación de: ${invitationData['userInfo']['name']}"),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Aceptar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Rechazar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -80,7 +156,7 @@ class HomeScreen extends StatelessWidget {
       showDialog(
         context: context,
         builder: (BuildContext context) =>
-            PopUpSalas(player: player, userFriends: myFriends),
+            PopUpSalas(player: player, userFriends: myFriends, socket: socket),
       );
     }
 

@@ -320,7 +320,12 @@ class _FriendsScreenState extends State<FriendsScreen>
                   onPressed: () {
                     acceptFriendRequest(widget.email, friend['email']);
                     setState(() {
-                      widget.myFriends.add(widget.myRequests[index]);
+                      Map<String, dynamic> newUser = {
+                        'name': widget.myRequests[index]['username'],
+                        'email': widget.myRequests[index]['email'],
+                        'picture': widget.myRequests[index]['picture']
+                      };
+                      widget.myFriends.add(newUser);
                       widget.myRequests.removeAt(index);
                     });
                   },

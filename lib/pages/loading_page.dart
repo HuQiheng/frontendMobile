@@ -31,7 +31,7 @@ class _LoadingScreenState extends State<LoadingScreen> {
     if (mounted) {
       if (hasSession) {
         Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const HomeScreen()));
+            MaterialPageRoute(builder: (context) => HomeScreen()));
       } else {
         Navigator.of(context).pushReplacement(
             MaterialPageRoute(builder: (context) => const InitialPage()));

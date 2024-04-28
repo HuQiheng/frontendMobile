@@ -97,7 +97,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
 
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
+        MaterialPageRoute(builder: (context) => HomeScreen()),
       );
     });
 

@@ -72,8 +72,7 @@ class PopUpSurrender extends StatelessWidget {
                         socket.disconnect();
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomeScreen()),
+                          MaterialPageRoute(builder: (context) => HomeScreen()),
                         );
                       },
                       style: ElevatedButton.styleFrom(

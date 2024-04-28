@@ -13,7 +13,10 @@ class PopUpChangeUsername extends StatefulWidget {
   final String picture;
 
   const PopUpChangeUsername(
-      {Key? key, required this.email, required this.password, required this.picture});
+      {Key? key,
+      required this.email,
+      required this.password,
+      required this.picture});
 
   @override
   _PopUpChangeUsernameState createState() => _PopUpChangeUsernameState();
@@ -98,13 +101,12 @@ class _PopUpChangeUsernameState extends State<PopUpChangeUsername> {
                         // Obtener el texto del TextField
                         String newUsername = _usernameController.text;
                         logger.d(newUsername);
-                        await updateUser(
-                            widget.email, newUsername, widget.password, widget.picture);
+                        await updateUser(widget.email, newUsername,
+                            widget.password, widget.picture);
                         // Regresa a pantalla principal (maybe un pop up más de feedback)
                         Navigator.push(
                           context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomeScreen()),
+                          MaterialPageRoute(builder: (context) => HomeScreen()),
                         );
                       },
                       style: ElevatedButton.styleFrom(
@@ -214,7 +216,7 @@ Future<String> getUser(String email) async {
         'cookie': 'connect.sid=$sessionCookie'
       },
     );
-    
+
     // Verificar si la solicitud fue exitosa (código de estado 200)
     if (response.statusCode == 200) {
       // El usuario ha sido actualizado exitosamente

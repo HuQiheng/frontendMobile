@@ -420,7 +420,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
                             ),
                             trailing: IconButton(
                               icon: const Icon(
-                                Icons.person_add,
+                                Icons.send,
                                 color: Colors.white,
                               ),
                               onPressed: () {

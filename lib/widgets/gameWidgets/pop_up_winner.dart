@@ -1,8 +1,10 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:wealth_wars/pages/homePage/home_screen.dart';
 
 class PopUpWinner extends StatelessWidget {
-  const PopUpWinner({super.key});
+  final AudioPlayer audioPlayer;
+  const PopUpWinner({super.key, required this.audioPlayer});
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +56,8 @@ class PopUpWinner extends StatelessWidget {
                     alignment: Alignment.bottomCenter,
                     child: ElevatedButton(
                       onPressed: () {
+                        audioPlayer.stop();
+                        audioPlayer.dispose();
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => HomeScreen()),

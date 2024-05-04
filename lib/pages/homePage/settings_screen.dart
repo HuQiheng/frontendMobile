@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:wealth_wars/methods/sound_settings.dart';
+import 'package:wealth_wars/methods/theme_settings.dart';
 import 'package:wealth_wars/widgets/homeWidgets/pop_up_close_session.dart';
 import 'package:wealth_wars/widgets/homeWidgets/pop_up_delete_account.dart';
-import 'package:logger/logger.dart';
 
 class SettingsScreen extends StatefulWidget {
   final String email;
@@ -9,19 +11,14 @@ class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key, required this.email});
 
   @override
+  // ignore: library_private_types_in_public_api
   _SettingsScreenState createState() => _SettingsScreenState();
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  bool _notificationsEnabled = true;
-  bool _soundsEnabled = false;
-  bool _darkModeEnabled = true;
-
   @override
   Widget build(BuildContext context) {
-    Logger logger = Logger();
     String email = widget.email;
-    logger.d("HOLA" + email);
     return Scaffold(
       backgroundColor: const Color(0xFF083344),
       appBar: AppBar(
@@ -51,37 +48,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
               child: ListView(
                 children: [
                   SwitchListTile(
-                    title: const Text('Notificaciones',
-                        style: TextStyle(color: Colors.white)),
-                    value: _notificationsEnabled,
-                    onChanged: (bool value) {
-                      setState(() {
-                        _notificationsEnabled = value;
-                      });
-                    },
-                    activeColor: Colors.white,
-                    activeTrackColor: Colors.lightBlueAccent,
-                  ),
-                  SwitchListTile(
                     title: const Text('Sonidos',
                         style: TextStyle(color: Colors.white)),
-                    value: _soundsEnabled,
+                    value: Provider.of<SoundSettings>(context).soundsEnabled,
                     onChanged: (bool value) {
-                      setState(() {
-                        _soundsEnabled = value;
-                      });
+                      Provider.of<SoundSettings>(context, listen: false)
+                          .soundsEnabled = value;
                     },
                     activeColor: Colors.white,
                     activeTrackColor: Colors.lightBlueAccent,
                   ),
                   SwitchListTile(
-                    title: const Text('Modo oscuro',
+                    title: const Text('Modo Oscuro',
                         style: TextStyle(color: Colors.white)),
-                    value: _darkModeEnabled,
+                    value: Provider.of<ThemeSettings>(context).darkModeEnabled,
                     onChanged: (bool value) {
-                      setState(() {
-                        _darkModeEnabled = value;
-                      });
+                      Provider.of<ThemeSettings>(context, listen: false)
+                          .darkModeEnabled = value;
                     },
                     activeColor: Colors.white,
                     activeTrackColor: Colors.lightBlueAccent,

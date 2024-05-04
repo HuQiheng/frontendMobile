@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 import 'package:wealth_wars/methods/player_class.dart';
+import 'package:wealth_wars/methods/sound_settings.dart';
 import 'package:wealth_wars/pages/gamePage/game_screen.dart';
 import 'package:wealth_wars/pages/homePage/home_screen.dart';
 import 'package:wealth_wars/widgets/lobbyWidgets/players_lobby.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:audioplayers/audioplayers.dart';
 
 class LobbyScreen extends StatefulWidget {
   final bool isHost;
@@ -33,12 +36,32 @@ class _LobbyScreenState extends State<LobbyScreen> {
   String accessCode = '';
   Logger logger = Logger();
   late List<Player> players;
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   @override
   void initState() {
     super.initState();
     players = [widget.player];
     initSocket();
+    initMusic();
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.stop();
+    _audioPlayer.dispose();
+    socket.dispose();
+    super.dispose();
+  }
+
+  void initMusic() async {
+    bool soundsEnabled =
+        Provider.of<SoundSettings>(context, listen: false).soundsEnabled;
+    if (soundsEnabled) {
+      logger.d("Reproduccion de musica: ");
+      await _audioPlayer.setReleaseMode(ReleaseMode.loop);
+      await _audioPlayer.play(AssetSource('sounds/lobby_music.mp3'));
+    }
   }
 
   Future<void> initSocket() async {
@@ -94,6 +117,9 @@ class _LobbyScreenState extends State<LobbyScreen> {
         textColor: Colors.black,
         fontSize: 16.0,
       );
+
+      _audioPlayer.stop();
+      _audioPlayer.dispose();
 
       Navigator.push(
         context,
@@ -160,6 +186,8 @@ class _LobbyScreenState extends State<LobbyScreen> {
 
     socket.on('mapSent', (map) {
       logger.d("Empezando partida desde lobby");
+      _audioPlayer.stop();
+      _audioPlayer.dispose();
       Navigator.of(context).push(MaterialPageRoute(
           builder: (_) => GameScreen(
                 socket: socket,
@@ -310,6 +338,8 @@ class _LobbyScreenState extends State<LobbyScreen> {
                                 onPressed: () {
                                   if (widget.isHost) {
                                     socket.dispose();
+                                    _audioPlayer.stop();
+                                    _audioPlayer.dispose();
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -319,6 +349,8 @@ class _LobbyScreenState extends State<LobbyScreen> {
                                   } else {
                                     socket.emit('leaveRoom');
                                     socket.dispose();
+                                    _audioPlayer.stop();
+                                    _audioPlayer.dispose();
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -449,11 +481,5 @@ class _LobbyScreenState extends State<LobbyScreen> {
         ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    socket.dispose();
-    super.dispose();
   }
 }

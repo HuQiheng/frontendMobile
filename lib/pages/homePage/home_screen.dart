@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:logger/logger.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:wealth_wars/pages/gamePage/lobby_screen.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
@@ -11,6 +14,7 @@ import 'package:wealth_wars/pages/homePage/settings_screen.dart';
 import 'package:wealth_wars/methods/shared_preferences.dart';
 import 'package:wealth_wars/methods/player_class.dart';
 import 'package:wealth_wars/methods/friend_manager.dart';
+import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -155,9 +159,14 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
 
-    void navigateToAwards() {
+    Future<void> navigateToAwards() async {
+      var userData = await getUserData();
+      String email = userData?['email'];
+      List<String> myAwards = await getMyAwards(email);
+      final Logger logger = Logger();
+      logger.d(myAwards);
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => const AwardsScreen()),
+        MaterialPageRoute(builder: (context) => AwardsScreen(myAwards: myAwards)),
       );
     }
 
@@ -292,6 +301,41 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
+  }
+  Future<List<String>> getMyAwards(String email) async {
+    final cookieManager = WebviewCookieManager();
+    final cookies = await cookieManager.getCookies('https://wealthwars.games');
+    String sessionCookie = cookies
+        .firstWhere(
+          (cookie) => cookie.name == 'connect.sid',
+        )
+        .value;
+    String url = 'https://wealthwars.games:3010/users/$email/achievements';
+
+    final Logger logger = Logger();
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Cookie': 'connect.sid=$sessionCookie',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        Logger().d("Obtención de la lista de logros: ${response.body}");
+        List<dynamic> awardsData = jsonDecode(response.body);
+        List<String> titles = awardsData.map((award) => award["title"] as String).toList();
+        return titles;
+      } else {
+        Logger().e("Error en la solicitud: ${response.statusCode}");
+        return [];
+      }
+    } catch (error) {
+      Logger().e("Error al hacer la solicitud: $error");
+      return [];
+    }
   }
 }
 

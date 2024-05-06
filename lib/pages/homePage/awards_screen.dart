@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 
 class AwardsScreen extends StatelessWidget {
-  const AwardsScreen({super.key});
+  final List<String> myAwards;
+  const AwardsScreen({Key? key, required this.myAwards}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +45,7 @@ class AwardsScreen extends StatelessWidget {
       'Alcanza a tener 99 tropas en un solo territorio',
       'Obten 1000 monedas en una sola partida',
     ];
-
+        
     return Scaffold(
       backgroundColor: const Color(0xFF083344),
       appBar: AppBar(
@@ -69,12 +71,11 @@ class AwardsScreen extends StatelessWidget {
                   separatorBuilder: (context, index) =>
                       const Divider(color: Colors.white24),
                   itemBuilder: (context, index) {
-                    // Falta implementación backend
-                    // IconData icono = logrosDesbloqueados[index] ? Icons.check : Icons.lock; 
+                    IconData icono = contieneElementoEnComun(nomLogros[index], myAwards) ? Icons.check : Icons.lock; 
                     return ListTile(
                       leading: Image.asset(
-                        imagenes[index], // Selecciona la imagen correspondiente al índice actual
-                        width: 40, // Ajusta el tamaño de la imagen según tus necesidades
+                        imagenes[index],
+                        width: 40,
                         height: 40,
                       ),
                       title: Text(
@@ -85,10 +86,9 @@ class AwardsScreen extends StatelessWidget {
                         descLogros[index],
                         style: const TextStyle(color: Colors.white70),
                       ),
-                      trailing: const Icon(
-                        // icono,
-                        Icons.check, // Cambia esto al icono que desees utilizar
-                        color: Colors.white, // Cambia el color del icono según tus necesidades
+                      trailing: Icon(
+                        icono,
+                        color: Colors.white,
                       ),
                       tileColor: const Color(0xFF0066CC),
                     );
@@ -101,4 +101,8 @@ class AwardsScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+bool contieneElementoEnComun(String item, List<String> lista) {
+  return lista.contains(item);
 }

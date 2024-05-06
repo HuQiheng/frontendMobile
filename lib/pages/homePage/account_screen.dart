@@ -118,7 +118,7 @@ class ProfileScreen extends StatelessWidget {
                           ? IconButton(
                               icon: const Icon(Icons.edit, color: Colors.white),
                               onPressed: () async {
-                                final List<String> myAwards = await getMyAwards(email);
+                                final Map<String, String> myAwards = await getMyAwards(email);
                                 showDialog(
                                   context: context,
                                   builder: (BuildContext context) {
@@ -175,7 +175,7 @@ class ProfileScreen extends StatelessWidget {
 }
 
 
-  Future<List<String>> getMyAwards(String email) async {
+  Future<Map<String, String>> getMyAwards(String email) async {
     final cookieManager = WebviewCookieManager();
     final cookies = await cookieManager.getCookies('https://wealthwars.games');
     String sessionCookie = cookies
@@ -199,15 +199,20 @@ class ProfileScreen extends StatelessWidget {
       if (response.statusCode == 200) {
         Logger().d("Obtención de la lista de logros: ${response.body}");
         List<dynamic> awardsData = jsonDecode(response.body);
-        List<String> titles = awardsData.map((award) => award["image_url"] as String).toList();
-        return titles;
+        final Map<String, String> imageMap = {};
+        for (var item in awardsData) {
+          String title = item["title"];
+          String imageUrl = item["image_url"];
+          imageMap[title] = imageUrl;
+        }
+        return imageMap;
       } else {
         Logger().e("Error en la solicitud: ${response.statusCode}");
-        return [];
+        return {};
       }
     } catch (error) {
       Logger().e("Error al hacer la solicitud: $error");
-      return [];
+      return {};
     }
   }
 }

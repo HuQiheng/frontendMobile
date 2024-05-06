@@ -117,7 +117,7 @@ class PopUpSalas extends StatelessWidget {
                                 ),
                               ),
                             ),
-                            const SizedBox(
+                            /*const SizedBox(
                               width: 10,
                             ),
                             SizedBox(
@@ -126,7 +126,7 @@ class PopUpSalas extends StatelessWidget {
                                 'assets/icons/join.png',
                                 fit: BoxFit.contain,
                               ),
-                            ),
+                            ),*/
                           ],
                         ),
                         Padding(

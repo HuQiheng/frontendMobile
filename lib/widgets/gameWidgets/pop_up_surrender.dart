@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 // ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -5,7 +6,9 @@ import 'package:wealth_wars/pages/homePage/home_screen.dart';
 
 class PopUpSurrender extends StatelessWidget {
   final IO.Socket socket;
-  const PopUpSurrender({super.key, required this.socket});
+  final AudioPlayer audioPlayer;
+  const PopUpSurrender(
+      {super.key, required this.socket, required this.audioPlayer});
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +72,9 @@ class PopUpSurrender extends StatelessWidget {
                       onPressed: () {
                         socket.emit("surrender");
                         socket.emit("leaveRoom");
-                        socket.dispose();
+                        //socket.dispose();
+                        audioPlayer.stop();
+                        audioPlayer.dispose();
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => HomeScreen()),

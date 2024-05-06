@@ -33,9 +33,13 @@ dependencies:
 
   cupertino_icons: ^1.0.6
 
+  audioplayers: ^6.0.0
+
   socket_io_client: ^2.0.3+1
 
   fluttertoast: ^8.2.5
+
+  provider: ^6.0.2
 
   smooth_page_indicator: ^1.1.0
 
@@ -106,6 +110,9 @@ flutter:
     - assets/insignias/ganar_10_partidas.png
     - assets/insignias/ganar_100_partidas.png
     - assets/insignias/jugar_1_partida.png
+    - assets/sounds/lobby_music.mp3
+    - assets/sounds/game_music.mp3
+    - assets/sounds/explosion_attack.mp3
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -1,10 +1,14 @@
 //import 'dart:io';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:logger/logger.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:provider/provider.dart';
 // ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:wealth_wars/methods/player_class.dart';
+import 'package:wealth_wars/methods/sound_settings.dart';
 import 'package:wealth_wars/widgets/gameWidgets/map.dart';
 import 'package:wealth_wars/widgets/gameWidgets/turn_info.dart';
 import 'package:wealth_wars/widgets/gameWidgets/resources_info.dart';
@@ -12,8 +16,7 @@ import 'package:wealth_wars/widgets/gameWidgets/players_info.dart';
 import 'package:wealth_wars/widgets/gameWidgets/pop_up_surrender.dart';
 import 'package:wealth_wars/widgets/gameWidgets/pop_up_winner.dart';
 
-
-// ignore: depend_on_referenced_packages 
+// ignore: depend_on_referenced_packages
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 class GameScreen extends StatelessWidget {
@@ -62,10 +65,13 @@ class _MapScreenState extends State<MapScreen> {
   Logger logger = Logger();
   bool _isLoading = true;
   bool sended = false;
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   @override
   void initState() {
     super.initState();
+
+    initMusic();
 
     widget.socket.off('mapSent');
 
@@ -76,6 +82,19 @@ class _MapScreenState extends State<MapScreen> {
       });
     });
 
+    widget.socket.on('achievementUnlocked', (data) {
+      logger.d("Enhorabuena, has completado el logro: $data");
+
+      Fluttertoast.showToast(
+        msg: "Enhorabuena, has completado el logro: $data",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: const Color(0xFFEA970A),
+        textColor: Colors.black,
+        fontSize: 16.0,
+      );
+    });
+
     widget.socket.on('victory', (sal) {
       logger.d(sal);
       widget.socket.dispose();
@@ -83,7 +102,7 @@ class _MapScreenState extends State<MapScreen> {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          return const PopUpWinner();
+          return PopUpWinner(audioPlayer: _audioPlayer);
         },
       );
     });
@@ -125,6 +144,24 @@ class _MapScreenState extends State<MapScreen> {
         _isLoading = false;
       });
     });
+  }
+
+  @override
+  void dispose() {
+    widget.socket.dispose();
+    _audioPlayer.stop();
+    _audioPlayer.dispose();
+    super.dispose();
+  }
+
+  void initMusic() async {
+    bool soundsEnabled =
+        Provider.of<SoundSettings>(context, listen: false).soundsEnabled;
+    if (soundsEnabled) {
+      logger.d("Reproduccion de musica: ");
+      await _audioPlayer.setReleaseMode(ReleaseMode.loop);
+      await _audioPlayer.play(AssetSource('sounds/game_music.mp3'));
+    }
   }
 
   void _handleSendPressed(types.PartialText message) {
@@ -209,7 +246,8 @@ class _MapScreenState extends State<MapScreen> {
                 showDialog(
                   context: context,
                   builder: (BuildContext context) {
-                    return PopUpSurrender(socket: widget.socket);
+                    return PopUpSurrender(
+                        socket: widget.socket, audioPlayer: _audioPlayer);
                   },
                 );
               },
@@ -278,10 +316,5 @@ class _MapScreenState extends State<MapScreen> {
         ],
       ),
     );
-  }
-  @override
-  void dispose() {
-    widget.socket.dispose();
-    super.dispose();
   }
 }

@@ -401,7 +401,7 @@ class PopUpTroop extends StatefulWidget {
   final IO.Socket socket;
 
   const PopUpTroop({super.key, required this.region, required this.socket});
-
+ 
   @override
   PopUpTroopState createState() => PopUpTroopState();
 }

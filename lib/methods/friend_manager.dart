@@ -193,7 +193,7 @@ void acceptFriendRequest(String userEmail, String requesterEmail) async {
         'Content-Type': 'application/json',
         'Cookie': 'connect.sid=$sessionCookie',
       },
-      body: jsonEncode({'friend': requesterEmail}),
+      body: jsonEncode({'email': requesterEmail}),
     );
 
     if (response.statusCode == 200) {

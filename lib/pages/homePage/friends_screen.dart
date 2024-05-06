@@ -306,7 +306,7 @@ class _FriendsScreenState extends State<FriendsScreen>
               backgroundImage: NetworkImage(friend['picture']),
             ),
             title: Text(
-              friend['username'],
+              friend['name'],
               style: const TextStyle(color: Colors.black),
             ),
             onTap: () {
@@ -334,7 +334,8 @@ class _FriendsScreenState extends State<FriendsScreen>
               children: [
                 Container(
                   decoration: const BoxDecoration(
-                    shape: BoxShape.circle, // Hace que el contenedor sea circular
+                    shape:
+                        BoxShape.circle, // Hace que el contenedor sea circular
                     color: Color(0xFF0066CC), // Color de fondo del contenedor
                   ),
                   child: IconButton(
@@ -343,7 +344,7 @@ class _FriendsScreenState extends State<FriendsScreen>
                       acceptFriendRequest(widget.email, friend['email']);
                       setState(() {
                         Map<String, dynamic> newUser = {
-                          'name': widget.myRequests[index]['username'],
+                          'name': widget.myRequests[index]['name'],
                           'email': widget.myRequests[index]['email'],
                           'picture': widget.myRequests[index]['picture']
                         };
@@ -355,10 +356,11 @@ class _FriendsScreenState extends State<FriendsScreen>
                 ),
                 Container(
                   decoration: const BoxDecoration(
-                    shape: BoxShape.circle, // Hace que el contenedor sea circular
+                    shape:
+                        BoxShape.circle, // Hace que el contenedor sea circular
                     color: Color(0xFF0066CC), // Color de fondo del contenedor
                   ),
-                  child:IconButton(
+                  child: IconButton(
                     icon: const Icon(Icons.close, color: Colors.red),
                     onPressed: () {
                       deleteFriendRequest(widget.email, friend['email']);

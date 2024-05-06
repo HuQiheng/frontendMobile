@@ -1,3 +1,4 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -18,6 +19,7 @@ class PopUpAttack extends StatefulWidget {
 }
 
 class PopUpAttackState extends State<PopUpAttack> {
+  final AudioPlayer audioPlayer = AudioPlayer();
   int _counter = 1;
   void incrementCounter() {
     setState(() {
@@ -189,6 +191,7 @@ class PopUpAttackState extends State<PopUpAttack> {
                           widget.region2.code,
                           _counter
                         ]);
+                        _playSound(audioPlayer);
                         Navigator.pop(context);
                       },
                       child: const Text(
@@ -205,4 +208,8 @@ class PopUpAttackState extends State<PopUpAttack> {
       ),
     );
   }
+}
+
+Future<void> _playSound(audioPlayer) async {
+  await audioPlayer.play(AssetSource('sounds/explosion_attack.mp3'));
 }

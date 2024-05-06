@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:provider/provider.dart';
 import 'package:wealth_wars/methods/theme_settings.dart';
 import 'package:wealth_wars/pages/loading_page.dart';
@@ -37,14 +38,22 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeSettings>(context);
-    return MaterialApp(
-      title: 'Wealth Wars App',
-      theme: ThemeData.light(),
-      darkTheme: ThemeData.dark(),
-      themeMode:
-          themeProvider.darkModeEnabled ? ThemeMode.dark : ThemeMode.light,
-      home:
-          const LoadingScreen(), // The loading screen is used as the initial screen, and later redirected to the correct one.
+
+    return StyledToast(
+      // Añade los parámetros de configuración que consideres necesarios para StyledToast aquí
+      locale: const Locale('en', 'US'), // Configura el locale si es necesario
+      textStyle: const TextStyle(
+          fontSize: 16.0,
+          color: Colors.white), // Configura el estilo de texto global del toast
+      child: MaterialApp(
+        title: 'Wealth Wars App',
+        theme: ThemeData.light(),
+        darkTheme: ThemeData.dark(),
+        themeMode:
+            themeProvider.darkModeEnabled ? ThemeMode.dark : ThemeMode.light,
+        home:
+            const LoadingScreen(), // La pantalla de carga se usa como pantalla inicial y luego redirige a la correcta
+      ),
     );
   }
 }

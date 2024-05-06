@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:wealth_wars/methods/custom_toast.dart';
 import 'package:wealth_wars/pages/gamePage/lobby_screen.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 import '../../widgets/lobbyWidgets/pop_up_salas.dart';
@@ -52,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
       logger.d('Socket connected for invitation');
     });
 
-    socket.on('invitationRecevied', (data) {
+    socket.on('invitationReceived', (data) {
       logger.d("Se ha recibido una invitación: $data");
 
       showInvitationDialog(data);
@@ -60,15 +61,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     socket.on('achievementUnlocked', (data) {
       logger.d("Enhorabuena, has completado el logro: $data");
-      
-      Fluttertoast.showToast(
-        msg: "Enhorabuena, has completado el logro: $data",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: const Color(0xFFEA970A),
-        textColor: Colors.black,
-        fontSize: 16.0,
-      );
+
+      showCustomToast(data, context);
     });
 
     socket.onError((data) {
@@ -166,7 +160,8 @@ class _HomeScreenState extends State<HomeScreen> {
       final Logger logger = Logger();
       logger.d(myAwards);
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => AwardsScreen(myAwards: myAwards)),
+        MaterialPageRoute(
+            builder: (context) => AwardsScreen(myAwards: myAwards)),
       );
     }
 
@@ -302,6 +297,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
   Future<List<String>> getMyAwards(String email) async {
     final cookieManager = WebviewCookieManager();
     final cookies = await cookieManager.getCookies('https://wealthwars.games');
@@ -326,7 +322,8 @@ class _HomeScreenState extends State<HomeScreen> {
       if (response.statusCode == 200) {
         Logger().d("Obtención de la lista de logros: ${response.body}");
         List<dynamic> awardsData = jsonDecode(response.body);
-        List<String> titles = awardsData.map((award) => award["title"] as String).toList();
+        List<String> titles =
+            awardsData.map((award) => award["title"] as String).toList();
         return titles;
       } else {
         Logger().e("Error en la solicitud: ${response.statusCode}");

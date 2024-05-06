@@ -11,9 +11,10 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:wealth_wars/methods/custom_toast.dart';
 
 class LobbyScreen extends StatefulWidget {
-  final bool isHost;
+  bool isHost;
   final String? joinCode;
   final Player player;
   List<dynamic>? userFriends;
@@ -118,8 +119,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
         fontSize: 16.0,
       );
 
-      _audioPlayer.stop();
-      _audioPlayer.dispose();
+      dispose();
 
       Navigator.push(
         context,
@@ -165,6 +165,13 @@ class _LobbyScreenState extends State<LobbyScreen> {
 
         setState(() {
           players = newPlayers;
+          if (players.isNotEmpty &&
+              players.first.email == widget.player.email) {
+            logger.d("El usuario es el host");
+            widget.isHost = true;
+          } else {
+            widget.isHost = false;
+          }
         });
       } else {
         logger.e("Data is not a List: ${data.runtimeType}");
@@ -174,14 +181,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
     socket.on('achievementUnlocked', (data) {
       logger.d("Enhorabuena, has completado el logro: $data");
 
-      Fluttertoast.showToast(
-        msg: "Enhorabuena, has completado el logro: $data",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: const Color(0xFFEA970A),
-        textColor: Colors.black,
-        fontSize: 16.0,
-      );
+      showCustomToast(data, context);
     });
 
     socket.on('mapSent', (map) {
@@ -337,9 +337,8 @@ class _LobbyScreenState extends State<LobbyScreen> {
                               ElevatedButton(
                                 onPressed: () {
                                   if (widget.isHost) {
-                                    socket.dispose();
-                                    _audioPlayer.stop();
-                                    _audioPlayer.dispose();
+                                    socket.emit('leaveRoom');
+                                    dispose();
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -348,9 +347,7 @@ class _LobbyScreenState extends State<LobbyScreen> {
                                     );
                                   } else {
                                     socket.emit('leaveRoom');
-                                    socket.dispose();
-                                    _audioPlayer.stop();
-                                    _audioPlayer.dispose();
+                                    dispose();
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(

@@ -55,6 +55,8 @@ dependencies:
 
   flutter_chat_ui: ^1.6.12
 
+  flutter_styled_toast: ^2.2.1
+
   path_drawing: ^1.0.1
 
   xml: ^6.3.0

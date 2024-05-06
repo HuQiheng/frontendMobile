@@ -1,14 +1,19 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 //import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
+import 'package:wealth_wars/widgets/homeWidgets/pop_up_change_awards.dart';
 import 'package:wealth_wars/widgets/homeWidgets/pop_up_change_username.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:webview_cookie_manager/webview_cookie_manager.dart';
+import 'package:http/http.dart' as http;
 
 class ProfileScreen extends StatelessWidget {
   final String username;
   final String email;
   final String picture;
   final String? password;
+  // Strings de url1, url2, url3 con cada una de las imágenes seleccionadas para mostrar (insignias)
 
   const ProfileScreen({ 
     super.key,
@@ -63,27 +68,6 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ),
                 if (password != null) ...[
-                  /*TextButton(
-                    onPressed: () {
-                      Clipboard.setData(
-                          const ClipboardData(text: '<Mi código amigo>'));
-                      Fluttertoast.showToast(
-                        msg: "Código de amigo copiado en el portapapeles",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.BOTTOM,
-                        backgroundColor: const Color(0xFFEA970A),
-                        textColor: Colors.black,
-                        fontSize: 16.0,
-                      );
-                    },
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.white,
-                      backgroundColor: const Color(0xFF0066CC),
-                      textStyle: const TextStyle(
-                          fontSize: 16, fontStyle: FontStyle.italic),
-                    ),
-                    child: const Text('<Mi código amigo>'),
-                  ),*/
                   Row(
                     children: [
                       const Expanded(child: SizedBox.shrink()),
@@ -133,8 +117,16 @@ class ProfileScreen extends StatelessWidget {
                       child: password != null
                           ? IconButton(
                               icon: const Icon(Icons.edit, color: Colors.white),
-                              onPressed: () {
-                                // Código para abrir el pop up y elegir insignia
+                              onPressed: () async {
+                                final List<String> myAwards = await getMyAwards(email);
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return PopUpChangeAwards(
+                                      myAwards: myAwards,
+                                    );
+                                  },
+                                );
                               },
                             )
                           : const SizedBox.shrink(),
@@ -149,9 +141,9 @@ class ProfileScreen extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _buildBadgePlaceholder(),
-                    _buildBadgePlaceholder(),
-                    _buildBadgePlaceholder(),
+                    _buildBadgePlaceholder(""),
+                    _buildBadgePlaceholder(""),
+                    _buildBadgePlaceholder(""),
                   ],
                 ),
               ],
@@ -162,14 +154,60 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBadgePlaceholder() {
-    return Container(
-      width: 64,
-      height: 64,
-      decoration: BoxDecoration(
-        color: Colors.white24,
-        borderRadius: BorderRadius.circular(8),
-      ),
-    );
+  Widget _buildBadgePlaceholder(String url) {
+  return Image.network(
+    url,
+    width: 64,
+    height: 64,
+    fit: BoxFit.cover, // Ajusta la imagen al tamaño del contenedor
+    errorBuilder: (context, error, stackTrace) {
+      // En caso de error al cargar la imagen, puedes mostrar un placeholder o un mensaje alternativo
+      return Container(
+        width: 64,
+        height: 64,
+        decoration: BoxDecoration(
+          color: Colors.white24,
+          borderRadius: BorderRadius.circular(8),
+        ),
+      );
+    },
+  );
+}
+
+
+  Future<List<String>> getMyAwards(String email) async {
+    final cookieManager = WebviewCookieManager();
+    final cookies = await cookieManager.getCookies('https://wealthwars.games');
+    String sessionCookie = cookies
+        .firstWhere(
+          (cookie) => cookie.name == 'connect.sid',
+        )
+        .value;
+    String url = 'https://wealthwars.games:3010/users/$email/achievements';
+
+    final Logger logger = Logger();
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Cookie': 'connect.sid=$sessionCookie',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        Logger().d("Obtención de la lista de logros: ${response.body}");
+        List<dynamic> awardsData = jsonDecode(response.body);
+        List<String> titles = awardsData.map((award) => award["image_url"] as String).toList();
+        return titles;
+      } else {
+        Logger().e("Error en la solicitud: ${response.statusCode}");
+        return [];
+      }
+    } catch (error) {
+      Logger().e("Error al hacer la solicitud: $error");
+      return [];
+    }
   }
 }

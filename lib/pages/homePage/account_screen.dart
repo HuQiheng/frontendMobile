@@ -12,6 +12,7 @@ class ProfileScreen extends StatelessWidget {
   final String username;
   final String email;
   final String picture;
+  final int numVics;
   final String? password;
   // Strings de url1, url2, url3 con cada una de las imágenes seleccionadas para mostrar (insignias)
 
@@ -20,6 +21,7 @@ class ProfileScreen extends StatelessWidget {
     required this.username,
     required this.email,
     required this.picture,
+    required this.numVics,
     this.password,
   });
 
@@ -57,9 +59,9 @@ class ProfileScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(20), // Valor ajustable
                     color: const Color(0xFF0066CC),
                   ),
-                  child: const Text(
-                    'Victorias: 777',
-                    style: TextStyle(
+                  child: Text(
+                    'Victorias: $numVics',
+                    style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 16,

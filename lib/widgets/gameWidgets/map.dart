@@ -655,6 +655,7 @@ class _MapWidgetState extends State<MapWidget> {
                   svgAddress: "assets/iberian_map.svg",
                   onChanged: (region) {
                     String name = region!.name;
+                    logger.d("Nombre region: ${region.name}");
 
                     if (player == playerPlaying) {
                       // Fase de compra
@@ -698,9 +699,9 @@ class _MapWidgetState extends State<MapWidget> {
                             textColor: Colors.black,
                             fontSize: 16.0,
                           );
-                        } 
-                        else if (attackPhase == 1 && attackRegion != region) {
-                          if (areRegionsAdjacent(attackRegion.name, region.name)) {
+                        } else if (attackPhase == 1 && attackRegion != region) {
+                          if (areRegionsAdjacent(
+                              attackRegion.name, region.name)) {
                             if (areMine(gr2, gr)) {
                               showDialog(
                                 context: context,
@@ -713,8 +714,7 @@ class _MapWidgetState extends State<MapWidget> {
                                 },
                               );
                               attackPhase = 0;
-                            } 
-                            else {
+                            } else {
                               Fluttertoast.showToast(
                                 msg: "No puedes atacarte a ti mismo",
                                 toastLength: Toast.LENGTH_SHORT,
@@ -723,11 +723,11 @@ class _MapWidgetState extends State<MapWidget> {
                                 textColor: Colors.black,
                                 fontSize: 16.0,
                               );
-                              logger.d("Las regiones pertenecen al mismo dueño.");
+                              logger
+                                  .d("Las regiones pertenecen al mismo dueño.");
                               attackPhase = 0;
                             }
-                          } 
-                          else {
+                          } else {
                             logger.d("Las regiones no son adyacentes.");
                             attackPhase = 0;
                           }
@@ -735,7 +735,6 @@ class _MapWidgetState extends State<MapWidget> {
                       }
                       // Fase de movimientos
                       if (phase == 2) {
-
                         GameRegion gr = searchRegionByName(region.name);
                         if (movePhase == 0 && gr.player == playerPlaying) {
                           moveRegion = region;
@@ -752,7 +751,8 @@ class _MapWidgetState extends State<MapWidget> {
                             fontSize: 16.0,
                           );
                         } else if (movePhase == 1 && moveRegion != region) {
-                          if (areRegionsAdjacent(moveRegion.name, region.name)) {
+                          if (areRegionsAdjacent(
+                              moveRegion.name, region.name)) {
                             // Negado para solo elegir propias
                             if (!areMine(gr2, gr)) {
                               showDialog(
@@ -766,8 +766,7 @@ class _MapWidgetState extends State<MapWidget> {
                                 },
                               );
                               movePhase = 0;
-                            } 
-                            else {
+                            } else {
                               Fluttertoast.showToast(
                                 msg: "No puedes mover tropas a un enemigo",
                                 toastLength: Toast.LENGTH_SHORT,
@@ -776,11 +775,11 @@ class _MapWidgetState extends State<MapWidget> {
                                 textColor: Colors.black,
                                 fontSize: 16.0,
                               );
-                              logger.d("Las regiones pertenecen al mismo dueño.");
+                              logger
+                                  .d("Las regiones pertenecen al mismo dueño.");
                               movePhase = 0;
                             }
-                          } 
-                          else {
+                          } else {
                             logger.d("Las regiones no son adyacentes.");
                             movePhase = 0;
                           }

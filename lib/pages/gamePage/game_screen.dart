@@ -82,22 +82,13 @@ class _MapScreenState extends State<MapScreen> {
       });
     });
 
-    widget.socket.on('achievementUnlocked', (data) {
-      logger.d("Enhorabuena, has completado el logro: $data");
-
-      Fluttertoast.showToast(
-        msg: "Enhorabuena, has completado el logro: $data",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: const Color(0xFFEA970A),
-        textColor: Colors.black,
-        fontSize: 16.0,
-      );
+    widget.socket.on('gameOver', (data) {
+      widget.socket.dispose();
+      logger.d("Informacion de fin de partida: $data");
     });
 
     widget.socket.on('victory', (sal) {
       logger.d(sal);
-      widget.socket.dispose();
       showDialog(
         context: context,
         barrierDismissible: false,

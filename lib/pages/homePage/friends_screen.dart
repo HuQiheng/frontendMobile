@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:wealth_wars/methods/friend_manager.dart';
 import 'package:wealth_wars/pages/homePage/account_screen.dart';
+import 'package:webview_cookie_manager/webview_cookie_manager.dart';
+import 'package:http/http.dart' as http;
 
 class FriendsScreen extends StatefulWidget {
   final String email;
@@ -173,7 +177,8 @@ class _FriendsScreenState extends State<FriendsScreen>
               friend['name'],
               style: const TextStyle(color: Colors.black),
             ),
-            onTap: () {
+            onTap: () async {
+              int numVics = await getNumVics(friend['email']);
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -181,6 +186,7 @@ class _FriendsScreenState extends State<FriendsScreen>
                     username: friend['name'],
                     email: friend['email'],
                     picture: friend['picture'],
+                    numVics: numVics,
                   ),
                 ),
               );
@@ -376,5 +382,39 @@ class _FriendsScreenState extends State<FriendsScreen>
         );
       },
     );
+  }
+  Future<int> getNumVics(String email) async {
+    final cookieManager = WebviewCookieManager();
+    final cookies = await cookieManager.getCookies('https://wealthwars.games');
+    String sessionCookie = cookies
+        .firstWhere(
+          (cookie) => cookie.name == 'connect.sid',
+        )
+        .value;
+    String url = 'https://wealthwars.games:3010/users/$email/wins';
+
+    final Logger logger = Logger();
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Cookie': 'connect.sid=$sessionCookie',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        logger.d("Obtención del numero de victorias: ${response.body}");
+        int victorias = jsonDecode(response.body);
+        return victorias;
+      } else {
+        logger.e("Error en la solicitud: ${response.statusCode}");
+        return 0;
+      }
+    } catch (error) {
+      logger.e("Error al hacer la solicitud: $error");
+      return 0;
+    }
   }
 }

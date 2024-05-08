@@ -141,13 +141,14 @@ class _HomeScreenState extends State<HomeScreen> {
       String email = userData?['email'];
       String picture = userData?['picture'];
       String password = userData?['password'];
-
+      int numVics = await getNumVics(email);
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => ProfileScreen(
               username: username,
               email: email,
               picture: picture,
+              numVics: numVics,
               password: password),
         ),
       );
@@ -332,6 +333,41 @@ class _HomeScreenState extends State<HomeScreen> {
     } catch (error) {
       Logger().e("Error al hacer la solicitud: $error");
       return [];
+    }
+  }
+
+  Future<int> getNumVics(String email) async {
+    final cookieManager = WebviewCookieManager();
+    final cookies = await cookieManager.getCookies('https://wealthwars.games');
+    String sessionCookie = cookies
+        .firstWhere(
+          (cookie) => cookie.name == 'connect.sid',
+        )
+        .value;
+    String url = 'https://wealthwars.games:3010/users/$email/wins';
+
+    final Logger logger = Logger();
+
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          'Content-Type': 'application/json',
+          'Cookie': 'connect.sid=$sessionCookie',
+        },
+      );
+      
+      if (response.statusCode == 200) {
+        logger.d("Obtención del numero de victorias: ${response.body}");
+        int victorias = jsonDecode(response.body);
+        return victorias;
+      } else {
+        logger.e("Error en la solicitud: ${response.statusCode}");
+        return 0;
+      }
+    } catch (error) {
+      logger.e("Error al hacer la solicitud: $error");
+      return 0;
     }
   }
 }

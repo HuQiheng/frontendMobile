@@ -3,7 +3,7 @@ import 'package:logger/logger.dart';
 
 class AwardsScreen extends StatelessWidget {
   final List<String> myAwards;
-  const AwardsScreen({Key? key, required this.myAwards}) : super(key: key);
+  const AwardsScreen({super.key, required this.myAwards});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class AwardsScreen extends StatelessWidget {
       'Alcanza a tener 99 tropas en un solo territorio',
       'Obten 1000 monedas en una sola partida',
     ];
-        
+
     return Scaffold(
       backgroundColor: const Color(0xFF083344),
       appBar: AppBar(
@@ -71,7 +71,10 @@ class AwardsScreen extends StatelessWidget {
                   separatorBuilder: (context, index) =>
                       const Divider(color: Colors.white24),
                   itemBuilder: (context, index) {
-                    IconData icono = contieneElementoEnComun(nomLogros[index], myAwards) ? Icons.check : Icons.lock; 
+                    IconData icono =
+                        contieneElementoEnComun(nomLogros[index], myAwards)
+                            ? Icons.check
+                            : Icons.lock;
                     return ListTile(
                       leading: Image.asset(
                         imagenes[index],

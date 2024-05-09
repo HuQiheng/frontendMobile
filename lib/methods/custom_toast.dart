@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:logger/logger.dart';
 
-void showCustomToast(String data, BuildContext context) {
+void showCustomToast(dynamic data, BuildContext context) {
   showToastWidget(
     Container(
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
@@ -12,11 +13,11 @@ void showCustomToast(String data, BuildContext context) {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Image.asset('assets/${data}.png', width: 50),
+          Image.network(data['image_url'], width: 50),
           const SizedBox(width: 12.0),
           Expanded(
             child: Text(
-              "Enhorabuena, has completado el logro: $data",
+              "Enhorabuena, has completado el logro: ${data['title']}",
               style: const TextStyle(
                 fontSize: 16.0,
                 color: Colors.black,

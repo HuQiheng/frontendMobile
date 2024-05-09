@@ -3,7 +3,6 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:logger/logger.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 // ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -88,7 +87,7 @@ class _MapScreenState extends State<MapScreen> {
     });
 
     widget.socket.on('victory', (sal) {
-      logger.d(sal);
+      logger.d("Victoria recibida $sal");
       showDialog(
         context: context,
         barrierDismissible: false,

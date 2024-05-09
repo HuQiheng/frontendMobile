@@ -249,7 +249,7 @@ class _FriendsScreenState extends State<FriendsScreen>
               backgroundImage: NetworkImage(friend['picture']),
             ),
             title: Text(
-              friend['username'],
+              friend['name'],
               style: const TextStyle(color: Colors.black),
             ),
             onTap: () {
@@ -261,16 +261,6 @@ class _FriendsScreenState extends State<FriendsScreen>
                 textColor: Colors.black,
                 fontSize: 16.0,
               );
-              /*Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProfileScreen(
-                    username: friend['username'],
-                    email: friend['email'],
-                    picture: friend['picture'],
-                  ),
-                ),
-              );*/
             },
             trailing: Container(
               decoration: const BoxDecoration(
@@ -324,16 +314,6 @@ class _FriendsScreenState extends State<FriendsScreen>
                 textColor: Colors.black,
                 fontSize: 16.0,
               );
-              /*Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => ProfileScreen(
-                    username: friend['username'],
-                    email: friend['email'],
-                    picture: friend['picture'],
-                  ),
-                ),
-              );*/
             },
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
@@ -383,6 +363,7 @@ class _FriendsScreenState extends State<FriendsScreen>
       },
     );
   }
+
   Future<int> getNumVics(String email) async {
     final cookieManager = WebviewCookieManager();
     final cookies = await cookieManager.getCookies('https://wealthwars.games');

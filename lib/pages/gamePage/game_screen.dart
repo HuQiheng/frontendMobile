@@ -83,18 +83,22 @@ class _MapScreenState extends State<MapScreen> {
 
     widget.socket.on('gameOver', (data) {
       widget.socket.dispose();
+      _audioPlayer.stop();
+      _audioPlayer.dispose();
       logger.d("Informacion de fin de partida: $data");
-    });
-
-    widget.socket.on('victory', (sal) {
-      logger.d("Victoria recibida $sal");
       showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          return PopUpWinner(audioPlayer: _audioPlayer);
+          return PopUpWinner(
+            data: data,
+          );
         },
       );
+    });
+
+    widget.socket.on('victory', (sal) {
+      logger.d("Victoria recibida $sal");
     });
 
     widget.socket.on('messageReceived', (message) {

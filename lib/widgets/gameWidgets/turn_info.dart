@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -31,11 +29,8 @@ class TurnInfo extends StatefulWidget {
 class _TurnInfoState extends State<TurnInfo> {
   final logger = Logger();
   int phase = 0;
-  int player = 0; // backend in json
-  int timerSeconds = 90;
-  Timer? countdownTimer;
+  int player = 0;
 
-  // Jugador del sistema
   // ignore: prefer_typing_uninitialized_variables
   var playerSystem;
 
@@ -50,9 +45,6 @@ class _TurnInfoState extends State<TurnInfo> {
         playerSystem =
             widget.players.indexWhere((player) => player.email == playerEmail);
         logger.d("Indice del jugador del sistema: $playerSystem");
-        if (playerSystem == player) {
-          resetTimer();
-        }
       });
     });
 
@@ -63,49 +55,16 @@ class _TurnInfoState extends State<TurnInfo> {
         player = (player + 1) % widget.players.length;
         logger.d(player);
         mapa.updatePlayer(player);
-        timerSeconds = 90;
         if (playerSystem == player) {
           logger.d("Me toca a mi y soy el jugador del movil");
-          startTimer();
         }
       });
-    });
-  }
-
-  void disposeTimer() {
-    countdownTimer?.cancel();
-    super.dispose();
-  }
-
-  void startTimer() {
-    countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        if (timerSeconds > 0) {
-          timerSeconds--; // Decrementa el contador
-        } else {
-          timer.cancel(); // Detiene el temporizador
-          phase = 0;
-          mapa.updatePhase(phase);
-          widget.socket.emit("nextPhase");
-          widget.socket.emit("nextPhase");
-          widget.socket.emit("nextTurn");
-        }
-      });
-    });
-  }
-
-  void resetTimer() {
-    setState(() {
-      timerSeconds = 90; // Restablece el contador a 60 segundos
-      startTimer(); // Reinicia el temporizador
     });
   }
 
   void changePhase() {
     setState(() {
       if (phase == 2) {
-        countdownTimer?.cancel();
-        timerSeconds = 90;
         widget.socket.emit("nextTurn");
       } else {
         widget.socket.emit("nextPhase");
@@ -199,29 +158,6 @@ class _TurnInfoState extends State<TurnInfo> {
                   Icons.skip_next,
                   size: 55,
                   color: Colors.black,
-                ),
-              ),
-            ),
-          ),
-          Positioned(
-            right: 17.5,
-            top: 70,
-            child: Container(
-              width: 40,
-              height: 25,
-              decoration: BoxDecoration(
-                color: colors[player],
-                borderRadius: BorderRadius.circular(25.0),
-                border: Border.all(color: Colors.black, width: 2.0),
-              ),
-              child: Center(
-                child: Text(
-                  '$timerSeconds',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14,
-                  ),
                 ),
               ),
             ),

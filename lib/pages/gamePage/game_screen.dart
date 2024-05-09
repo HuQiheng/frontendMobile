@@ -1,9 +1,9 @@
 //import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:logger/logger.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 // ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -66,10 +66,13 @@ class _MapScreenState extends State<MapScreen> {
   bool _isLoading = true;
   bool sended = false;
   final AudioPlayer _audioPlayer = AudioPlayer();
+  late ConfettiController _confettiController;
 
   @override
   void initState() {
     super.initState();
+    _confettiController =
+        ConfettiController(duration: const Duration(seconds: 10));
 
     initMusic();
 
@@ -84,18 +87,29 @@ class _MapScreenState extends State<MapScreen> {
 
     widget.socket.on('gameOver', (data) {
       widget.socket.dispose();
+      _audioPlayer.stop();
+      _audioPlayer.dispose();
       logger.d("Informacion de fin de partida: $data");
-    });
-
-    widget.socket.on('victory', (sal) {
-      logger.d(sal);
       showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
-          return PopUpWinner(audioPlayer: _audioPlayer);
+          return PopUpWinner(
+            data: data,
+          );
         },
       );
+    });
+
+    widget.socket.on('victory', (sal) {
+      logger.d("Victoria recibida $sal");
+      bool soundsEnabled =
+          Provider.of<SoundSettings>(context, listen: false).soundsEnabled;
+      if (soundsEnabled) {
+        AudioPlayer winnerSound = AudioPlayer();
+        _playSound(winnerSound);
+      }
+      _confettiController.play();
     });
 
     widget.socket.on('messageReceived', (message) {
@@ -140,6 +154,7 @@ class _MapScreenState extends State<MapScreen> {
   @override
   void dispose() {
     widget.socket.dispose();
+    _confettiController.dispose();
     _audioPlayer.stop();
     _audioPlayer.dispose();
     super.dispose();
@@ -304,8 +319,31 @@ class _MapScreenState extends State<MapScreen> {
                 ],
               ),
             ),
+          Align(
+              alignment: Alignment.center,
+              child: ConfettiWidget(
+                confettiController: _confettiController,
+                blastDirectionality: BlastDirectionality.explosive,
+                maxBlastForce: 20,
+                minBlastForce: 5,
+                emissionFrequency: 0.02,
+                numberOfParticles: 50,
+                gravity: 0.3,
+                colors: const [
+                  Colors.green,
+                  Colors.blue,
+                  Colors.pink,
+                  Colors.orange,
+                  Colors.purple
+                ],
+                particleDrag: 0.05,
+              )),
         ],
       ),
     );
   }
+}
+
+Future<void> _playSound(winner) async {
+  await winner.play(AssetSource('sounds/trumpet_victory.mp3'));
 }

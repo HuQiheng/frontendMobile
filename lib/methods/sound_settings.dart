@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SoundSettings extends ChangeNotifier {
-  bool _soundsEnabled = true;
+  bool _soundsEnabled = false;
 
   SoundSettings() {
     loadPreferences();

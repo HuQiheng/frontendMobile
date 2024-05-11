@@ -67,6 +67,7 @@ class _MapScreenState extends State<MapScreen> {
   bool sended = false;
   final AudioPlayer _audioPlayer = AudioPlayer();
   late ConfettiController _confettiController;
+  bool hasSurrendered = false;
 
   @override
   void initState() {

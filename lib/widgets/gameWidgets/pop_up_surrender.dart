@@ -77,7 +77,8 @@ class PopUpSurrender extends StatelessWidget {
                         audioPlayer.dispose();
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => HomeScreen()),
+                          MaterialPageRoute(
+                              builder: (context) => const HomeScreen()),
                         );
                       },
                       style: ElevatedButton.styleFrom(

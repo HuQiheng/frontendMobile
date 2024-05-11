@@ -1,12 +1,21 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 //import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
-import 'package:wealth_wars/widgets/homeWidgets/pop_up_change_awards.dart';
 import 'package:wealth_wars/widgets/homeWidgets/pop_up_change_username.dart';
-import 'package:webview_cookie_manager/webview_cookie_manager.dart';
-import 'package:http/http.dart' as http;
+
+// Diccionario que asocia el nombre del logro con el nombre del archivo de imagen
+Map<String, String> achievementImages = {
+  'Bienvenido a WealthWars': 'assets/insignias/jugar_1_partida.png',
+  'Comandante principiante': 'assets/insignias/ganar_1_partida.png',
+  'Comandante experimentado': 'assets/insignias/ganar_10_partidas.png',
+  'Comandante veterano': 'assets/insignias/ganar_100_partidas.png',
+  'Tu primer compañero': 'assets/insignias/añadir_1_amigo.png',
+  'Conquistador': 'assets/insignias/conquista_1_territorio.png',
+  'Industrializador': 'assets/insignias/comprar_1_fabrica.png',
+  'Revolución industrial': 'assets/insignias/comprar_15_fabricas.png',
+  'La Armada Invencible': 'assets/insignias/conseguir_99_tropas.png',
+  'Mileurista': 'assets/insignias/conseguir_1000_monedas.png'
+};
 
 class ProfileScreen extends StatelessWidget {
   final String username;
@@ -14,21 +23,49 @@ class ProfileScreen extends StatelessWidget {
   final String picture;
   final int numVics;
   final String? password;
-  // Strings de url1, url2, url3 con cada una de las imágenes seleccionadas para mostrar (insignias)
+  final List<String> myAwards;
 
-  const ProfileScreen({ 
+  const ProfileScreen({
     super.key,
     required this.username,
     required this.email,
     required this.picture,
     required this.numVics,
     this.password,
+    required this.myAwards,
   });
 
   @override
   Widget build(BuildContext context) {
     final Logger logger = Logger();
     logger.d("$username $email $picture");
+
+    List<Widget> badges = myAwards.map((award) {
+      String assetUrl = achievementImages[award] ?? "";
+      return _buildBadgePlaceholder(assetUrl);
+    }).toList();
+
+    List<Widget> badgeRows = [];
+    for (int i = 0; i < badges.length; i += 3) {
+      List<Widget> rowItems =
+          badges.sublist(i, i + 3 > badges.length ? badges.length : i + 3);
+      if (rowItems.length < 3) {
+        int placeholdersNeeded = 3 - rowItems.length;
+        for (int j = 0; j < placeholdersNeeded; j++) {
+          rowItems.add(_buildEmptyBadgePlaceholder());
+        }
+      }
+
+      badgeRows.add(Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: rowItems,
+      ));
+
+      if (i + 3 < badges.length) {
+        badgeRows.add(const SizedBox(height: 16));
+      }
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xFF083344),
       appBar: AppBar(
@@ -49,26 +86,48 @@ class ProfileScreen extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 CircleAvatar(
-                  radius: 50,
+                  radius: 60,
                   backgroundImage: NetworkImage(picture),
                 ),
+                const SizedBox(height: 10),
                 Container(
-                  // FALTA PASAR NUM VICTORIAS
-                  padding: const EdgeInsets.all(10), // Valor ajustable
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                   decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20), // Valor ajustable
-                    color: const Color(0xFF0066CC),
-                  ),
-                  child: Text(
-                    'Victorias: $numVics',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      fontStyle: FontStyle.italic,
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [Color(0xFF4D77FF), Color(0xFF355C7D)],
                     ),
+                    borderRadius: BorderRadius.circular(20),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.1),
+                        spreadRadius: 0,
+                        blurRadius: 6,
+                        offset: const Offset(0, 3),
+                      ),
+                    ],
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.emoji_events,
+                          color: Colors.yellow[700], size: 24),
+                      const SizedBox(width: 10),
+                      Text(
+                        'Victorias: $numVics',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          fontStyle: FontStyle.italic,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
+                const SizedBox(height: 10),
                 if (password != null) ...[
                   Row(
                     children: [
@@ -87,7 +146,7 @@ class ProfileScreen extends StatelessWidget {
                         },
                         style: TextButton.styleFrom(
                           foregroundColor: Colors.white,
-                          backgroundColor: const Color(0xFF0066CC),
+                          backgroundColor: const Color(0xFFd68a0a),
                           textStyle: const TextStyle(
                               fontSize: 16, fontStyle: FontStyle.italic),
                         ),
@@ -116,22 +175,6 @@ class ProfileScreen extends StatelessWidget {
                         shape: BoxShape.circle,
                         color: Color(0xFF0066CC),
                       ),
-                      child: password != null
-                          ? IconButton(
-                              icon: const Icon(Icons.edit, color: Colors.white),
-                              onPressed: () async {
-                                final Map<String, String> myAwards = await getMyAwards(email);
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return PopUpChangeAwards(
-                                      myAwards: myAwards,
-                                    );
-                                  },
-                                );
-                              },
-                            )
-                          : const SizedBox.shrink(),
                     )
                   ],
                 ),
@@ -140,14 +183,7 @@ class ProfileScreen extends StatelessWidget {
                   color: Colors.white24,
                 ),
                 const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _buildBadgePlaceholder(""),
-                    _buildBadgePlaceholder(""),
-                    _buildBadgePlaceholder(""),
-                  ],
-                ),
+                ...badgeRows,
               ],
             ),
           ),
@@ -156,65 +192,47 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBadgePlaceholder(String url) {
-  return Image.network(
-    url,
-    width: 64,
-    height: 64,
-    fit: BoxFit.cover, // Ajusta la imagen al tamaño del contenedor
-    errorBuilder: (context, error, stackTrace) {
-      // En caso de error al cargar la imagen, puedes mostrar un placeholder o un mensaje alternativo
-      return Container(
-        width: 64,
-        height: 64,
-        decoration: BoxDecoration(
-          color: Colors.white24,
+  Widget _buildBadgePlaceholder(String assetUrl) {
+    return Container(
+      width: 64,
+      height: 64,
+      decoration: BoxDecoration(
+        color: const Color(0xFF274d5b),
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.15),
+            spreadRadius: 1,
+            blurRadius: 2,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: ClipRRect(
           borderRadius: BorderRadius.circular(8),
+          child: Image.asset(
+            assetUrl,
+            fit: BoxFit.contain,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                decoration: BoxDecoration(
+                  color: Colors.white24,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              );
+            },
+          ),
         ),
-      );
-    },
-  );
-}
+      ),
+    );
+  }
 
-
-  Future<Map<String, String>> getMyAwards(String email) async {
-    final cookieManager = WebviewCookieManager();
-    final cookies = await cookieManager.getCookies('https://wealthwars.games');
-    String sessionCookie = cookies
-        .firstWhere(
-          (cookie) => cookie.name == 'connect.sid',
-        )
-        .value;
-    String url = 'https://wealthwars.games:3010/users/$email/achievements';
-
-    final Logger logger = Logger();
-
-    try {
-      final response = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Cookie': 'connect.sid=$sessionCookie',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        Logger().d("Obtención de la lista de logros: ${response.body}");
-        List<dynamic> awardsData = jsonDecode(response.body);
-        final Map<String, String> imageMap = {};
-        for (var item in awardsData) {
-          String title = item["title"];
-          String imageUrl = item["image_url"];
-          imageMap[title] = imageUrl;
-        }
-        return imageMap;
-      } else {
-        Logger().e("Error en la solicitud: ${response.statusCode}");
-        return {};
-      }
-    } catch (error) {
-      Logger().e("Error al hacer la solicitud: $error");
-      return {};
-    }
+  Widget _buildEmptyBadgePlaceholder() {
+    return const SizedBox(
+      width: 64,
+      height: 64,
+    );
   }
 }

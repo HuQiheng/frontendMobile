@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
+import 'package:wealth_wars/methods/account_manager.dart';
 import 'package:wealth_wars/methods/friend_manager.dart';
 import 'package:wealth_wars/pages/homePage/account_screen.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
@@ -179,6 +180,7 @@ class _FriendsScreenState extends State<FriendsScreen>
             ),
             onTap: () async {
               int numVics = await getNumVics(friend['email']);
+              List<String> myAwards = await getMyAwards(friend['email']);
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -187,6 +189,7 @@ class _FriendsScreenState extends State<FriendsScreen>
                     email: friend['email'],
                     picture: friend['picture'],
                     numVics: numVics,
+                    myAwards: myAwards,
                   ),
                 ),
               );

@@ -111,7 +111,7 @@ class InitialPage1 extends StatelessWidget {
         body: Center(
           child: Info(
             'Wealth Wars',
-            'Un juego de estrategia donde tendrás que ganar dinero, erigir fábricas, y \n conquistar territorios para expandir tu influencia',
+            'Un juego de estrategia donde tendrás que ganar dinero, erigir fábricas, y \n conquistar territorios para expandir tu influencia.',
           ),
         ),
       ),
@@ -134,7 +134,7 @@ class InitialPage2 extends StatelessWidget {
             width: 500,
             child: Info(
               'Completa logros',
-              'Consigue completar todos los logros, tanto los más fáciles, como los más exclusivos y así hacerte con todas las insignias',
+              'Consigue completar todos los logros, tanto los más fáciles, como los más exclusivos y así hacerte con todas las insignias.',
             ),
           ),
         ),
@@ -158,7 +158,7 @@ class InitialPage3 extends StatelessWidget {
             width: 500,
             child: Info(
               'Agrega amigos',
-              'Haz todos los amigos que desees para jugar con ellos y presumir de tus insignias con ellos',
+              'Haz todos los amigos que desees para jugar con ellos y presumir de tus insignias con ellos.',
             ),
           ),
         ),
@@ -186,7 +186,7 @@ class InitialPage4 extends StatelessWidget {
             width: 500,
             child: InfoLogin(
               'Comienza a jugar',
-              'Crea una nueva cuenta o incia sesión con una ya existente para empezar a jugar ya',
+              'Crea una nueva cuenta o inicia sesión con una ya existente para empezar a jugar ya.',
               onNavigate: onNavigate,
               handleSignIn: handleSignIn,
             ),

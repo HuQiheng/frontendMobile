@@ -52,13 +52,33 @@ class _TurnInfoState extends State<TurnInfo> {
       logger.d("Siguiente turno recibido");
       setState(() {
         logger.d(player);
-        player = (player + 1) % widget.players.length;
+        do {
+          player = (player + 1) % widget.players.length;
+        } while (widget.players[player].surrender);
         logger.d(player);
         mapa.updatePlayer(player);
         if (playerSystem == player) {
           logger.d("Me toca a mi y soy el jugador del movil");
         }
       });
+    });
+
+    widget.socket.on('userSurrendered', (email) {
+      logger.d("Email de la persona que se rindio: $email");
+
+      int playerIndex =
+          widget.players.indexWhere((player) => player.email == email);
+
+      widget.socket.emit("nextTurn");
+
+      if (playerIndex != -1) {
+        setState(() {
+          widget.players[playerIndex].surrender = true;
+        });
+        logger.d("${widget.players[playerIndex].name} se ha rendido.");
+      } else {
+        logger.e("No se encontró al jugador con el email: $email");
+      }
     });
   }
 
@@ -84,7 +104,7 @@ class _TurnInfoState extends State<TurnInfo> {
     ];
 
     // Consider if the player is the user fo the app
-    if (player == playerSystem) {
+    if (player == playerSystem && !widget.players[playerSystem].surrender) {
       return Stack(
         children: [
           Container(

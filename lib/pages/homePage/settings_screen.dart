@@ -35,15 +35,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              color: const Color(0xFF005A88),
-              width: double.infinity,
-              padding: const EdgeInsets.all(8.0),
-              child: const Text(
-                'Ajustes:',
-                style: TextStyle(color: Colors.white, fontSize: 24),
-              ),
-            ),
             Expanded(
               child: ListView(
                 children: [

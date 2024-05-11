@@ -13,6 +13,7 @@ import 'package:wealth_wars/widgets/gameWidgets/map.dart';
 import 'package:wealth_wars/widgets/gameWidgets/turn_info.dart';
 import 'package:wealth_wars/widgets/gameWidgets/resources_info.dart';
 import 'package:wealth_wars/widgets/gameWidgets/players_info.dart';
+import 'package:wealth_wars/widgets/gameWidgets/pop_up_leave_room.dart';
 import 'package:wealth_wars/widgets/gameWidgets/pop_up_surrender.dart';
 import 'package:wealth_wars/widgets/gameWidgets/pop_up_winner.dart';
 
@@ -67,6 +68,7 @@ class _MapScreenState extends State<MapScreen> {
   bool sended = false;
   final AudioPlayer _audioPlayer = AudioPlayer();
   late ConfettiController _confettiController;
+  bool hasSurrendered = false;
 
   @override
   void initState() {
@@ -249,16 +251,32 @@ class _MapScreenState extends State<MapScreen> {
                   _positionChat = -300.0;
                   FocusScope.of(context).unfocus();
                 });
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return PopUpSurrender(
-                        socket: widget.socket, audioPlayer: _audioPlayer);
-                  },
-                );
+                if (!hasSurrendered) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return PopUpSurrender(socket: widget.socket);
+                    },
+                  ).then((value) {
+                    // Verificar si el valor devuelto es verdadero, lo que indica que se ha rendido
+                    if (value == true) {
+                      setState(() {
+                        hasSurrendered = true;
+                      });
+                    }
+                  });
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return PopUpLeaveRoom(
+                          socket: widget.socket, audioPlayer: _audioPlayer);
+                    },
+                  );
+                }
               },
-              icon: const Icon(
-                Icons.logout,
+              icon: Icon(
+                hasSurrendered ? Icons.logout : Icons.flag,
                 size: 60,
                 color: Colors.red,
               ),

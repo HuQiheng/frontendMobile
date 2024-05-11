@@ -630,12 +630,7 @@ class _MapWidgetState extends State<MapWidget> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        image: DecorationImage(
-          image: AssetImage("assets/images/sea_background.jpg"),
-          fit: BoxFit.cover,
-        ),
-      ),
+      decoration: const BoxDecoration(color: Color(0xFF083344)),
       child: InteractiveViewer(
         scaleEnabled: true,
         panEnabled: true,

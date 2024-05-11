@@ -1,9 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:wealth_wars/methods/account_manager.dart';
 import 'package:wealth_wars/methods/custom_toast.dart';
 import 'package:wealth_wars/pages/gamePage/lobby_screen.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
@@ -142,6 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
       String picture = userData?['picture'];
       String password = userData?['password'];
       int numVics = await getNumVics(email);
+      List<String> myAwards = await getMyAwards(email);
       Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => ProfileScreen(
@@ -149,7 +149,8 @@ class _HomeScreenState extends State<HomeScreen> {
               email: email,
               picture: picture,
               numVics: numVics,
-              password: password),
+              password: password,
+              myAwards: myAwards),
         ),
       );
     }
@@ -299,43 +300,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Future<List<String>> getMyAwards(String email) async {
-    final cookieManager = WebviewCookieManager();
-    final cookies = await cookieManager.getCookies('https://wealthwars.games');
-    String sessionCookie = cookies
-        .firstWhere(
-          (cookie) => cookie.name == 'connect.sid',
-        )
-        .value;
-    String url = 'https://wealthwars.games:3010/users/$email/achievements';
-
-    final Logger logger = Logger();
-
-    try {
-      final response = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Cookie': 'connect.sid=$sessionCookie',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        Logger().d("Obtención de la lista de logros: ${response.body}");
-        List<dynamic> awardsData = jsonDecode(response.body);
-        List<String> titles =
-            awardsData.map((award) => award["title"] as String).toList();
-        return titles;
-      } else {
-        Logger().e("Error en la solicitud: ${response.statusCode}");
-        return [];
-      }
-    } catch (error) {
-      Logger().e("Error al hacer la solicitud: $error");
-      return [];
-    }
-  }
-
   Future<int> getNumVics(String email) async {
     final cookieManager = WebviewCookieManager();
     final cookies = await cookieManager.getCookies('https://wealthwars.games');
@@ -356,7 +320,7 @@ class _HomeScreenState extends State<HomeScreen> {
           'Cookie': 'connect.sid=$sessionCookie',
         },
       );
-      
+
       if (response.statusCode == 200) {
         logger.d("Obtención del numero de victorias: ${response.body}");
         int victorias = jsonDecode(response.body);

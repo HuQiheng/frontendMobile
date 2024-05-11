@@ -1,14 +1,10 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 // ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'package:wealth_wars/pages/homePage/home_screen.dart';
 
 class PopUpSurrender extends StatelessWidget {
   final IO.Socket socket;
-  final AudioPlayer audioPlayer;
-  const PopUpSurrender(
-      {super.key, required this.socket, required this.audioPlayer});
+  const PopUpSurrender({super.key, required this.socket});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +18,7 @@ class PopUpSurrender extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text(
-                'Abandonar partida',
+                'Rendirse',
                 style: TextStyle(
                   color: Color(0xFFEA970A),
                   fontWeight: FontWeight.bold,
@@ -31,7 +27,7 @@ class PopUpSurrender extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.pop(context, false);
                 },
                 icon: const Icon(
                   Icons.close,
@@ -57,7 +53,7 @@ class PopUpSurrender extends StatelessWidget {
                 children: [
                   const Expanded(child: SizedBox.shrink()),
                   const Text(
-                    '¿Estás seguro de que quieres rendirte?\nNo podrás regresar a la partida\ny perderás tus territorios',
+                    '¿Estás seguro de que quieres rendirte?\nTe quedaras viendo la partida\ny perderás tus territorios',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -71,15 +67,7 @@ class PopUpSurrender extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () {
                         socket.emit("surrender");
-                        socket.emit("leaveRoom");
-                        //socket.dispose();
-                        audioPlayer.stop();
-                        audioPlayer.dispose();
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const HomeScreen()),
-                        );
+                        Navigator.pop(context, true);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.red,
@@ -88,7 +76,7 @@ class PopUpSurrender extends StatelessWidget {
                       child: const IntrinsicWidth(
                         child: Row(
                           children: [
-                            Text('Abandonar'),
+                            Text('Rendirse'),
                             SizedBox(
                               width: 10,
                             ),

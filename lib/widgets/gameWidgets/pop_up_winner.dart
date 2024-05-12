@@ -17,7 +17,8 @@ class PopUpWinner extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              data['message'],
+              // data['message'],
+              data['ranking'],
               style: const TextStyle(
                 color: Color(0xFFEA970A),
                 fontWeight: FontWeight.bold,

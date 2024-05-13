@@ -7,6 +7,20 @@ class PopUpWinner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<dynamic> ranking = data['ranking'];
+
+    // Email que queremos encontrar
+    String targetEmail = data['email'];
+
+    // Buscar el nombre correspondiente al email
+    String name = "";
+    for (var player in ranking) {
+      if (player['email'] == targetEmail) {
+        name = player['name'];
+        break;
+      }
+    }
+
     return AlertDialog(
       contentPadding:
           const EdgeInsets.only(top: 20, right: 20, left: 20, bottom: 20),
@@ -16,10 +30,10 @@ class PopUpWinner extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
+            Text(
               // data['message'],
-              "Debug",
-              style: TextStyle(
+              "$name ha ganado la partida!!",
+              style: const TextStyle(
                 color: Color(0xFFEA970A),
                 fontWeight: FontWeight.bold,
                 fontSize: 18,

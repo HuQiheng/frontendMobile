@@ -533,6 +533,10 @@ class _MapWidgetState extends State<MapWidget> {
   void initState() {
     super.initState();
 
+    player = 0;
+    playerPlaying = 0;
+    phase = 0;
+
     // Queremos saber quien es el usuario del sistema
     getUserData().then((userData) {
       setState(() {
@@ -651,7 +655,6 @@ class _MapWidgetState extends State<MapWidget> {
                   onChanged: (region) {
                     String name = region!.name;
                     logger.d("Nombre region: ${region.name}");
-
                     if (player == playerPlaying) {
                       // Fase de compra
                       if (phase == 0) {

@@ -37,6 +37,8 @@ class _TurnInfoState extends State<TurnInfo> {
   @override
   void initState() {
     super.initState();
+    phase = widget.gameMap['phase'];
+    player = widget.gameMap['turn'];
 
     // Queremos saber quien es el usuario del sistema
     getUserData().then((userData) {

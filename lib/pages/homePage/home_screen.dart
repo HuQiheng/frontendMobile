@@ -4,6 +4,7 @@ import 'package:logger/logger.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:wealth_wars/methods/account_manager.dart';
 import 'package:wealth_wars/methods/custom_toast.dart';
+import 'package:wealth_wars/pages/gamePage/game_screen.dart';
 import 'package:wealth_wars/pages/gamePage/lobby_screen.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 import '../../widgets/lobbyWidgets/pop_up_salas.dart';
@@ -50,12 +51,40 @@ class _HomeScreenState extends State<HomeScreen> {
 
     socket.on('connect', (_) {
       logger.d('Socket connected for invitation');
+      logger.d("Envio evento sendMap");
+      socket.emit('sendMap');
     });
 
     socket.on('invitationReceived', (data) {
       logger.d("Se ha recibido una invitación: $data");
 
       showInvitationDialog(data);
+    });
+
+    socket.on('mapSent', (map) {
+      logger.d("Reconectando al usuario $map");
+
+      List<Player> players = [];
+      List<dynamic> playersJson = map['players'];
+      List<int> surrendered = List<int>.from(map['surrendered']);
+
+      for (int i = 0; i < playersJson.length; i++) {
+        var playerJson = playersJson[i];
+        Player player = Player.fromEmailNamePicture(
+            playerJson['email'], playerJson['name'], playerJson['picture']);
+        // Check if this player's index is in the surrendered list
+        if (surrendered.contains(i)) {
+          player.surrender = true;
+        }
+        players.add(player);
+      }
+
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (_) => GameScreen(
+                socket: socket,
+                players: players,
+                gameMap: map,
+              )));
     });
 
     socket.on('achievementUnlocked', (data) {

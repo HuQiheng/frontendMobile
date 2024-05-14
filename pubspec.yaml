@@ -72,6 +72,8 @@ dependencies:
   interactable_svg: any
   google_sign_in: ^6.2.1
 
+  flutter_chat_types: ^3.6.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -53,11 +53,11 @@ class _TurnInfoState extends State<TurnInfo> {
     widget.socket.on('nextTurn', (data) {
       logger.d("Siguiente turno recibido");
       setState(() {
-        logger.d(player);
+        logger.d("He recibido siguiente turno: $player");
         do {
           player = (player + 1) % widget.players.length;
         } while (widget.players[player].surrender);
-        logger.d(player);
+        logger.d("Jugador resultante: $player");
         mapa.updatePlayer(player);
         if (playerSystem == player) {
           logger.d("Me toca a mi y soy el jugador del movil");

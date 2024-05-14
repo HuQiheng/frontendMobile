@@ -98,6 +98,7 @@ class _MapScreenState extends State<MapScreen> {
         builder: (BuildContext context) {
           return PopUpWinner(
             data: data,
+            socket: widget.socket,
           );
         },
       );
@@ -204,9 +205,11 @@ class _MapScreenState extends State<MapScreen> {
                 });
               },
               child: MapWidget(
-                  key: ValueKey(widget.gameMap),
-                  gameMap: widget.gameMap,
-                  socket: widget.socket),
+                key: ValueKey(widget.gameMap),
+                gameMap: widget.gameMap,
+                socket: widget.socket,
+                players: widget.players,
+              ),
             ),
           ),
           //=============================
@@ -287,7 +290,8 @@ class _MapScreenState extends State<MapScreen> {
           Align(
             alignment: Alignment.centerLeft,
             child:
-                ResourcesInfo(gameMap: widget.gameMap, players: widget.players),
+                ResourcesInfo(gameMap: widget.gameMap,
+                players: widget.players),
           ),
           //========================
           //==========CHAT==========

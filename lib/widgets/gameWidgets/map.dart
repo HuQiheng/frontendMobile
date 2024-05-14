@@ -13,6 +13,7 @@ import 'package:wealth_wars/widgets/gameWidgets/pop_up_invest.dart';
 import 'package:wealth_wars/widgets/gameWidgets/pop_up_move.dart';
 import 'package:wealth_wars/methods/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:wealth_wars/methods/player_class.dart';
 
 const double width = -392.394 * 0.5;
 const double height = -317.762 * 0.5;
@@ -37,7 +38,8 @@ final List<Color> colorsCircles = [
 class MapWidget extends StatefulWidget {
   final Map<String, dynamic> gameMap;
   final IO.Socket socket;
-  const MapWidget({super.key, required this.gameMap, required this.socket});
+  final List<Player> players;
+  const MapWidget({super.key, required this.gameMap, required this.socket, required this.players});
 
   @override
   State<MapWidget> createState() => _MapWidgetState();
@@ -633,6 +635,12 @@ class _MapWidgetState extends State<MapWidget> {
 
   @override
   Widget build(BuildContext context) {
+    var playerSystem;
+    getUserData().then((userData) {
+      setState(() {
+        playerSystem = userData?['email'];
+      });
+    });
     return Container(
       decoration: const BoxDecoration(color: Color(0xFF083344)),
       child: InteractiveViewer(
@@ -666,11 +674,23 @@ class _MapWidgetState extends State<MapWidget> {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
+                              var currentPlayer;
+                              int money;
+                              int index = widget.players.indexWhere((player) => player.email == playerSystem);
+                              if(index != -1){
+                                currentPlayer = widget.gameMap['players']
+                                  [widget.players.indexWhere((player) => player.email == playerSystem)];;
+                                money = currentPlayer['coins']; 
+                              }
+                              else{
+                                money = 0;
+                              }
                               return PopUpInvest(
                                 region: gr,
                                 numFab: numFab,
                                 callback: updateNumFab,
                                 socket: widget.socket,
+                                money: money,
                               );
                             },
                           );

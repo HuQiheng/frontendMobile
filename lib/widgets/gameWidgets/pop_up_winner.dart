@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:wealth_wars/pages/homePage/home_screen.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class PopUpWinner extends StatelessWidget {
   final dynamic data;
-  const PopUpWinner({super.key, required this.data});
+  final IO.Socket socket;
+  const PopUpWinner({super.key, required this.data, required this.socket});
 
   @override
   Widget build(BuildContext context) {
@@ -21,13 +23,12 @@ class PopUpWinner extends StatelessWidget {
       }
     }
 
-    final double popupWidth = 300.0; // Anchura constante del popup
-
     return AlertDialog(
-      contentPadding: EdgeInsets.all(20),
+      contentPadding:
+          const EdgeInsets.only(top: 20, right: 20, left: 20, bottom: 20),
       backgroundColor: const Color(0xFF083344),
       content: SizedBox(
-        width: popupWidth, // Establecer la anchura fija del popup
+        width: double.maxFinite,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -71,6 +72,8 @@ class PopUpWinner extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
+                // Comprobar socket
+                socket.dispose();
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const HomeScreen()),

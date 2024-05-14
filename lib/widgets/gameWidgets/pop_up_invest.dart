@@ -9,13 +9,16 @@ class PopUpInvest extends StatelessWidget {
   int numFab;
   final IO.Socket socket;
   final Function(int) callback;
+  final money;
 
   PopUpInvest(
       {super.key,
       required this.region,
       required this.numFab,
       required this.callback,
-      required this.socket});
+      required this.socket,
+      required this.money,
+      });
 
   @override
   Widget build(BuildContext context) {
@@ -109,6 +112,7 @@ class PopUpInvest extends StatelessWidget {
                                 numFab: numFab,
                                 callback: callback,
                                 socket: socket,
+                                money: money,
                               );
                             },
                           );
@@ -131,6 +135,7 @@ class PopUpInvest extends StatelessWidget {
                               return PopUpTroop(
                                 region: region,
                                 socket: socket,
+                                money: money,
                               );
                             },
                           );
@@ -157,12 +162,14 @@ class PopUpFactory extends StatelessWidget {
   int numFab;
   final IO.Socket socket;
   final Function(int) callback;
+  final money;
   PopUpFactory({
     super.key,
     required this.region,
     required this.numFab,
     required this.callback,
     required this.socket,
+    required this.money,
   });
 
   @override
@@ -274,11 +281,25 @@ class PopUpFactory extends StatelessWidget {
                                 textColor: Colors.black,
                                 fontSize: 16.0,
                               );
-                            } else {
-                              numFab = 1;
-                              callback(numFab);
-                              socket.emit(
-                                  'buyActives', ['factory', region.code, 1]);
+                            } 
+                            else {
+                              if(money < 15){
+                                Fluttertoast.showToast(
+                                msg:
+                                    "No tienes suficiente dinero\npara comprar una fábrica",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                backgroundColor: const Color(0xFFEA970A),
+                                textColor: Colors.black,
+                                fontSize: 16.0,
+                               );
+                              } 
+                              else{
+                                numFab = 1;
+                                callback(numFab);
+                                socket.emit(
+                                    'buyActives', ['factory', region.code, 1]);
+                              }
                             }
                             Navigator.pop(context);
                           },
@@ -399,8 +420,9 @@ class PopUpFactory extends StatelessWidget {
 class PopUpTroop extends StatefulWidget {
   final GameRegion region;
   final IO.Socket socket;
+  final int money;
 
-  const PopUpTroop({super.key, required this.region, required this.socket});
+  const PopUpTroop({super.key, required this.region, required this.socket, required this.money});
  
   @override
   PopUpTroopState createState() => PopUpTroopState();
@@ -574,9 +596,22 @@ class PopUpTroopState extends State<PopUpTroop> {
                         } else {
                           final logger = Logger();
                           logger.d(widget.region.code);
-                          widget.socket.emit('buyActives',
+                          if(widget.money < 2*_counter){
+                            Fluttertoast.showToast(
+                              msg:
+                                "No tienes suficiente dinero\npara comprar tropas",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              backgroundColor: const Color(0xFFEA970A),
+                              textColor: Colors.black,
+                              fontSize: 16.0,
+                            );
+                          } 
+                          else{
+                            widget.socket.emit('buyActives',
                               ['troop', widget.region.code, _counter]);
-                          Navigator.pop(context);
+                            Navigator.pop(context);
+                          }
                         }
                       },
                       child: const Text(

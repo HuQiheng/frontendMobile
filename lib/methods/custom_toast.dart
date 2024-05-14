@@ -18,8 +18,11 @@ Map<String, String> achievementImages = {
 void showCustomToast(dynamic data, BuildContext context) {
   String? achievementImage = achievementImages[data['title']];
 
+  double toastWidth = 300.0; // Anchura constante del toast
+
   showToastWidget(
     Container(
+      width: toastWidth, // Establecer la anchura fija del toast
       padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(25.0),

@@ -21,12 +21,13 @@ class PopUpWinner extends StatelessWidget {
       }
     }
 
+    final double popupWidth = 300.0; // Anchura constante del popup
+
     return AlertDialog(
-      contentPadding:
-          const EdgeInsets.only(top: 20, right: 20, left: 20, bottom: 20),
+      contentPadding: EdgeInsets.all(20),
       backgroundColor: const Color(0xFF083344),
       content: SizedBox(
-        width: double.maxFinite,
+        width: popupWidth, // Establecer la anchura fija del popup
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

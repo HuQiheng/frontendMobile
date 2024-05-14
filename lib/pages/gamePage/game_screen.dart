@@ -345,7 +345,7 @@ class _MapScreenState extends State<MapScreen> {
                 maxBlastForce: 20,
                 minBlastForce: 5,
                 emissionFrequency: 0.02,
-                numberOfParticles: 50,
+                numberOfParticles: 100,
                 gravity: 0.3,
                 colors: const [
                   Colors.green,

@@ -307,14 +307,14 @@ class _MapScreenState extends State<MapScreen> {
                     ),
                   ),
                   borderRadius: BorderRadius.circular(4.0),
-                  color: const Color.fromARGB(255, 255, 206, 120),
+                  color: const Color(0xFF083344),
                 ),
                 child: Chat(
                   messages: _messages,
                   onSendPressed: _handleSendPressed,
                   user: const types.User(id: 'user1'), // Actual User
                   theme: const DefaultChatTheme(
-                    backgroundColor: Color.fromARGB(255, 255, 206, 120),
+                    backgroundColor: Color(0xFF083344),
                   ),
                   showUserNames: true,
                 )),

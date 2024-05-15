@@ -49,9 +49,13 @@ class _LobbyScreenState extends State<LobbyScreen> {
 
   @override
   void dispose() {
-    _audioPlayer.stop();
-    _audioPlayer.dispose();
-    socket.dispose();
+    if (_audioPlayer != null) {
+      _audioPlayer.stop();
+      _audioPlayer.dispose();
+    }
+    if (socket != null) {
+      socket.dispose();
+    }
     super.dispose();
   }
 

@@ -69,7 +69,7 @@ class PopUpInfo extends StatelessWidget {
                   ),
                   Center(
                     child: Text(
-                      'Durante esta fase podrás comprar una fábrica y tantas tropas como puedas, cada tropa cuesta 2 monedas y cada fábrica 15 monedas',
+                      'Durante esta fase podrás comprar tantas tropas y fábricas como puedas, cada tropa cuesta 2 monedas y cada fábrica 15 monedas',
                       textAlign: TextAlign.center,
                       style: TextStyle(
                           fontSize: 16.0,

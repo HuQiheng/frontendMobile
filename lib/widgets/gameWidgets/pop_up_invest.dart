@@ -270,6 +270,19 @@ class PopUpFactory extends StatelessWidget {
                             backgroundColor: const Color(0xFF083344),
                           ),
                           onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text(
+                            'NO',
+                            style:
+                                TextStyle(fontSize: 20.0, color: Colors.white),
+                          ),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF083344),
+                          ),
+                          onPressed: () {
                             if (region.factories == 1) {
                               // Saca un popUp
                               Fluttertoast.showToast(
@@ -305,19 +318,6 @@ class PopUpFactory extends StatelessWidget {
                           },
                           child: const Text(
                             'SI',
-                            style:
-                                TextStyle(fontSize: 20.0, color: Colors.white),
-                          ),
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF083344),
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text(
-                            'NO',
                             style:
                                 TextStyle(fontSize: 20.0, color: Colors.white),
                           ),

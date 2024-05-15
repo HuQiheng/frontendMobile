@@ -18,22 +18,7 @@ class PopUpMove extends StatefulWidget {
 }
 
 class PopUpMoveState extends State<PopUpMove> {
-  int _counter = 1;
-  void incrementCounter() {
-    setState(() {
-      if (_counter < widget.region1.troops - 1) {
-        _counter++;
-      }
-    });
-  }
-
-  void decrementCounter() {
-    setState(() {
-      if (_counter > 1) {
-        _counter--;
-      }
-    });
-  }
+  int _sliderValue = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -110,10 +95,10 @@ class PopUpMoveState extends State<PopUpMove> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
+                      const Text(
                         "Desde ",
                         textAlign: TextAlign.center,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 20.0,
                           fontWeight: FontWeight.bold,
                         ),
@@ -144,38 +129,22 @@ class PopUpMoveState extends State<PopUpMove> {
                       ),
                     ],
                   ),
-                  Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF083344),
-                          ),
-                          onPressed: decrementCounter,
-                          child: const Icon(
-                            Icons.remove,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Text(
-                          '$_counter',
-                          style: const TextStyle(
-                            fontSize: 24.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF083344),
-                          ),
-                          onPressed: incrementCounter,
-                          child: const Icon(
-                            Icons.add,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
+                  Slider(
+                    value: _sliderValue.toDouble(),
+                    min: 1,
+                    max: widget.region1.troops.toDouble() - 1,
+                    divisions: (widget.region1.troops - 1).toInt(),
+                    onChanged: (newValue) {
+                      setState(() {
+                        _sliderValue = newValue.toInt();
+                      });
+                    },
+                  ),
+                  Text(
+                    '$_sliderValue',
+                    style: const TextStyle(
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                   const Divider(
@@ -195,7 +164,7 @@ class PopUpMoveState extends State<PopUpMove> {
                         widget.socket.emit('moveTroops', [
                           widget.region1.code,
                           widget.region2.code,
-                          _counter
+                          _sliderValue,
                         ]);
                         Navigator.pop(context);
                       },

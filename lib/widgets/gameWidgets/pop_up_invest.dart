@@ -270,6 +270,19 @@ class PopUpFactory extends StatelessWidget {
                             backgroundColor: const Color(0xFF083344),
                           ),
                           onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text(
+                            'NO',
+                            style:
+                                TextStyle(fontSize: 20.0, color: Colors.white),
+                          ),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF083344),
+                          ),
+                          onPressed: () {
                             if (region.factories == 1) {
                               // Saca un popUp
                               Fluttertoast.showToast(
@@ -305,19 +318,6 @@ class PopUpFactory extends StatelessWidget {
                           },
                           child: const Text(
                             'SI',
-                            style:
-                                TextStyle(fontSize: 20.0, color: Colors.white),
-                          ),
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF083344),
-                          ),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          child: const Text(
-                            'NO',
                             style:
                                 TextStyle(fontSize: 20.0, color: Colors.white),
                           ),
@@ -429,71 +429,59 @@ class PopUpTroop extends StatefulWidget {
 }
 
 class PopUpTroopState extends State<PopUpTroop> {
-  int _counter = 1;
+  double _troopCount = 1; // Cambiado a double
   int _cost = 2;
-  void incrementCounter() {
-    setState(() {
-      if (_counter < 99) {
-        _counter++;
-        _cost = _counter * 2;
-      }
-    });
-  }
 
-  void decrementCounter() {
+  void _updateCost() {
     setState(() {
-      if (_counter > 1) {
-        _counter--;
-        _cost = _counter * 2;
-      }
+      _cost = (_troopCount * 2).toInt(); // Convertir a entero
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      contentPadding:
-          const EdgeInsets.only(top: 2, right: 20, left: 20, bottom: 20),
+      contentPadding: const EdgeInsets.only(top: 2, right: 20, left: 20, bottom: 20),
       backgroundColor: const Color(0xFF083344),
-      content: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Row(
-                children: [
-                  Text(
-                    'Comprar tropas - 2',
-                    style: TextStyle(
-                      color: Color(0xFFEA970A),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 25,
+      content: SingleChildScrollView( // Envolver el contenido con SingleChildScrollView
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Row(
+                  children: [
+                    Text(
+                      'Comprar tropas - 2',
+                      style: TextStyle(
+                        color: Color(0xFFEA970A),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25,
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    width: 5,
-                  ),
-                  Icon(
-                    Icons.monetization_on_outlined,
-                    size: 30,
-                    color: Color(0xFFEA970A),
-                  ),
-                ],
-              ),
-              IconButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                icon: const Icon(
-                  Icons.close,
-                  color: Colors.white,
-                  size: 40,
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Icon(
+                      Icons.monetization_on_outlined,
+                      size: 30,
+                      color: Color(0xFFEA970A),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-          Expanded(
-            child: Container(
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  icon: const Icon(
+                    Icons.close,
+                    color: Colors.white,
+                    size: 40,
+                  ),
+                ),
+              ],
+            ),
+            Container(
               margin: const EdgeInsets.only(top: 2),
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
@@ -530,34 +518,25 @@ class PopUpTroopState extends State<PopUpTroop> {
                     ),
                   ),
                   Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    child: Column(
                       children: <Widget>[
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF083344),
-                          ),
-                          onPressed: decrementCounter,
-                          child: const Icon(
-                            Icons.remove,
-                            color: Colors.white,
-                          ),
+                        Slider(
+                          value: _troopCount,
+                          min: 1,
+                          max: 99,
+                          divisions: 98, // Valor máximo - 1
+                          onChanged: (newValue) {
+                            setState(() {
+                              _troopCount = newValue.roundToDouble(); // Redondear al entero más cercano
+                              _updateCost(); // Actualizar el costo
+                            });
+                          },
                         ),
                         Text(
-                          '$_counter',
+                          '${_troopCount.toInt()}', // Mostrar el valor del Slider como entero
                           style: const TextStyle(
                             fontSize: 24.0,
                             fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF083344),
-                          ),
-                          onPressed: incrementCounter,
-                          child: const Icon(
-                            Icons.add,
-                            color: Colors.white,
                           ),
                         ),
                       ],
@@ -582,11 +561,10 @@ class PopUpTroopState extends State<PopUpTroop> {
                         backgroundColor: const Color(0xFF083344),
                       ),
                       onPressed: () {
-                        if (widget.region.troops + _counter > 99) {
+                        if (widget.region.troops + _troopCount > 99) {
                           // Saca un popUp
                           Fluttertoast.showToast(
-                            msg:
-                                "No puedes sobrepasar las 99 tropas por territorio",
+                            msg: "No puedes sobrepasar las 99 tropas por territorio",
                             toastLength: Toast.LENGTH_SHORT,
                             gravity: ToastGravity.BOTTOM,
                             backgroundColor: const Color(0xFFEA970A),
@@ -596,10 +574,9 @@ class PopUpTroopState extends State<PopUpTroop> {
                         } else {
                           final logger = Logger();
                           logger.d(widget.region.code);
-                          if(widget.money < 2*_counter){
+                          if(widget.money < 2*_troopCount){
                             Fluttertoast.showToast(
-                              msg:
-                                "No tienes suficiente dinero\npara comprar tropas",
+                              msg: "No tienes suficiente dinero\npara comprar tropas",
                               toastLength: Toast.LENGTH_SHORT,
                               gravity: ToastGravity.BOTTOM,
                               backgroundColor: const Color(0xFFEA970A),
@@ -609,7 +586,7 @@ class PopUpTroopState extends State<PopUpTroop> {
                           } 
                           else{
                             widget.socket.emit('buyActives',
-                              ['troop', widget.region.code, _counter]);
+                              ['troop', widget.region.code, _troopCount.toInt()]);
                             Navigator.pop(context);
                           }
                         }
@@ -623,8 +600,8 @@ class PopUpTroopState extends State<PopUpTroop> {
                 ],
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

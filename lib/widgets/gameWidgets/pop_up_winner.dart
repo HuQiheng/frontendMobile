@@ -4,8 +4,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class PopUpWinner extends StatelessWidget {
   final dynamic data;
-  final IO.Socket socket;
-  const PopUpWinner({super.key, required this.data, required this.socket});
+  const PopUpWinner({super.key, required this.data});
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +72,6 @@ class PopUpWinner extends StatelessWidget {
             ElevatedButton(
               onPressed: () {
                 // Comprobar socket
-                socket.dispose();
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const HomeScreen()),

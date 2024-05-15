@@ -1,10 +1,11 @@
 //import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:provider/provider.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
-import 'package:provider/provider.dart';
 // ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:wealth_wars/methods/player_class.dart';
@@ -87,10 +88,44 @@ class _MapScreenState extends State<MapScreen> {
       });
     });
 
+    widget.socket.on('attack', (data){
+      String user = "";
+      String regAtaque = "";
+      String regAtacada = "";
+      logger.d("Alguien ha atacado a alguien");
+      logger.d(data);
+
+      // Nombre del atacante
+      Player? jugador = widget.players.firstWhere((player) => player.email == data['email']);
+      user = jugador.name;
+      
+      // Falta pasar las regiones
+      // GameRegion? gRegAtacada = gameRegions.firstWhere((region) => region.code == data['to']);
+      // regAtacada = gRegAtacada.name;
+      
+      bool soundsEnabled =
+        Provider.of<SoundSettings>(context, listen: false).soundsEnabled;
+        if (soundsEnabled) {
+          AudioPlayer explosion = AudioPlayer();
+          _playSound(explosion);
+        }
+
+      Fluttertoast.showToast(
+        msg:
+          "$user está atacando $regAtacada desde $regAtaque",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: const Color(0xFFEA970A),
+        textColor: Colors.black,
+        fontSize: 16.0,
+      );
+    });
+
     widget.socket.on('gameOver', (data) {
       widget.socket.dispose();
       _audioPlayer.stop();
       _audioPlayer.dispose();
+      super.dispose();
       logger.d("Informacion de fin de partida: $data");
       showDialog(
         context: context,
@@ -98,7 +133,6 @@ class _MapScreenState extends State<MapScreen> {
         builder: (BuildContext context) {
           return PopUpWinner(
             data: data,
-            socket: widget.socket,
           );
         },
       );
@@ -152,6 +186,10 @@ class _MapScreenState extends State<MapScreen> {
         _isLoading = false;
       });
     });
+  }
+
+  Future<void> _playSound(explosion) async {
+    await explosion.play(AssetSource('sounds/explosion_attack.mp3'));
   }
 
   @override

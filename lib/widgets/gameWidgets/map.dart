@@ -39,7 +39,8 @@ class MapWidget extends StatefulWidget {
   final Map<String, dynamic> gameMap;
   final IO.Socket socket;
   final List<Player> players;
-  const MapWidget({super.key, required this.gameMap, required this.socket, required this.players});
+  int money;
+  MapWidget({super.key, required this.gameMap, required this.socket, required this.players, required this.money});
 
   @override
   State<MapWidget> createState() => _MapWidgetState();
@@ -635,12 +636,6 @@ class _MapWidgetState extends State<MapWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var playerSystem;
-    getUserData().then((userData) {
-      setState(() {
-        playerSystem = userData?['email'];
-      });
-    });
     return Container(
       decoration: const BoxDecoration(color: Color(0xFF083344)),
       child: InteractiveViewer(
@@ -674,23 +669,13 @@ class _MapWidgetState extends State<MapWidget> {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              var currentPlayer;
-                              int money;
-                              int index = widget.players.indexWhere((player) => player.email == playerSystem);
-                              if(index != -1){
-                                currentPlayer = widget.gameMap['players']
-                                  [widget.players.indexWhere((player) => player.email == playerSystem)];;
-                                money = currentPlayer['coins']; 
-                              }
-                              else{
-                                money = 0;
-                              }
+                              
                               return PopUpInvest(
                                 region: gr,
                                 numFab: numFab,
                                 callback: updateNumFab,
                                 socket: widget.socket,
-                                money: money,
+                                money: widget.money,
                               );
                             },
                           );

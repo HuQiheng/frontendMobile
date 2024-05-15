@@ -1,13 +1,15 @@
 //import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:provider/provider.dart';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
-import 'package:provider/provider.dart';
 // ignore: library_prefixes
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:wealth_wars/methods/player_class.dart';
+import 'package:wealth_wars/methods/shared_preferences.dart';
 import 'package:wealth_wars/methods/sound_settings.dart';
 import 'package:wealth_wars/widgets/gameWidgets/map.dart';
 import 'package:wealth_wars/widgets/gameWidgets/turn_info.dart';
@@ -16,6 +18,7 @@ import 'package:wealth_wars/widgets/gameWidgets/players_info.dart';
 import 'package:wealth_wars/widgets/gameWidgets/pop_up_leave_room.dart';
 import 'package:wealth_wars/widgets/gameWidgets/pop_up_surrender.dart';
 import 'package:wealth_wars/widgets/gameWidgets/pop_up_winner.dart';
+import 'package:wealth_wars/widgets/gameWidgets/dictionary.dart';
 
 // ignore: depend_on_referenced_packages
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -69,10 +72,19 @@ class _MapScreenState extends State<MapScreen> {
   final AudioPlayer _audioPlayer = AudioPlayer();
   late ConfettiController _confettiController;
   bool hasSurrendered = false;
+  var playerSystem;
+  var currentPlayer;
 
   @override
   void initState() {
     super.initState();
+
+    getUserData().then((userData) {
+       setState(() {
+         playerSystem = userData?['email'];
+       });
+    });
+
     _confettiController =
         ConfettiController(duration: const Duration(seconds: 10));
 
@@ -84,7 +96,40 @@ class _MapScreenState extends State<MapScreen> {
       logger.d("Mapa recibido desde pantalla game: $map");
       setState(() {
         widget.gameMap = map;
+        
       });
+    });
+
+    widget.socket.on('attack', (data){
+      String user = "";
+      String regAtaque = "";
+      String regAtacada = "";
+      logger.d("Alguien ha atacado a alguien");
+      logger.d(data);
+
+      // Nombre del atacante
+      Player? jugador = widget.players.firstWhere((player) => player.email == data['email']);
+      user = jugador.name;
+      
+      regAtacada = codeDict.entries.firstWhere((entry) => entry.value == data['to']).key;
+      regAtaque = codeDict.entries.firstWhere((entry) => entry.value == data['from']).key;
+
+      bool soundsEnabled =
+        Provider.of<SoundSettings>(context, listen: false).soundsEnabled;
+        if (soundsEnabled) {
+          AudioPlayer explosion = AudioPlayer();
+          _playSound(explosion);
+        }
+
+      Fluttertoast.showToast(
+        msg:
+          "$user está atacando $regAtacada desde $regAtaque",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: const Color(0xFFEA970A),
+        textColor: Colors.black,
+        fontSize: 16.0,
+      );
     });
 
     widget.socket.on('gameOver', (data) {
@@ -109,7 +154,7 @@ class _MapScreenState extends State<MapScreen> {
           Provider.of<SoundSettings>(context, listen: false).soundsEnabled;
       if (soundsEnabled) {
         AudioPlayer winnerSound = AudioPlayer();
-        _playSound(winnerSound);
+        _playSoundWin(winnerSound);
       }
       _confettiController.play();
     });
@@ -151,6 +196,10 @@ class _MapScreenState extends State<MapScreen> {
         _isLoading = false;
       });
     });
+  }
+
+  Future<void> _playSound(explosion) async {
+    await explosion.play(AssetSource('sounds/explosion_attack.mp3'));
   }
 
   @override
@@ -204,9 +253,12 @@ class _MapScreenState extends State<MapScreen> {
                 });
               },
               child: MapWidget(
-                  key: ValueKey(widget.gameMap),
-                  gameMap: widget.gameMap,
-                  socket: widget.socket),
+                key: ValueKey(widget.gameMap),
+                gameMap: widget.gameMap,
+                socket: widget.socket,
+                players: widget.players,
+                money: getMoney(),
+              ),
             ),
           ),
           //=============================
@@ -287,7 +339,8 @@ class _MapScreenState extends State<MapScreen> {
           Align(
             alignment: Alignment.centerLeft,
             child:
-                ResourcesInfo(gameMap: widget.gameMap, players: widget.players),
+                ResourcesInfo(gameMap: widget.gameMap,
+                players: widget.players),
           ),
           //========================
           //==========CHAT==========
@@ -345,7 +398,7 @@ class _MapScreenState extends State<MapScreen> {
                 maxBlastForce: 20,
                 minBlastForce: 5,
                 emissionFrequency: 0.02,
-                numberOfParticles: 50,
+                numberOfParticles: 100,
                 gravity: 0.3,
                 colors: const [
                   Colors.green,
@@ -360,8 +413,20 @@ class _MapScreenState extends State<MapScreen> {
       ),
     );
   }
+
+  int getMoney(){
+    int index = widget.players.indexWhere((player) => player.email == playerSystem);
+    if(index != -1){
+      currentPlayer = widget.gameMap['players']
+        [widget.players.indexWhere((player) => player.email == playerSystem)];
+      return currentPlayer['coins'];
+    }
+    else{
+      return 0;
+    }
+  }
 }
 
-Future<void> _playSound(winner) async {
+Future<void> _playSoundWin(winner) async {
   await winner.play(AssetSource('sounds/trumpet_victory.mp3'));
 }

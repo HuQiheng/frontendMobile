@@ -60,7 +60,7 @@ class PopUpMoveState extends State<PopUpMove> {
                     width: 5,
                   ),
                   Icon(
-                    Icons.monetization_on_outlined,
+                    Icons.directions_run,
                     size: 30,
                     color: Color(0xFFEA970A),
                   ),

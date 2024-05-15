@@ -1,10 +1,8 @@
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:provider/provider.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:wealth_wars/widgets/gameWidgets/map.dart';
-import 'package:wealth_wars/methods/sound_settings.dart';
 
 class PopUpAttack extends StatefulWidget {
   final GameRegion region1, region2;
@@ -64,7 +62,7 @@ class PopUpAttackState extends State<PopUpAttack> {
                     width: 5,
                   ),
                   Icon(
-                    Icons.monetization_on_outlined,
+                    Icons.flash_on,
                     size: 30,
                     color: Color(0xFFEA970A),
                   ),
@@ -193,12 +191,6 @@ class PopUpAttackState extends State<PopUpAttack> {
                           widget.region2.code,
                           _counter
                         ]);
-                        bool soundsEnabled =
-                            Provider.of<SoundSettings>(context, listen: false)
-                                .soundsEnabled;
-                        if (soundsEnabled) {
-                          _playSound(audioPlayer);
-                        }
                         Navigator.pop(context);
                       },
                       child: const Text(
@@ -215,8 +207,4 @@ class PopUpAttackState extends State<PopUpAttack> {
       ),
     );
   }
-}
-
-Future<void> _playSound(audioPlayer) async {
-  await audioPlayer.play(AssetSource('sounds/explosion_attack.mp3'));
 }

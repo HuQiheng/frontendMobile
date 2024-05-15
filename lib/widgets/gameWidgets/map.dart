@@ -13,6 +13,7 @@ import 'package:wealth_wars/widgets/gameWidgets/pop_up_invest.dart';
 import 'package:wealth_wars/widgets/gameWidgets/pop_up_move.dart';
 import 'package:wealth_wars/methods/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:wealth_wars/methods/player_class.dart';
 
 const double width = -392.394 * 0.5;
 const double height = -317.762 * 0.5;
@@ -37,7 +38,9 @@ final List<Color> colorsCircles = [
 class MapWidget extends StatefulWidget {
   final Map<String, dynamic> gameMap;
   final IO.Socket socket;
-  const MapWidget({super.key, required this.gameMap, required this.socket});
+  final List<Player> players;
+  int money;
+  MapWidget({super.key, required this.gameMap, required this.socket, required this.players, required this.money});
 
   @override
   State<MapWidget> createState() => _MapWidgetState();
@@ -666,11 +669,13 @@ class _MapWidgetState extends State<MapWidget> {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
+                              
                               return PopUpInvest(
                                 region: gr,
                                 numFab: numFab,
                                 callback: updateNumFab,
                                 socket: widget.socket,
+                                money: widget.money,
                               );
                             },
                           );

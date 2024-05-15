@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wealth_wars/pages/homePage/home_screen.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class PopUpWinner extends StatelessWidget {
   final dynamic data;
@@ -70,6 +71,7 @@ class PopUpWinner extends StatelessWidget {
             ),
             ElevatedButton(
               onPressed: () {
+                // Comprobar socket
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => const HomeScreen()),

@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:wealth_wars/methods/shared_preferences.dart';
 import 'package:wealth_wars/pages/loading_page.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 import 'package:logger/logger.dart';
-
+import 'package:wealth_wars/methods/account_manager.dart';
 
 class PopUpCloseSession extends StatelessWidget {
-  const PopUpCloseSession({super.key});
-  
+  final IO.Socket socket;
+  const PopUpCloseSession({super.key, required this.socket});
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +36,7 @@ class PopUpCloseSession extends StatelessWidget {
                   Navigator.of(context).pop();
                 },
                 icon: const Icon(
-                  Icons.close, 
+                  Icons.close,
                   color: Colors.white,
                   size: 40,
                 ),
@@ -71,16 +72,22 @@ class PopUpCloseSession extends StatelessWidget {
                     alignment: Alignment.bottomCenter,
                     child: ElevatedButton(
                       onPressed: () async {
+                        if (socket.connected) {
+                          socket.disconnect();
+                        }
+                        socket.dispose();
+                        logout();
                         await clearAllData();
                         cookieManager.clearCookies().then((_) {
                           logger.d("Cookies cleared successfully.");
                         }).catchError((e) {
                           logger.e("Failed to clear cookies: $e");
                         });
-                        Navigator.push(
+                        Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(
                               builder: (context) => const LoadingScreen()),
+                          (Route<dynamic> route) => false,
                         );
                       },
                       style: ElevatedButton.styleFrom(

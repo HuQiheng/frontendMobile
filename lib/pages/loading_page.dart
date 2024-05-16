@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:wealth_wars/methods/account_manager.dart';
+import 'package:wealth_wars/methods/shared_preferences.dart';
 import 'package:wealth_wars/pages/homePage/home_screen.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 import 'initialPage/initial_page.dart';
@@ -19,6 +21,15 @@ class _LoadingScreenState extends State<LoadingScreen> {
   final cookieManager = WebviewCookieManager();
 
   void checkSession() async {
+    var userData = await getUserData();
+    if (userData != null) {
+      String email = userData['email'];
+      String user = await getUser(email);
+      if (user == "") {
+        await cookieManager.clearCookies();
+      }
+    }
+
     final List<Cookie> cookies =
         await cookieManager.getCookies('https://wealthwars.games');
     logger.d("Cookie de inicio de sesion: $cookies.toString()");

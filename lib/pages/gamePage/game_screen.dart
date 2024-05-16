@@ -80,9 +80,9 @@ class _MapScreenState extends State<MapScreen> {
     super.initState();
 
     getUserData().then((userData) {
-       setState(() {
-         playerSystem = userData?['email'];
-       });
+      setState(() {
+        playerSystem = userData?['email'];
+      });
     });
 
     _confettiController =
@@ -92,15 +92,16 @@ class _MapScreenState extends State<MapScreen> {
 
     widget.socket.off('mapSent');
 
+    widget.socket.off('invitationReceived');
+
     widget.socket.on('mapSent', (map) {
       logger.d("Mapa recibido desde pantalla game: $map");
       setState(() {
         widget.gameMap = map;
-        
       });
     });
 
-    widget.socket.on('attack', (data){
+    widget.socket.on('attack', (data) {
       String user = "";
       String regAtaque = "";
       String regAtacada = "";
@@ -108,22 +109,25 @@ class _MapScreenState extends State<MapScreen> {
       logger.d(data);
 
       // Nombre del atacante
-      Player? jugador = widget.players.firstWhere((player) => player.email == data['email']);
+      Player? jugador =
+          widget.players.firstWhere((player) => player.email == data['email']);
       user = jugador.name;
-      
-      regAtacada = codeDict.entries.firstWhere((entry) => entry.value == data['to']).key;
-      regAtaque = codeDict.entries.firstWhere((entry) => entry.value == data['from']).key;
+
+      regAtacada =
+          codeDict.entries.firstWhere((entry) => entry.value == data['to']).key;
+      regAtaque = codeDict.entries
+          .firstWhere((entry) => entry.value == data['from'])
+          .key;
 
       bool soundsEnabled =
-        Provider.of<SoundSettings>(context, listen: false).soundsEnabled;
-        if (soundsEnabled) {
-          AudioPlayer explosion = AudioPlayer();
-          _playSound(explosion);
-        }
+          Provider.of<SoundSettings>(context, listen: false).soundsEnabled;
+      if (soundsEnabled) {
+        AudioPlayer explosion = AudioPlayer();
+        _playSound(explosion);
+      }
 
       Fluttertoast.showToast(
-        msg:
-          "$user está atacando $regAtacada desde $regAtaque",
+        msg: "$user está atacando $regAtacada desde $regAtaque",
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: const Color(0xFFEA970A),
@@ -339,8 +343,7 @@ class _MapScreenState extends State<MapScreen> {
           Align(
             alignment: Alignment.centerLeft,
             child:
-                ResourcesInfo(gameMap: widget.gameMap,
-                players: widget.players),
+                ResourcesInfo(gameMap: widget.gameMap, players: widget.players),
           ),
           //========================
           //==========CHAT==========
@@ -414,14 +417,14 @@ class _MapScreenState extends State<MapScreen> {
     );
   }
 
-  int getMoney(){
-    int index = widget.players.indexWhere((player) => player.email == playerSystem);
-    if(index != -1){
+  int getMoney() {
+    int index =
+        widget.players.indexWhere((player) => player.email == playerSystem);
+    if (index != -1) {
       currentPlayer = widget.gameMap['players']
-        [widget.players.indexWhere((player) => player.email == playerSystem)];
+          [widget.players.indexWhere((player) => player.email == playerSystem)];
       return currentPlayer['coins'];
-    }
-    else{
+    } else {
       return 0;
     }
   }

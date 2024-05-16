@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:wealth_wars/methods/sound_settings.dart';
 import 'package:wealth_wars/methods/theme_settings.dart';
 import 'package:wealth_wars/widgets/homeWidgets/pop_up_close_session.dart';
@@ -7,8 +8,9 @@ import 'package:wealth_wars/widgets/homeWidgets/pop_up_delete_account.dart';
 
 class SettingsScreen extends StatefulWidget {
   final String email;
+  final IO.Socket socket;
 
-  const SettingsScreen({super.key, required this.email});
+  const SettingsScreen({super.key, required this.email, required this.socket});
 
   @override
   // ignore: library_private_types_in_public_api
@@ -78,7 +80,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       // Cerrar sesión
                       context: context,
                       builder: (BuildContext context) {
-                        return const PopUpCloseSession();
+                        return PopUpCloseSession(
+                          socket: widget.socket,
+                        );
                       },
                     );
                   },
@@ -109,7 +113,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       // Borrar cuenta
                       context: context,
                       builder: (BuildContext context) {
-                        return PopUpDelete(email: email);
+                        return PopUpDelete(
+                          email: email,
+                          socket: widget.socket,
+                        );
                         //return const PopUpDelete();
                       },
                     );

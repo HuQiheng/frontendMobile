@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:wealth_wars/methods/account_manager.dart';
 import 'package:wealth_wars/methods/shared_preferences.dart';
 import 'package:wealth_wars/pages/loading_page.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
@@ -7,47 +9,8 @@ import 'package:http/http.dart' as http;
 
 class PopUpDelete extends StatelessWidget {
   final String email;
-  const PopUpDelete({super.key, required this.email});
-
-  Future<void> deleteUser(String email) async {
-    final cookieManager = WebviewCookieManager();
-
-    // Construir la URL con el email del usuario a eliminar
-    Logger logger = Logger();
-    logger.d("Tengo las cookies");
-    String url = 'https://wealthwars.games:3010/users/$email';
-    logger.d(url);
-
-    final cookies = await cookieManager.getCookies('https://wealthwars.games');
-    String sessionCookie = cookies
-        .firstWhere(
-          (cookie) => cookie.name == 'connect.sid',
-        )
-        .value;
-
-    try {
-      // Realizar la solicitud DELETE al backend
-      var response = await http.delete(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'cookie': 'connect.sid=$sessionCookie'
-        },
-      );
-
-      // Verificar si la solicitud fue exitosa (código de estado 200)
-      if (response.statusCode == 200) {
-        // El usuario ha sido eliminado exitosamente
-        logger.d('Respuesta del servidor: ${response.body}');
-      } else {
-        // La solicitud no fue exitosa, mostrar el mensaje de error
-        logger.d('Error al eliminar usuario: ${response.statusCode}');
-      }
-    } catch (error) {
-      // Manejar errores de conexión u otros errores
-      logger.d('Error al eliminar usuario: $error');
-    }
-  }
+  final IO.Socket socket;
+  const PopUpDelete({super.key, required this.email, required this.socket});
 
   @override
   Widget build(BuildContext context) {
@@ -112,6 +75,8 @@ class PopUpDelete extends StatelessWidget {
                     alignment: Alignment.bottomCenter,
                     child: ElevatedButton(
                       onPressed: () async {
+                        socket.disconnect();
+                        socket.dispose();
                         // Borrar cuenta aquí
                         await deleteUser(email);
                         await clearAllData();

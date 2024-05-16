@@ -36,70 +36,90 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> initSocket() async {
-    final cookies = await cookieManager.getCookies('https://wealthwars.games');
-    String sessionCookie = cookies
-        .firstWhere(
-          (cookie) => cookie.name == 'connect.sid',
-        )
-        .value;
+    try {
+      final cookies =
+          await cookieManager.getCookies('https://wealthwars.games');
+      String sessionCookie = cookies
+          .firstWhere(
+            (cookie) => cookie.name == 'connect.sid',
+          )
+          .value;
 
-    socket = IO.io('https://wealthwars.games:3010', <String, dynamic>{
-      'transports': ['websocket'],
-      'extraHeaders': {'cookie': 'connect.sid=$sessionCookie'},
-      'withCredentials': true,
-    });
+      logger.d("Cookie de inicio de sesión en home: $sessionCookie");
 
-    socket.on('connect', (_) {
-      logger.d('Socket connected for invitation');
-      logger.d("Envio evento sendMap");
-      socket.emit('sendMap');
-    });
+      socket = IO.io('https://wealthwars.games:3010', <String, dynamic>{
+        'transports': ['websocket'],
+        'extraHeaders': {
+          'cookie': 'connect.sid=$sessionCookie',
+        },
+        'withCredentials': true,
+      });
 
-    socket.on('invitationReceived', (data) {
-      logger.d("Se ha recibido una invitación: $data");
+      socket.on('connect', (_) {
+        logger.d('Socket connected for invitation');
+        logger.d("Envio evento sendMap");
+        socket.emit('sendMap');
+      });
 
-      showInvitationDialog(data);
-    });
+      socket.on('invitationReceived', (data) {
+        logger.d("Se ha recibido una invitación: $data");
+        showInvitationDialog(data);
+      });
 
-    socket.on('mapSent', (map) {
-      logger.d("Reconectando al usuario $map");
+      socket.on('mapSent', (map) {
+        logger.d("Reconectando al usuario $map");
 
-      List<Player> players = [];
-      List<dynamic> playersJson = map['players'];
-      List<int> surrendered = List<int>.from(map['surrendered']);
+        List<Player> players = [];
+        List<dynamic> playersJson = map['players'];
+        List<int> surrendered = List<int>.from(map['surrendered']);
 
-      for (int i = 0; i < playersJson.length; i++) {
-        var playerJson = playersJson[i];
-        Player player = Player.fromEmailNamePicture(
-            playerJson['email'], playerJson['name'], playerJson['picture']);
-        // Check if this player's index is in the surrendered list
-        if (surrendered.contains(i)) {
-          player.surrender = true;
+        for (int i = 0; i < playersJson.length; i++) {
+          var playerJson = playersJson[i];
+          Player player = Player.fromEmailNamePicture(
+              playerJson['email'], playerJson['name'], playerJson['picture']);
+          // Check if this player's index is in the surrendered list
+          if (surrendered.contains(i)) {
+            player.surrender = true;
+          }
+          players.add(player);
         }
-        players.add(player);
-      }
 
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (_) => GameScreen(
-                socket: socket,
-                players: players,
-                gameMap: map,
-              )));
-    });
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (_) => GameScreen(
+                  socket: socket,
+                  players: players,
+                  gameMap: map,
+                )));
+      });
 
-    socket.on('achievementUnlocked', (data) {
-      logger.d("Enhorabuena, has completado el logro: $data");
+      socket.on('achievementUnlocked', (data) {
+        logger.d("Enhorabuena, has completado el logro: $data");
+        showCustomToast(data, context);
+      });
 
-      showCustomToast(data, context);
-    });
+      socket.onError((data) {
+        logger.d('Error: $data');
+        socket.dispose();
+      });
 
-    socket.onError((data) {
-      logger.d('Error: $data');
-    });
+      socket.on('connect_error', (error) {
+        logger.e('Error de conexión: $error');
+      });
 
-    socket.onDisconnect((_) => logger.d('disconnect'));
+      socket.on('connect_timeout', (_) {
+        logger.e('Timeout de conexión');
+      });
 
-    socket.connect();
+      socket.on('error', (error) {
+        logger.e('Error en el socket: $error');
+      });
+
+      socket.onDisconnect((_) => logger.d('disconnect'));
+
+      socket.connect();
+    } catch (e) {
+      logger.e('Error initializing socket: $e');
+    }
   }
 
   void showInvitationDialog(dynamic invitationData) {
@@ -222,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => SettingsScreen(email: email),
+          builder: (context) => SettingsScreen(email: email, socket: socket),
         ),
       );
     }
@@ -327,41 +347,6 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
     );
-  }
-
-  Future<int> getNumVics(String email) async {
-    final cookieManager = WebviewCookieManager();
-    final cookies = await cookieManager.getCookies('https://wealthwars.games');
-    String sessionCookie = cookies
-        .firstWhere(
-          (cookie) => cookie.name == 'connect.sid',
-        )
-        .value;
-    String url = 'https://wealthwars.games:3010/users/$email/wins';
-
-    final Logger logger = Logger();
-
-    try {
-      final response = await http.get(
-        Uri.parse(url),
-        headers: {
-          'Content-Type': 'application/json',
-          'Cookie': 'connect.sid=$sessionCookie',
-        },
-      );
-
-      if (response.statusCode == 200) {
-        logger.d("Obtención del numero de victorias: ${response.body}");
-        int victorias = jsonDecode(response.body);
-        return victorias;
-      } else {
-        logger.e("Error en la solicitud: ${response.statusCode}");
-        return 0;
-      }
-    } catch (error) {
-      logger.e("Error al hacer la solicitud: $error");
-      return 0;
-    }
   }
 }
 

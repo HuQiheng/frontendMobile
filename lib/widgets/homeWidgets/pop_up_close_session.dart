@@ -74,6 +74,7 @@ class PopUpCloseSession extends StatelessWidget {
                       onPressed: () async {
                         if (socket.connected) {
                           socket.disconnect();
+                          socket.close();
                         }
                         socket.dispose();
                         logout();

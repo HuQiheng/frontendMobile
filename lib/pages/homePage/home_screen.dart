@@ -44,7 +44,8 @@ class _HomeScreenState extends State<HomeScreen> {
             (cookie) => cookie.name == 'connect.sid',
           )
           .value;
-      logger.d("Cookie de inicio de sesion en home: $sessionCookie");
+
+      logger.d("Cookie de inicio de sesión en home: $sessionCookie");
 
       socket = IO.io('https://wealthwars.games:3010', <String, dynamic>{
         'transports': ['websocket'],

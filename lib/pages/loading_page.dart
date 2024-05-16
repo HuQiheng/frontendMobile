@@ -21,32 +21,13 @@ class _LoadingScreenState extends State<LoadingScreen> {
   final cookieManager = WebviewCookieManager();
 
   void checkSession() async {
-    var userData = await getUserData();
-    if (userData != null) {
-      String email = userData['email'];
-      String user = await getUser(email);
-      if (user == "") {
-        await cookieManager.clearCookies();
-      }
-    }
-
-    final List<Cookie> cookies =
-        await cookieManager.getCookies('https://wealthwars.games');
-    logger.d("Cookie de inicio de sesion: $cookies.toString()");
+    await cookieManager.clearCookies();
 
     await Future.delayed(const Duration(seconds: 3));
 
-    bool hasSession = cookies
-        .any((Cookie c) => c.name == 'connect.sid' && c.value.isNotEmpty);
-
     if (mounted) {
-      if (hasSession) {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => HomeScreen()));
-      } else {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (context) => const InitialPage()));
-      }
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const InitialPage()));
     }
   }
 

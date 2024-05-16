@@ -5,7 +5,6 @@ import 'package:wealth_wars/methods/shared_preferences.dart';
 import 'package:wealth_wars/pages/loading_page.dart';
 import 'package:webview_cookie_manager/webview_cookie_manager.dart';
 import 'package:logger/logger.dart';
-import 'package:http/http.dart' as http;
 
 class PopUpDelete extends StatelessWidget {
   final String email;
@@ -62,7 +61,7 @@ class PopUpDelete extends StatelessWidget {
                 children: [
                   const Expanded(child: SizedBox.shrink()),
                   const Text(
-                    '¿Estás seguro de que quieres borrar tu cuenta?\nNo podrás recuperar ninguno de tus logros\no puntuaciones.\n¿Estás realmente seguro?',
+                    '¿Estás seguro de que quieres borrar tu cuenta?\nNo podrás recuperar ninguno de tus logros\no puntuaciones.\n',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -75,7 +74,6 @@ class PopUpDelete extends StatelessWidget {
                     alignment: Alignment.bottomCenter,
                     child: ElevatedButton(
                       onPressed: () async {
-                        socket.disconnect();
                         socket.dispose();
                         // Borrar cuenta aquí
                         await deleteUser(email);

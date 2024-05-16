@@ -99,6 +99,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
       socket.onError((data) {
         logger.d('Error: $data');
+        socket.dispose();
+      });
+
+      socket.on('connect_error', (error) {
+        logger.e('Error de conexión: $error');
+      });
+
+      socket.on('connect_timeout', (_) {
+        logger.e('Timeout de conexión');
+      });
+
+      socket.on('error', (error) {
+        logger.e('Error en el socket: $error');
       });
 
       socket.onDisconnect((_) => logger.d('disconnect'));

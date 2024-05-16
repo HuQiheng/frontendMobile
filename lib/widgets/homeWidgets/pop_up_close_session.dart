@@ -72,23 +72,20 @@ class PopUpCloseSession extends StatelessWidget {
                     alignment: Alignment.bottomCenter,
                     child: ElevatedButton(
                       onPressed: () async {
-                        if (socket.connected) {
-                          socket.disconnect();
-                          socket.close();
-                        }
                         socket.dispose();
-                        logout();
+                        await logout();
                         await clearAllData();
+
                         cookieManager.clearCookies().then((_) {
                           logger.d("Cookies cleared successfully.");
                         }).catchError((e) {
                           logger.e("Failed to clear cookies: $e");
                         });
-                        Navigator.pushAndRemoveUntil(
+
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => const LoadingScreen()),
-                          (Route<dynamic> route) => false,
                         );
                       },
                       style: ElevatedButton.styleFrom(

@@ -73,7 +73,7 @@ class PopUpCloseSession extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () async {
                         socket.dispose();
-                        await logout();
+                        //await logout();
                         await clearAllData();
 
                         cookieManager.clearCookies().then((_) {
